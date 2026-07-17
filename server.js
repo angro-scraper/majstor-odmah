@@ -3,9 +3,11 @@ const fs = require('fs');
 const path = require('path');
 const URL = require('url').URL;
 const createSupabaseApi = require('./supabase-api').createSupabaseApi;
+const analyzeProject = require('./ai-advisor').analyzeProject;
 
 const root = __dirname;
 const dataFile = path.join(root, 'data.json');
+const aiRequestLog = new Map();
 const mimeTypes = { '.html': 'text/html; charset=utf-8', '.js': 'application/javascript; charset=utf-8', '.css': 'text/css; charset=utf-8', '.json': 'application/json; charset=utf-8' };
 const providers = [
   { id: 'milan', name: 'Milan Jovanović', category: 'Električar', rating: '4,9', reviews: 86, responseTime: 'odgovara za ~8 min', availability: 'dostupan danas', verified: true },
@@ -44,10 +46,16 @@ function parseBody(request, done) {
   request.on('end', function () { try { done(null, JSON.parse(raw || '{}')); } catch (error) { done(error); } });
 }
 function findJob(data, id) { return data.jobs.find(function (job) { return job.id === Number(id); }); }
+function canUseAi(request) {
+  const address = request.socket.remoteAddress || 'unknown'; const now = Date.now();
+  const recent = (aiRequestLog.get(address) || []).filter(function (time) { return now - time < 3600000; });
+  if (recent.length >= 8) return false;
+  recent.push(now); aiRequestLog.set(address, recent); return true;
+}
 
 const server = http.createServer(function (request, response) {
   const url = new URL(request.url, 'http://localhost');
-  if (supabaseApi.enabled && url.pathname.indexOf('/api/') === 0) {
+  if (supabaseApi.enabled && url.pathname.indexOf('/api/') === 0 && url.pathname !== '/api/ai-advice') {
     supabaseApi.handle(request, response, url).catch(function (error) {
       console.error('Supabase API greška:', error.message);
       reply(response, 502, { error: 'Privremeno nije moguće sačuvati podatke.' });
@@ -60,6 +68,16 @@ const server = http.createServer(function (request, response) {
   const messageMatch = url.pathname.match(/^\/api\/jobs\/(\d+)\/messages$/);
   const photoMatch = url.pathname.match(/^\/api\/jobs\/(\d+)\/photos$/);
   const reviewMatch = url.pathname.match(/^\/api\/jobs\/(\d+)\/review$/);
+
+  if (url.pathname === '/api/ai-advice' && request.method === 'POST') {
+    if (!canUseAi(request)) return reply(response, 429, { error: 'Dostignut je privremeni limit AI saveta. Pokušaj ponovo kasnije.' });
+    return parseBody(request, function (error, payload) {
+      if (error) return reply(response, 400, { error: 'Podaci za AI savet nisu validni.' });
+      analyzeProject(payload).then(function (advice) { reply(response, 200, advice); }).catch(function (aiError) {
+        console.error('AI savetnik greška:', aiError.message); reply(response, aiError.status || 502, { error: aiError.message || 'AI savetnik trenutno nije dostupan.' });
+      });
+    });
+  }
 
   if (url.pathname === '/api/providers' && request.method === 'GET') return reply(response, 200, providers);
   if (url.pathname === '/api/jobs' && request.method === 'GET') return reply(response, 200, readData().jobs);

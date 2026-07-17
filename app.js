@@ -156,6 +156,16 @@ const closeFinder = () => { finderDrawer.classList.add('hidden'); finderToggle.s
 finderToggle.addEventListener('click', () => { const open = finderDrawer.classList.contains('hidden'); finderDrawer.classList.toggle('hidden', !open); finderToggle.setAttribute('aria-expanded', String(open)); });
 document.querySelector('#closeFinder').addEventListener('click', closeFinder);
 document.querySelectorAll('.category').forEach(button => button.addEventListener('click', () => { closeFinder(); openModal(button.dataset.category); }));
+const finderSearch = document.querySelector('#finderSearch');
+const finderProviderResults = document.querySelector('#finderProviderResults');
+function filterFinder(query) {
+  const value = String(query || '').trim().toLocaleLowerCase('sr');
+  document.querySelectorAll('.finder-category-list .category').forEach(function (button) { button.hidden = Boolean(value) && !button.dataset.category.toLocaleLowerCase('sr').includes(value); });
+  const matches = value ? rankedPros.filter(function (pro) { return [pro.name, pro.category, pro.area].join(' ').toLocaleLowerCase('sr').includes(value); }).slice(0, 3) : [];
+  finderProviderResults.innerHTML = matches.map(function (pro) { return '<button class="finder-provider-result" data-category="' + pro.category + '"><span><b>' + pro.name + ' · ★ ' + pro.rating.toFixed(1).replace('.', ',') + '</b><small>' + pro.category + ' · ' + pro.area + '</small></span><small>' + pro.reliability + '%</small></button>'; }).join('');
+  finderProviderResults.querySelectorAll('button').forEach(function (button) { button.addEventListener('click', function () { closeFinder(); openModal(button.dataset.category); }); });
+}
+finderSearch.addEventListener('input', function (event) { filterFinder(event.target.value); });
 document.querySelectorAll('.contact-pro').forEach(button => button.addEventListener('click', () => { openModal(); document.querySelector('#jobDescription').value = `Želim da pošaljem zahtev majstoru ${button.dataset.name}.`; }));
 
 function imageFilesToDataUrls(files) {

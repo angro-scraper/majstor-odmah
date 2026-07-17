@@ -70,6 +70,18 @@ function renderReview(job, isPro) {
   return '<div class="review-box"><h4>Uzajamne ocene</h4>' + displays + form + (form ? '<p class="helper-note">Ocena je vidljiva drugoj strani i utiče na pokazatelj pouzdanosti.</p>' : '') + '</div>';
 }
 
+function renderAiAdvisor(isPro) {
+  const title = isPro ? 'AI savetnik za ponudu' : 'AI savetnik za radove';
+  const lead = isPro ? 'Dodaj fotografiju i opis da dobiješ predlog obima radova i materijala za ponudu.' : 'Dodaj fotografiju problema i opis — dobićeš predlog majstora, radova i materijala.';
+  return '<section class="ai-advisor"><div class="ai-advisor-head"><span>✦</span><div><h4>' + title + '</h4><p>' + lead + '</p></div></div><form id="aiAdvisorForm"><textarea required name="description" maxlength="1500" rows="3" placeholder="Opiši šta vidiš ili šta želiš da uradiš."></textarea><input name="images" type="file" accept="image/jpeg,image/png,image/webp" multiple /><label class="ai-consent"><input required type="checkbox" /> Razumem da se izabrane fotografije i opis šalju AI servisu radi izrade predloga.</label><button type="submit">Analiziraj fotografiju i opis →</button></form><div class="ai-advice-result hidden" id="aiAdviceResult" aria-live="polite"></div><p class="ai-disclaimer">Savet je informativan. Kvalifikovan majstor potvrđuje stanje, bezbednost i potrebne količine na licu mesta.</p></section>';
+}
+
+function renderAiAdvice(advice) {
+  const work = (advice.work_scope || []).map(function (item) { return '<li>' + escapeHtml(item) + '</li>'; }).join('');
+  const materials = (advice.materials || []).map(function (item) { return '<li><b>' + escapeHtml(item.item) + '</b><span>' + escapeHtml(item.quantity_note) + '</span></li>'; }).join('');
+  return '<div class="ai-advice-summary"><span>Predlog · pouzdanost: ' + escapeHtml(advice.confidence || 'srednja') + '</span><h4>' + escapeHtml(advice.recommended_trade || 'Potreban je stručan pregled') + '</h4><p>' + escapeHtml(advice.summary || '') + '</p></div><div class="ai-advice-columns"><div><b>Predlog radova</b><ul>' + work + '</ul></div><div><b>Okvirni materijali</b><ul class="ai-materials">' + materials + '</ul></div></div><p class="ai-safety">⚠ ' + escapeHtml(advice.safety_note || 'Pre početka radova proveri stanje sa kvalifikovanim majstorom.') + '</p>';
+}
+
 function fileToDataUrl(file) {
   return new Promise(function (resolve, reject) { if (!file || file.size > 450000) { reject(new Error('Fotografija mora biti manja od 450 KB.')); return; } const reader = new FileReader(); reader.onload = function () { resolve(reader.result); }; reader.onerror = reject; reader.readAsDataURL(file); });
 }
@@ -119,7 +131,7 @@ function renderPortfolioItem(item) {
 function renderProPanel() {
   const portfolio = getPortfolio();
   const available = localStorage.getItem('majstorOdmahAvailability') !== 'false';
-  return '<section class="pro-panel"><div class="pro-panel-top"><span class="pro-panel-avatar">MJ</span><div><h3>Milan Jovanović</h3><p>Verifikovan električar · 4,9 ★ · 86 ocena · pouzdanost 98%</p></div><label class="availability-toggle"><input id="availabilityToggle" type="checkbox"' + (available ? ' checked' : '') + ' /> ' + (available ? 'Dostupan danas' : 'Nisam dostupan') + '</label></div><div class="pro-panel-metrics"><div><b>86</b><span>završenih radova</span></div><div><b>~8 min</b><span>prosečan odgovor</span></div><div><b>20 km</b><span>radijus dolaska</span></div></div><p class="service-zones"><b>Zone rada:</b> Detelinara, Liman, Grbavica, Centar i Novi Sad</p><p class="trust-note">Poslovi klijenata sa dobrom istorijom saradnje imaju prednost. Ponavljana otkazivanja i potvrđene prijave spuštaju prioritet, uz mogućnost žalbe.</p><div class="portfolio-head"><h4>Portfolio radova</h4><span>' + portfolio.length + ' prikazanih projekata</span></div><div class="portfolio-grid">' + portfolio.map(renderPortfolioItem).join('') + '</div><form class="portfolio-upload" id="portfolioUpload"><input required name="portfolioImage" type="file" accept="image/*" /><input required name="portfolioTitle" maxlength="42" placeholder="npr. Zamena plafonjere" /><button type="submit">Dodaj rad</button></form>' + renderNotifications('pro') + '</section>';
+  return '<section class="pro-panel"><div class="pro-panel-top"><span class="pro-panel-avatar">MJ</span><div><h3>Milan Jovanović</h3><p>Verifikovan električar · 4,9 ★ · 86 ocena · pouzdanost 98%</p></div><label class="availability-toggle"><input id="availabilityToggle" type="checkbox"' + (available ? ' checked' : '') + ' /> ' + (available ? 'Dostupan danas' : 'Nisam dostupan') + '</label></div><div class="pro-panel-metrics"><div><b>86</b><span>završenih radova</span></div><div><b>~8 min</b><span>prosečan odgovor</span></div><div><b>20 km</b><span>radijus dolaska</span></div></div><p class="service-zones"><b>Zone rada:</b> Detelinara, Liman, Grbavica, Centar i Novi Sad</p><p class="trust-note">Poslovi klijenata sa dobrom istorijom saradnje imaju prednost. Ponavljana otkazivanja i potvrđene prijave spuštaju prioritet, uz mogućnost žalbe.</p><div class="portfolio-head"><h4>Portfolio radova</h4><span>' + portfolio.length + ' prikazanih projekata</span></div><div class="portfolio-grid">' + portfolio.map(renderPortfolioItem).join('') + '</div><form class="portfolio-upload" id="portfolioUpload"><input required name="portfolioImage" type="file" accept="image/*" /><input required name="portfolioTitle" maxlength="42" placeholder="npr. Zamena plafonjere" /><button type="submit">Dodaj rad</button></form>' + renderAiAdvisor(true) + renderNotifications('pro') + '</section>';
 }
 
 function initialNotifications(role) {
@@ -172,7 +184,7 @@ function renderCustomerPanel() {
     const visual = item.image ? '<img src="' + escapeHtml(item.image) + '" alt="Prostor: ' + escapeHtml(item.title) + '" />' : '<span class="customer-symbol">' + escapeHtml(item.symbol || '⌂') + '</span>';
     return '<article class="customer-project" style="background:' + escapeHtml(item.color || '#b97755') + '">' + visual + '<div><b>' + escapeHtml(item.title) + '</b><small>' + escapeHtml(item.detail || 'Moj projekat') + '</small></div></article>';
   }).join('');
-  return '<section class="customer-panel"><div class="customer-panel-top"><span class="customer-panel-avatar">AP</span><div><h3>Ana Petrović</h3><p>Moj dom · Detelinara, Novi Sad · 4,9 ★ · pouzdanost 98%</p></div><span class="home-tag">KLIJENT</span></div><p class="trust-note">Pre izbora ponude vidiš ocenu, broj završenih poslova i pouzdanost majstora. Ponavljana otkazivanja, potvrđene prijave i slab odziv utiču na rang-listu.</p><div class="portfolio-head"><h4>Moj dom i projekti</h4><span>dodaj prostor za sledeći posao</span></div><div class="customer-projects">' + cards + '</div><form class="customer-upload" id="customerPortfolioUpload"><input required name="customerImage" type="file" accept="image/*" /><input required name="customerTitle" maxlength="42" placeholder="npr. Terasa" /><button type="submit">Dodaj prostor</button></form>' + renderNotifications('customer') + '</section>';
+  return '<section class="customer-panel"><div class="customer-panel-top"><span class="customer-panel-avatar">AP</span><div><h3>Ana Petrović</h3><p>Moj dom · Detelinara, Novi Sad · 4,9 ★ · pouzdanost 98%</p></div><span class="home-tag">KLIJENT</span></div><p class="trust-note">Pre izbora ponude vidiš ocenu, broj završenih poslova i pouzdanost majstora. Ponavljana otkazivanja, potvrđene prijave i slab odziv utiču na rang-listu.</p><div class="portfolio-head"><h4>Moj dom i projekti</h4><span>dodaj prostor za sledeći posao</span></div><div class="customer-projects">' + cards + '</div><form class="customer-upload" id="customerPortfolioUpload"><input required name="customerImage" type="file" accept="image/*" /><input required name="customerTitle" maxlength="42" placeholder="npr. Terasa" /><button type="submit">Dodaj prostor</button></form>' + renderAiAdvisor(false) + renderNotifications('customer') + '</section>';
 }
 
 function showDashboard(role) {
@@ -215,6 +227,17 @@ function showDashboard(role) {
       }).catch(function (error) { alert(error.message || 'Fotografija nije dodata.'); });
     });
   }
+  const aiAdvisorForm = document.querySelector('#aiAdvisorForm');
+  aiAdvisorForm.addEventListener('submit', function (event) {
+    event.preventDefault();
+    const result = document.querySelector('#aiAdviceResult'); const button = aiAdvisorForm.querySelector('button'); const files = Array.prototype.slice.call(aiAdvisorForm.querySelector('[name="images"]').files || []).slice(0, 2);
+    button.disabled = true; button.textContent = 'AI analizira…'; result.classList.remove('hidden'); result.innerHTML = '<p class="helper-note">Analiziram opis' + (files.length ? ' i fotografiju' : '') + '…</p>';
+    Promise.all(files.map(fileToDataUrl)).then(function (images) {
+      return fetch('/api/ai-advice', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ description: aiAdvisorForm.querySelector('[name="description"]').value, images: images }) });
+    }).then(function (response) { return response.json().then(function (body) { if (!response.ok) throw new Error(body.error || 'AI savetnik trenutno nije dostupan.'); return body; }); }).then(function (advice) {
+      result.innerHTML = renderAiAdvice(advice);
+    }).catch(function (error) { result.innerHTML = '<p class="ai-error">' + escapeHtml(error.message || 'AI savetnik trenutno nije dostupan.') + '</p>'; }).finally(function () { button.disabled = false; button.textContent = 'Analiziraj fotografiju i opis →'; });
+  });
   document.querySelectorAll('.offer-form').forEach(function (form) { form.addEventListener('submit', function (event) {
     event.preventDefault(); const jobId = form.dataset.jobId; const amount = form.querySelector('[name="amount"]').value; const eta = form.querySelector('[name="eta"]').value;
     requestWorkflow('/api/jobs/' + jobId + '/offers', { providerName: 'Milan Jovanović', amount: amount, eta: eta, note: 'Verifikovan električar · 4,9★' }).then(function () { addNotification('customer', 'Milan Jovanović je poslao ponudu za tvoj posao.'); refreshWorkflow(role); }).catch(function () { alert('Ponuda nije poslata. Pokušaj ponovo.'); });
