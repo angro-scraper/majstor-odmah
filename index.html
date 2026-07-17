@@ -15,6 +15,7 @@
     <link rel="stylesheet" href="rankings.css" />
     <link rel="stylesheet" href="finder-menu.css" />
     <link rel="stylesheet" href="materials.css" />
+    <link rel="stylesheet" href="auth.css" />
   </head>
   <body>
     <header class="topbar">
@@ -23,6 +24,7 @@
         <a href="#kako-radi">Kako radi</a>
         <a href="partneri.html">Partneri i materijali</a>
         <button class="text-button" id="supportButton">Podrška</button>
+        <button class="text-button notification-button" id="notificationsButton">Obaveštenja <span class="notification-count hidden" id="notificationCount">0</span></button>
         <button class="text-button" id="loginButton">Moj nalog</button>
         <button class="button small" id="registerButton">Postani majstor</button>
       </nav>
@@ -152,11 +154,21 @@
             <button class="role-card" data-role="pro"><span>🛠</span><b>Milan Jovanović · demo majstor</b><small>Pošalji ponudu, dopisuj se sa Anom i vodi posao do ocene.</small></button>
           </div>
           <p class="demo-account-note">Oba naloga su demonstraciona. Ne traže registraciju niti lozinku.</p>
+          <button class="secondary-button real-account-button" id="realAccountButton">Registracija ili prijava</button>
+        </div>
+        <div class="auth-view hidden" id="authView">
+          <button class="back-auth" id="backToDemo">← Nazad na demo naloge</button>
+          <p class="eyebrow"><span></span> Stvarni nalog</p><h2 id="authTitle">Prijavi se</h2><p class="modal-lead" id="authLead">Pristupi svojim poslovima i obaveštenjima.</p>
+          <form id="authLoginForm" class="auth-form"><label>E-mail<input required id="authLoginEmail" type="email" autocomplete="email" /></label><label>Lozinka<input required id="authLoginPassword" type="password" minlength="8" autocomplete="current-password" /></label><button class="button full" type="submit">Prijavi se →</button><button class="text-button auth-switch" type="button" data-auth-mode="signup">Nemaš nalog? Registruj se</button></form>
+          <form id="authSignupForm" class="auth-form hidden"><label>Ime i prezime<input required id="authName" minlength="2" autocomplete="name" /></label><label>Grad<input required id="authCity" minlength="2" placeholder="npr. Novi Sad" /></label><label>E-mail<input required id="authSignupEmail" type="email" autocomplete="email" /></label><label>Lozinka<input required id="authSignupPassword" type="password" minlength="8" autocomplete="new-password" placeholder="najmanje 8 znakova" /></label><label>Tip naloga<select id="authRole"><option value="customer">Klijent</option><option value="provider">Majstor</option></select></label><label class="auth-trade hidden" id="authTradeWrap">Zanat<input id="authTrade" placeholder="npr. Električar" /></label><button class="button full" type="submit">Napravi nalog →</button><button class="text-button auth-switch" type="button" data-auth-mode="login">Već imaš nalog? Prijavi se</button></form>
+          <p class="auth-error hidden" id="authError"></p>
         </div>
         <div class="dashboard hidden" id="dashboard"></div>
       </section>
     </div>
+    <div class="notifications-panel hidden" id="notificationsPanel" aria-live="polite"><div><b>Obaveštenja</b><button id="closeNotifications" aria-label="Zatvori obaveštenja">×</button></div><section id="notificationsList"></section></div>
     <script src="app.js"></script>
     <script src="workflow.js"></script>
+    <script src="account-auth.js"></script>
   </body>
 </html>

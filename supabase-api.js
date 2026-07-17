@@ -45,6 +45,34 @@ function createSupabaseApi(options) {
     return data;
   }
 
+  async function authRequest(method, path, body, token) {
+    const response = await fetch(baseUrl + path, {
+      method: method,
+      headers: { apikey: serviceRoleKey, Authorization: 'Bearer ' + (token || serviceRoleKey), 'Content-Type': 'application/json' },
+      body: body === undefined ? undefined : JSON.stringify(body)
+    });
+    const text = await response.text(); let data = null;
+    try { data = text ? JSON.parse(text) : null; } catch (error) { data = text; }
+    if (!response.ok) throw new Error((data && (data.msg || data.message || data.error_description)) || 'Prijava nije uspela.');
+    return data;
+  }
+
+  function bearer(request) {
+    const value = String(request.headers.authorization || '');
+    return value.indexOf('Bearer ') === 0 ? value.slice(7).trim() : '';
+  }
+
+  async function currentProfile(request) {
+    const token = bearer(request);
+    if (!token) throw new Error('Prijavi se da nastaviš.');
+    const user = await authRequest('GET', '/auth/v1/user', undefined, token);
+    const rows = await database('GET', '/rest/v1/profiles?auth_user_id=eq.' + encodeURIComponent(user.id) + '&select=*');
+    const profile = rows && rows[0];
+    if (!profile) throw new Error('Profil još nije spreman. Pokušaj ponovo za nekoliko sekundi.');
+    if (profile.is_blocked) throw new Error('Ovaj nalog je blokiran. Obrati se podršci ako smatraš da je došlo do greške.');
+    return { profile: profile, token: token };
+  }
+
   function dbStatus(label) {
     const map = {
       'Traži majstora': 'open',
@@ -91,9 +119,10 @@ function createSupabaseApi(options) {
     const supportMatch = url.pathname.match(/^\/api\/admin\/support\/([^/]+)$/);
     const jobFlagMatch = url.pathname.match(/^\/api\/admin\/jobs\/([^/]+)\/flag$/);
     const userBlockMatch = url.pathname.match(/^\/api\/admin\/users\/([^/]+)\/block$/);
+    const verificationMatch = url.pathname.match(/^\/api\/admin\/users\/([^/]+)\/verification$/);
     if (url.pathname === '/api/admin/overview' && request.method === 'GET') {
       const results = await Promise.all([
-        database('GET', '/rest/v1/profiles?select=id,full_name,role,city,phone_verified,identity_verified,is_blocked,blocked_at,blocked_reason,created_at&order=created_at.desc'),
+        database('GET', '/rest/v1/profiles?select=id,full_name,role,city,phone_verified,identity_verified,verification_status,is_blocked,blocked_at,blocked_reason,created_at&order=created_at.desc'),
         database('GET', '/rest/v1/providers?select=id,profile_id,trade,available,rating,review_count'),
         database('GET', '/rest/v1/jobs?select=*&order=created_at.desc'),
         database('GET', '/rest/v1/support_tickets?select=*&order=created_at.desc')
@@ -102,7 +131,7 @@ function createSupabaseApi(options) {
       return reply(response, 200, { stats: { users: profiles.length, providers: providersRows.length, blocked: profiles.filter(function (profile) { return profile.is_blocked; }).length, openJobs: jobs.filter(function (job) { return ['Traži majstora', 'Primljene ponude'].indexOf(job.status) >= 0; }).length, activeJobs: jobs.filter(function (job) { return ['Dogovoren termin', 'Potvrđen dolazak', 'Radovi u toku'].indexOf(job.status) >= 0; }).length, openTickets: tickets.filter(function (ticket) { return ticket.status !== 'resolved'; }).length }, jobs: jobs.slice(0, 8), tickets: tickets.slice(0, 8) });
     }
     if (url.pathname === '/api/admin/users' && request.method === 'GET') {
-      const results = await Promise.all([database('GET', '/rest/v1/profiles?select=id,full_name,role,city,phone_verified,identity_verified,is_blocked,blocked_at,blocked_reason,created_at&order=created_at.desc'), database('GET', '/rest/v1/providers?select=profile_id,trade,available,rating,review_count')]);
+      const results = await Promise.all([database('GET', '/rest/v1/profiles?select=id,full_name,role,city,phone_verified,identity_verified,verification_status,is_blocked,blocked_at,blocked_reason,created_at&order=created_at.desc'), database('GET', '/rest/v1/providers?select=profile_id,trade,available,rating,review_count')]);
       const providerByProfile = {}; (results[1] || []).forEach(function (provider) { providerByProfile[provider.profile_id] = provider; });
       return reply(response, 200, (results[0] || []).map(function (profile) { return Object.assign({}, profile, { provider: providerByProfile[profile.id] || null }); }));
     }
@@ -130,7 +159,39 @@ function createSupabaseApi(options) {
       const blocked = Boolean(payload.blocked); const rows = await database('PATCH', '/rest/v1/profiles?id=eq.' + encodeURIComponent(profile.id), { is_blocked: blocked, blocked_at: blocked ? new Date().toISOString() : null, blocked_reason: blocked ? String(payload.reason || 'Administrativna provera').trim().slice(0, 300) : null });
       return reply(response, 200, rows && rows[0] ? rows[0] : { id: profile.id, is_blocked: blocked });
     }
+    if (verificationMatch && request.method === 'POST') {
+      const payload = await parseBody(request); const status = String(payload.status || '');
+      if (['pending', 'verified', 'rejected'].indexOf(status) < 0) return reply(response, 400, { error: 'Status verifikacije nije validan.' });
+      const rows = await database('PATCH', '/rest/v1/profiles?id=eq.' + encodeURIComponent(verificationMatch[1]) + '&role=eq.provider', { verification_status: status, identity_verified: status === 'verified' });
+      return reply(response, 200, rows && rows[0] ? rows[0] : { id: verificationMatch[1], verification_status: status });
+    }
     return reply(response, 404, { error: 'Admin ruta nije pronađena.' });
+  }
+
+  async function handleAuth(request, response, url) {
+    if (!enabled) return reply(response, 503, { error: 'Registracija će uskoro biti dostupna.' });
+    if (url.pathname === '/api/auth/signup' && request.method === 'POST') {
+      const payload = await parseBody(request); const email = String(payload.email || '').trim().toLowerCase(); const password = String(payload.password || ''); const fullName = String(payload.fullName || '').trim(); const city = String(payload.city || '').trim(); const role = payload.role === 'provider' ? 'provider' : 'customer'; const trade = String(payload.trade || '').trim();
+      if (!/^\S+@\S+\.\S+$/.test(email) || password.length < 8 || fullName.length < 2 || city.length < 2 || (role === 'provider' && trade.length < 2)) return reply(response, 400, { error: 'Proveri ime, grad, e-mail, lozinku i zanat.' });
+      const created = await authRequest('POST', '/auth/v1/admin/users', { email: email, password: password, email_confirm: true }); const authUser = created.user || created;
+      const profiles = await database('POST', '/rest/v1/profiles', { auth_user_id: authUser.id, role: role, full_name: fullName, city: city, verification_status: role === 'provider' ? 'pending' : 'not_applicable' }); const profile = profiles && profiles[0];
+      if (!profile) throw new Error('Profil nije kreiran.');
+      if (role === 'provider') await database('POST', '/rest/v1/providers', { profile_id: profile.id, trade: trade, available: true });
+      await database('POST', '/rest/v1/notifications', { profile_id: profile.id, title: 'Dobro došli na Majstor odmah', body: role === 'provider' ? 'Profil majstora je kreiran i čeka administrativnu verifikaciju.' : 'Nalog je kreiran. Sada možeš da objaviš prvi posao.' });
+      const session = await authRequest('POST', '/auth/v1/token?grant_type=password', { email: email, password: password });
+      return reply(response, 201, { session: { access_token: session.access_token, expires_in: session.expires_in }, profile: profile });
+    }
+    if (url.pathname === '/api/auth/login' && request.method === 'POST') {
+      const payload = await parseBody(request); const session = await authRequest('POST', '/auth/v1/token?grant_type=password', { email: String(payload.email || '').trim().toLowerCase(), password: String(payload.password || '') });
+      const user = await authRequest('GET', '/auth/v1/user', undefined, session.access_token); const rows = await database('GET', '/rest/v1/profiles?auth_user_id=eq.' + encodeURIComponent(user.id) + '&select=*'); const profile = rows && rows[0];
+      if (!profile) return reply(response, 403, { error: 'Profil nije pronađen.' });
+      if (profile.is_blocked) return reply(response, 403, { error: 'Ovaj nalog je blokiran. Obrati se podršci.' });
+      return reply(response, 200, { session: { access_token: session.access_token, expires_in: session.expires_in }, profile: profile });
+    }
+    if (url.pathname === '/api/auth/me' && request.method === 'GET') { const current = await currentProfile(request); return reply(response, 200, current.profile); }
+    if (url.pathname === '/api/notifications' && request.method === 'GET') { const current = await currentProfile(request); const rows = await database('GET', '/rest/v1/notifications?profile_id=eq.' + encodeURIComponent(current.profile.id) + '&select=*&order=created_at.desc&limit=30'); return reply(response, 200, rows || []); }
+    if (url.pathname === '/api/notifications/read' && request.method === 'POST') { const current = await currentProfile(request); await database('PATCH', '/rest/v1/notifications?profile_id=eq.' + encodeURIComponent(current.profile.id) + '&read_at=is.null', { read_at: new Date().toISOString() }); return reply(response, 200, { ok: true }); }
+    return reply(response, 404, { error: 'Auth ruta nije pronađena.' });
   }
 
   async function handle(request, response, url) {
@@ -250,7 +311,7 @@ function createSupabaseApi(options) {
     return reply(response, 404, { error: 'API ruta nije pronađena.' });
   }
 
-  return { enabled: enabled, handle: handle, handleAdmin: handleAdmin };
+  return { enabled: enabled, handle: handle, handleAdmin: handleAdmin, handleAuth: handleAuth };
 }
 
 module.exports = { createSupabaseApi: createSupabaseApi };

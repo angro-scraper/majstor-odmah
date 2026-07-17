@@ -197,6 +197,7 @@ const openAccount = () => {
   accountBackdrop.classList.remove('hidden');
   accountBackdrop.classList.remove('dashboard-open');
   document.body.style.overflow = 'hidden';
+  document.querySelector('#authView').classList.add('hidden');
   const role = localStorage.getItem('majstorOdmahRole');
   if (role) { setDemoProfile(role); showDashboard(role); syncJobsFromServer(role); }
   else { accountWelcome.classList.remove('hidden'); dashboard.classList.add('hidden'); }
@@ -233,6 +234,7 @@ document.querySelector('#registerButton').addEventListener('click', openAccount)
 document.querySelector('#closeAccount').addEventListener('click', closeAccount);
 accountBackdrop.addEventListener('click', event => { if (event.target === accountBackdrop) closeAccount(); });
 document.querySelectorAll('.role-card').forEach(button => button.addEventListener('click', () => { localStorage.setItem('majstorOdmahRole', button.dataset.role); setDemoProfile(button.dataset.role); showDashboard(button.dataset.role); syncJobsFromServer(button.dataset.role); }));
+window.addEventListener('majstor-authenticated', function (event) { const profile = event.detail; const role = profile.role === 'provider' ? 'pro' : 'customer'; localStorage.setItem('majstorOdmahRole', role); localStorage.setItem('majstorOdmahDemoAccount', JSON.stringify({ name: profile.full_name, label: profile.role === 'provider' ? 'majstor' : 'klijent', email: profile.email || '' })); setDemoProfile(role); accountWelcome.classList.add('hidden'); document.querySelector('#authView').classList.add('hidden'); showDashboard(role); });
 
 const supportBackdrop = document.querySelector('#supportBackdrop');
 document.querySelector('#supportButton').addEventListener('click', () => { supportBackdrop.classList.remove('hidden'); document.body.style.overflow = 'hidden'; });

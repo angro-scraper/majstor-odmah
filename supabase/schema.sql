@@ -21,6 +21,7 @@ create table public.profiles (
   avatar_path text,
   phone_verified boolean not null default false,
   identity_verified boolean not null default false,
+  verification_status text not null default 'not_applicable' check (verification_status in ('not_applicable', 'pending', 'verified', 'rejected')),
   is_blocked boolean not null default false,
   blocked_at timestamptz,
   blocked_reason text,
@@ -140,11 +141,21 @@ create table public.support_tickets (
   updated_at timestamptz not null default now()
 );
 
+create table public.notifications (
+  id uuid primary key default gen_random_uuid(),
+  profile_id uuid not null references public.profiles(id) on delete cascade,
+  title text not null check (char_length(title) <= 160),
+  body text not null check (char_length(body) <= 1000),
+  read_at timestamptz,
+  created_at timestamptz not null default now()
+);
+
 create index jobs_status_trade_city_idx on public.jobs (status, trade, city);
 create index job_matches_job_id_idx on public.job_matches (job_id);
 create index offers_job_id_idx on public.offers (job_id);
 create index job_messages_job_created_idx on public.job_messages (job_id, created_at);
 create index work_updates_job_created_idx on public.work_updates (job_id, created_at);
+create index notifications_profile_created_idx on public.notifications (profile_id, created_at desc);
 
 create or replace function public.set_updated_at()
 returns trigger
