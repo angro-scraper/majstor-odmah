@@ -86,6 +86,32 @@ function renderJob(job, isPro) {
   return '<article class="dashboard-job"><div><b>' + escapeHtml(job.category) + ' · ' + escapeHtml(job.location) + '</b><p>' + escapeHtml(job.description) + '</p><p>' + dateLabel(job.createdAt) + '</p>' + renderImages(job) + '</div><span class="job-status ' + statusClass + '">' + escapeHtml(job.status || 'Novo') + '</span><div class="offer-panel">' + (isPro ? '<h4>Pošalji svoju ponudu</h4>' + proAction + (offers.length ? '<p class="helper-note">Na posao je stiglo ' + offers.length + ' ponuda.</p>' : '') : '<h4>Obavešteni majstori (' + (job.matches || []).length + ')</h4>' + renderMatches(job) + '<h4 style="margin-top:12px">Ponude majstora</h4>' + renderOffers(job)) + progress + renderWorkPhotos(job, isPro) + renderChat(job, isPro) + renderReview(job, isPro) + '</div></article>';
 }
 
+function defaultPortfolio() {
+  return [
+    { title: 'Rasveta u kuhinji', detail: 'LED i nova instalacija', emoji: '💡', color: '#3e7058' },
+    { title: 'Razvodna tabla', detail: 'Zamena osigurača', emoji: '⚡', color: '#315f81' },
+    { title: 'Pametni prekidači', detail: 'Stan · Grbavica', emoji: '⌁', color: '#9a6547' }
+  ];
+}
+
+function getPortfolio() {
+  try {
+    const saved = JSON.parse(localStorage.getItem('majstorOdmahPortfolio') || 'null');
+    return Array.isArray(saved) && saved.length ? saved : defaultPortfolio();
+  } catch (error) { return defaultPortfolio(); }
+}
+
+function renderPortfolioItem(item) {
+  const image = item.image ? '<img src="' + escapeHtml(item.image) + '" alt="Rad: ' + escapeHtml(item.title) + '" />' : '<span class="portfolio-emoji">' + escapeHtml(item.emoji || '🛠') + '</span>';
+  return '<article class="portfolio-item" style="background:' + escapeHtml(item.color || '#3e7058') + '">' + image + '<div><b>' + escapeHtml(item.title) + '</b><small>' + escapeHtml(item.detail || 'Radovi Milana Jovanovića') + '</small></div></article>';
+}
+
+function renderProPanel() {
+  const portfolio = getPortfolio();
+  const available = localStorage.getItem('majstorOdmahAvailability') !== 'false';
+  return '<section class="pro-panel"><div class="pro-panel-top"><span class="pro-panel-avatar">MJ</span><div><h3>Milan Jovanović</h3><p>Verifikovan električar · 4,9 ★ · 86 ocena</p></div><label class="availability-toggle"><input id="availabilityToggle" type="checkbox"' + (available ? ' checked' : '') + ' /> ' + (available ? 'Dostupan danas' : 'Nisam dostupan') + '</label></div><div class="pro-panel-metrics"><div><b>86</b><span>završenih radova</span></div><div><b>~8 min</b><span>prosečan odgovor</span></div><div><b>20 km</b><span>radijus dolaska</span></div></div><p class="service-zones"><b>Zone rada:</b> Detelinara, Liman, Grbavica, Centar i Novi Sad</p><div class="portfolio-head"><h4>Portfolio radova</h4><span>' + portfolio.length + ' prikazanih projekata</span></div><div class="portfolio-grid">' + portfolio.map(renderPortfolioItem).join('') + '</div><form class="portfolio-upload" id="portfolioUpload"><input required name="portfolioImage" type="file" accept="image/*" /><input required name="portfolioTitle" maxlength="42" placeholder="npr. Zamena plafonjere" /><button type="submit">Dodaj rad</button></form></section>';
+}
+
 function showDashboard(role) {
   accountWelcome.classList.add('hidden');
   dashboard.classList.remove('hidden');
@@ -95,8 +121,23 @@ function showDashboard(role) {
   const offerCount = jobs.reduce(function (total, job) { return total + (job.offers || []).length; }, 0);
   const selectedCount = jobs.filter(function (job) { return job.acceptedOfferId; }).length;
   const list = jobs.length ? jobs.map(function (job) { return renderJob(job, isPro); }).join('') : '<div class="empty-jobs">Trenutno nema otvorenih poslova u ovoj zoni.</div>';
-  dashboard.innerHTML = '<div class="dashboard-header"><div><p class="eyebrow"><span></span> ' + escapeHtml(profile.email) + '</p><h2>Zdravo, ' + escapeHtml(profile.name.split(' ')[0]) + '.</h2><p>' + (isPro ? 'Tvoj demo nalog prikazuje poslove iz blizine. Pošalji jasnu ponudu i Ana može odmah da te izabere.' : 'Tvoj demo nalog prikazuje zahteve, ponude i ceo tok dogovora sa Milanom.') + '</p></div><span class="dashboard-role">' + (isPro ? 'DEMO MAJSTOR' : 'DEMO KLIJENT') + '</span></div><div class="dashboard-stats"><div class="dashboard-stat"><b>' + jobs.length + '</b><span>' + (isPro ? 'otvorena posla' : 'aktivni zahtevi') + '</span></div><div class="dashboard-stat"><b>' + (isPro ? '4,9' : offerCount) + '</b><span>' + (isPro ? 'prosečna ocena' : 'primljene ponude') + '</span></div><div class="dashboard-stat"><b>' + selectedCount + '</b><span>dogovoreni termini</span></div></div><h3>' + (isPro ? 'Poslovi za tvoju delatnost' : 'Tok posla') + '</h3><div class="job-list">' + list + '</div><div class="dashboard-actions"><button class="button" id="dashboardPrimary">' + (isPro ? 'Osveži poslove' : 'Objavi posao') + ' →</button><button class="secondary-button" id="switchRole">Promeni demo nalog</button></div>';
+  dashboard.innerHTML = '<div class="dashboard-header"><div><p class="eyebrow"><span></span> ' + escapeHtml(profile.email) + '</p><h2>Zdravo, ' + escapeHtml(profile.name.split(' ')[0]) + '.</h2><p>' + (isPro ? 'Tvoj demo nalog prikazuje poslove iz blizine. Pošalji jasnu ponudu i Ana može odmah da te izabere.' : 'Tvoj demo nalog prikazuje zahteve, ponude i ceo tok dogovora sa Milanom.') + '</p></div><span class="dashboard-role">' + (isPro ? 'DEMO MAJSTOR' : 'DEMO KLIJENT') + '</span></div>' + (isPro ? renderProPanel() : '') + '<div class="dashboard-stats"><div class="dashboard-stat"><b>' + jobs.length + '</b><span>' + (isPro ? 'otvorena posla' : 'aktivni zahtevi') + '</span></div><div class="dashboard-stat"><b>' + (isPro ? '4,9' : offerCount) + '</b><span>' + (isPro ? 'prosečna ocena' : 'primljene ponude') + '</span></div><div class="dashboard-stat"><b>' + selectedCount + '</b><span>dogovoreni termini</span></div></div><h3>' + (isPro ? 'Poslovi za tvoju delatnost' : 'Tok posla') + '</h3><div class="job-list">' + list + '</div><div class="dashboard-actions"><button class="button" id="dashboardPrimary">' + (isPro ? 'Osveži poslove' : 'Objavi posao') + ' →</button><button class="secondary-button" id="switchRole">Promeni demo nalog</button></div>';
   document.querySelector('#dashboardPrimary').addEventListener('click', function () { if (isPro) refreshWorkflow(role); else { closeAccount(); openModal(); } });
+  if (isPro) {
+    document.querySelector('#availabilityToggle').addEventListener('change', function (event) { localStorage.setItem('majstorOdmahAvailability', event.target.checked ? 'true' : 'false'); showDashboard(role); });
+    document.querySelector('#portfolioUpload').addEventListener('submit', function (event) {
+      event.preventDefault();
+      const form = event.currentTarget;
+      const file = form.querySelector('[name="portfolioImage"]').files[0];
+      const title = form.querySelector('[name="portfolioTitle"]').value.trim();
+      fileToDataUrl(file).then(function (image) {
+        const portfolio = getPortfolio();
+        portfolio.unshift({ title: title, detail: 'Novi demo rad', image: image, color: '#3e7058' });
+        localStorage.setItem('majstorOdmahPortfolio', JSON.stringify(portfolio.slice(0, 6)));
+        showDashboard(role);
+      }).catch(function (error) { alert(error.message || 'Fotografija nije dodata.'); });
+    });
+  }
   document.querySelectorAll('.offer-form').forEach(function (form) { form.addEventListener('submit', function (event) {
     event.preventDefault(); const jobId = form.dataset.jobId; const amount = form.querySelector('[name="amount"]').value; const eta = form.querySelector('[name="eta"]').value;
     requestWorkflow('/api/jobs/' + jobId + '/offers', { providerName: 'Milan Jovanović', amount: amount, eta: eta, note: 'Verifikovan električar · 4,9★' }).then(function () { refreshWorkflow(role); }).catch(function () { alert('Ponuda nije poslata. Pokušaj ponovo.'); });
