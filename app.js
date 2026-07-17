@@ -178,7 +178,8 @@ function imageFilesToDataUrls(files) {
 document.querySelector('#jobForm').addEventListener('submit', function (event) {
   event.preventDefault();
   imageFilesToDataUrls(document.querySelector('#jobImages').files).then(function (images) {
-    const job = { category: selector.value, location: document.querySelector('#jobLocation').value, description: document.querySelector('#jobDescription').value, images: images, createdAt: new Date().toISOString(), clientId: 'job-' + Date.now() };
+    const gpsPoint = typeof readGpsPoint === 'function' ? readGpsPoint('customer') : null;
+    const job = { category: selector.value, location: document.querySelector('#jobLocation').value, description: document.querySelector('#jobDescription').value, images: images, coordinates: gpsPoint ? { lat: gpsPoint.lat, lng: gpsPoint.lng } : null, createdAt: new Date().toISOString(), clientId: 'job-' + Date.now() };
     const saved = JSON.parse(localStorage.getItem('majstorOdmahJobs') || '[]');
     saved.push(job);
     localStorage.setItem('majstorOdmahJobs', JSON.stringify(saved));
