@@ -13,6 +13,8 @@ to service_role
 using (true)
 with check (true);
 
-grant select, insert, update, delete
-on table public.support_tickets
-to service_role;
+-- The server uses a Supabase secret key. It maps to service_role and needs
+-- explicit grants because this project has table-level permissions enabled.
+grant usage on schema public to service_role;
+grant select, insert, update, delete on all tables in schema public to service_role;
+grant usage, select on all sequences in schema public to service_role;
