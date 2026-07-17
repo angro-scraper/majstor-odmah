@@ -46,11 +46,18 @@ function parseBody(request, done) {
   request.on('end', function () { try { done(null, JSON.parse(raw || '{}')); } catch (error) { done(error); } });
 }
 function findJob(data, id) { return data.jobs.find(function (job) { return job.id === Number(id); }); }
+function aiLimit(name, fallback) { return Math.max(1, Number(process.env[name] || fallback)); }
 function canUseAi(request) {
-  const address = request.socket.remoteAddress || 'unknown'; const now = Date.now();
-  const recent = (aiRequestLog.get(address) || []).filter(function (time) { return now - time < 3600000; });
-  if (recent.length >= 8) return false;
-  recent.push(now); aiRequestLog.set(address, recent); return true;
+  const address = request.socket.remoteAddress || 'unknown'; const now = Date.now(); const day = new Date().toISOString().slice(0, 10);
+  const hourKey = 'hour:' + address; const dayKey = 'day:' + day + ':' + address; const globalKey = 'global:' + day;
+  const recent = (aiRequestLog.get(hourKey) || []).filter(function (time) { return now - time < 3600000; });
+  const perIpLimit = aiLimit('AI_DAILY_LIMIT_PER_IP', 3); const globalLimit = aiLimit('AI_DAILY_LIMIT_GLOBAL', 50);
+  const dailyCount = Number(aiRequestLog.get(dayKey) || 0); const globalCount = Number(aiRequestLog.get(globalKey) || 0);
+  if (recent.length >= 5) return { ok: false, error: 'Previše AI saveta u kratkom periodu. Pokušaj ponovo za sat vremena.' };
+  if (dailyCount >= perIpLimit) return { ok: false, error: 'Dostignut je dnevni limit od ' + perIpLimit + ' AI saveta. Pokušaj ponovo sutra.' };
+  if (globalCount >= globalLimit) return { ok: false, error: 'Današnji AI limit platforme je dostignut. Pokušaj ponovo sutra.' };
+  recent.push(now); aiRequestLog.set(hourKey, recent); aiRequestLog.set(dayKey, dailyCount + 1); aiRequestLog.set(globalKey, globalCount + 1);
+  return { ok: true };
 }
 
 const server = http.createServer(function (request, response) {
@@ -70,7 +77,8 @@ const server = http.createServer(function (request, response) {
   const reviewMatch = url.pathname.match(/^\/api\/jobs\/(\d+)\/review$/);
 
   if (url.pathname === '/api/ai-advice' && request.method === 'POST') {
-    if (!canUseAi(request)) return reply(response, 429, { error: 'Dostignut je privremeni limit AI saveta. Pokušaj ponovo kasnije.' });
+    const access = canUseAi(request);
+    if (!access.ok) return reply(response, 429, { error: access.error });
     return parseBody(request, function (error, payload) {
       if (error) return reply(response, 400, { error: 'Podaci za AI savet nisu validni.' });
       analyzeProject(payload).then(function (advice) { reply(response, 200, advice); }).catch(function (aiError) {
