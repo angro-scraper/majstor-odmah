@@ -79,7 +79,7 @@ function renderAiAdvisor(isPro) {
 function renderAiAdvice(advice) {
   const work = (advice.work_scope || []).map(function (item) { return '<li>' + escapeHtml(item) + '</li>'; }).join('');
   const materials = (advice.materials || []).map(function (item) { return '<li><b>' + escapeHtml(item.item) + '</b><span>' + escapeHtml(item.quantity_note) + '</span></li>'; }).join('');
-  return '<div class="ai-advice-summary"><span>Predlog · pouzdanost: ' + escapeHtml(advice.confidence || 'srednja') + '</span><h4>' + escapeHtml(advice.recommended_trade || 'Potreban je stručan pregled') + '</h4><p>' + escapeHtml(advice.summary || '') + '</p></div><div class="ai-advice-columns"><div><b>Predlog radova</b><ul>' + work + '</ul></div><div><b>Okvirni materijali</b><ul class="ai-materials">' + materials + '</ul></div></div><p class="ai-safety">⚠ ' + escapeHtml(advice.safety_note || 'Pre početka radova proveri stanje sa kvalifikovanim majstorom.') + '</p>';
+  return '<div class="ai-advice-summary"><span>Predlog · pouzdanost: ' + escapeHtml(advice.confidence || 'srednja') + '</span><h4>' + escapeHtml(advice.recommended_trade || 'Potreban je stručan pregled') + '</h4><p>' + escapeHtml(advice.summary || '') + '</p></div><div class="ai-advice-columns"><div><b>Predlog radova</b><ul>' + work + '</ul></div><div><b>Okvirni materijali</b><ul class="ai-materials">' + materials + '</ul></div></div><p class="ai-safety">⚠ ' + escapeHtml(advice.safety_note || 'Pre početka radova proveri stanje sa kvalifikovanim majstorom.') + '</p><div class="ai-advice-actions"><button type="button" class="ai-create-job">Objavi zahtev za majstora →</button><a href="partneri.html">Pretraži materijale</a></div>';
 }
 
 function fileToDataUrl(file) {
@@ -236,6 +236,11 @@ function showDashboard(role) {
       return fetch('/api/ai-advice', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ description: aiAdvisorForm.querySelector('[name="description"]').value, images: images }) });
     }).then(function (response) { return response.json().then(function (body) { if (!response.ok) throw new Error(body.error || 'AI savetnik trenutno nije dostupan.'); return body; }); }).then(function (advice) {
       result.innerHTML = renderAiAdvice(advice);
+      result.querySelector('.ai-create-job').addEventListener('click', function () {
+        const materials = (advice.materials || []).map(function (item) { return item.item; }).join(', ');
+        closeAccount(); openModal(advice.recommended_trade || '');
+        document.querySelector('#jobDescription').value = 'AI predlog: ' + (advice.summary || '') + (materials ? '\nPredloženi materijali: ' + materials + '.' : '');
+      });
     }).catch(function (error) { result.innerHTML = '<p class="ai-error">' + escapeHtml(error.message || 'AI savetnik trenutno nije dostupan.') + '</p>'; }).finally(function () { button.disabled = false; button.textContent = 'Analiziraj fotografiju i opis →'; });
   });
   document.querySelectorAll('.offer-form').forEach(function (form) { form.addEventListener('submit', function (event) {
