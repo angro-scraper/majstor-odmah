@@ -13,10 +13,11 @@
     <main class="admin-shell">
       <section class="admin-login" id="adminLogin"><span class="admin-mark">M</span><p class="eyebrow">Zaštićen pristup</p><h1>Administracija platforme</h1><p>Unesi administratorsku lozinku postavljenu u Render environment varijabli.</p><form id="adminLoginForm"><input id="adminPassword" required type="password" autocomplete="current-password" placeholder="Administratorska lozinka" /><button type="submit">Otvori panel →</button></form><p class="admin-login-error hidden" id="adminLoginError"></p></section>
       <section class="admin-app hidden" id="adminApp">
-        <aside class="admin-nav"><a class="admin-brand" href="index.html"><span>M</span> majstor<span>odmah</span></a><div class="admin-user"><b>Administrator</b><small>upravljanje platformom</small></div><nav><button class="active" data-view="overview">⌂ Pregled</button><button data-view="jobs">▤ Poslovi</button><button data-view="users">♙ Korisnici i majstori</button><button data-view="support">✦ Podrška</button><button data-view="ai">✦ AI i limiti</button></nav><button class="admin-logout" id="adminLogout">Odjavi se</button></aside>
+        <aside class="admin-nav"><a class="admin-brand" href="index.html"><span>M</span> majstor<span>odmah</span></a><div class="admin-user"><b>Administrator</b><small>upravljanje platformom</small></div><nav><button class="active" data-view="overview">⌂ Pregled</button><button data-view="jobs">▤ Poslovi</button><button data-view="users">♙ Korisnici i majstori</button><button data-view="partners">▦ Partneri</button><button data-view="support">✦ Podrška</button><button data-view="ai">✦ AI i limiti</button></nav><button class="admin-logout" id="adminLogout">Odjavi se</button></aside>
         <section class="admin-content"><header><div><p class="eyebrow"><span></span> Administracija</p><h1 id="adminTitle">Pregled platforme</h1></div><button id="adminRefresh">Osveži podatke</button></header><p class="admin-status" id="adminStatus" aria-live="polite"></p><div id="adminView"></div></section>
       </section>
     </main>
     <script src="admin.js"></script>
+    <script src="admin-partners.js"></script>
   </body>
 </html>

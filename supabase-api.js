@@ -90,6 +90,14 @@ function createSupabaseApi(options) {
     return String(parts[parts.length - 1] || location || 'Novi Sad').trim() || 'Novi Sad';
   }
 
+  function partnerTicket(ticket) {
+    const fields = {};
+    String(ticket.message || '').split('\n').forEach(function (line) { const index = line.indexOf(':'); if (index > 0) fields[line.slice(0, index).trim()] = line.slice(index + 1).trim(); });
+    return { id: ticket.id, company: String(ticket.subject || '').replace(/^Partner katalog ·\s*/, ''), category: fields.Kategorija || 'Ostalo', city: fields.Grad || '—', website: fields.Sajt || '', contact: fields.Kontakt || '', description: fields.Opis || '', featured: fields.Istaknuto === 'da', status: ticket.status === 'resolved' ? 'active' : 'paused' };
+  }
+
+  function partnerMessage(payload) { return ['Kategorija: ' + String(payload.category || '').trim(), 'Grad: ' + String(payload.city || '').trim(), 'Sajt: ' + String(payload.website || '').trim(), 'Kontakt: ' + String(payload.contact || '').trim(), 'Istaknuto: ' + (payload.featured ? 'da' : 'ne'), 'Opis: ' + String(payload.description || '').trim()].join('\n'); }
+
   function toJob(row) {
     const workflow = row.workflow && typeof row.workflow === 'object' ? row.workflow : {};
     const job = Object.assign({}, workflow);
@@ -116,7 +124,18 @@ function createSupabaseApi(options) {
   }
 
   async function handleAdmin(request, response, url) {
-    const supportMatch = url.pathname.match(/^\/api\/admin\/support\/([^/]+)$/);
+    const supportMatch = url.pathname.match(/^\/api\/admin\/support\/([^/]+)$/); const partnerMatch = url.pathname.match(/^\/api\/admin\/partners\/([^/]+)$/);
+    if (url.pathname === '/api/admin/partners' && request.method === 'GET') {
+      const rows = await database('GET', '/rest/v1/support_tickets?subject=like.' + encodeURIComponent('Partner katalog ·%') + '&select=*&order=created_at.desc'); return reply(response, 200, (rows || []).map(partnerTicket));
+    }
+    if (url.pathname === '/api/admin/partners' && request.method === 'POST') {
+      const payload = await parseBody(request); const company = String(payload.company || '').trim(); const category = String(payload.category || '').trim(); const city = String(payload.city || '').trim(); const description = String(payload.description || '').trim();
+      if (!company || !category || !city || !description || company.length > 90 || description.length > 500) return reply(response, 400, { error: 'Proveri naziv, kategoriju, grad i opis partnera.' });
+      const rows = await database('POST', '/rest/v1/support_tickets', { subject: 'Partner katalog · ' + company, message: partnerMessage(payload), status: 'resolved' }); return reply(response, 201, partnerTicket(rows[0]));
+    }
+    if (partnerMatch && request.method === 'POST') {
+      const payload = await parseBody(request); const status = payload.status === 'active' ? 'resolved' : 'open'; const rows = await database('PATCH', '/rest/v1/support_tickets?id=eq.' + encodeURIComponent(partnerMatch[1]), { status: status }); return reply(response, 200, partnerTicket(rows && rows[0] ? rows[0] : { id: partnerMatch[1], status: status }));
+    }
     const jobFlagMatch = url.pathname.match(/^\/api\/admin\/jobs\/([^/]+)\/flag$/);
     const userBlockMatch = url.pathname.match(/^\/api\/admin\/users\/([^/]+)\/block$/);
     const verificationMatch = url.pathname.match(/^\/api\/admin\/users\/([^/]+)\/verification$/);
@@ -203,6 +222,9 @@ function createSupabaseApi(options) {
     const reviewMatch = url.pathname.match(/^\/api\/jobs\/([^/]+)\/review$/);
 
     if (url.pathname === '/api/providers' && request.method === 'GET') return reply(response, 200, providers);
+    if (url.pathname === '/api/partners' && request.method === 'GET') {
+      const rows = await database('GET', '/rest/v1/support_tickets?subject=like.' + encodeURIComponent('Partner katalog ·%') + '&status=eq.resolved&select=*&order=created_at.desc'); return reply(response, 200, (rows || []).map(partnerTicket));
+    }
     if (url.pathname === '/api/jobs' && request.method === 'GET') {
       const rows = await database('GET', '/rest/v1/jobs?select=*&order=created_at.desc');
       const jobs = (rows || []).map(toJob);
