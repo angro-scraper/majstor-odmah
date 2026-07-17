@@ -106,6 +106,29 @@ function createSupabaseApi(options) {
     return { id: row.id, partnerId: row.partner_id, title: row.title, description: row.description || '', priceLabel: row.price_label || '', linkUrl: row.link_url || '', imageUrl: row.image_url || '', active: row.is_active !== false, createdAt: row.created_at };
   }
 
+  async function loadPartnersWithRatings(activeOnly) {
+    const tickets = await database('GET', '/rest/v1/support_tickets?select=*&order=created_at.desc');
+    let reviews = [];
+    try { reviews = await database('GET', '/rest/v1/partner_reviews?select=partner_id,rating,is_visible'); } catch (error) { console.warn('Partner ocene još nisu dostupne:', error.message); }
+    const totals = {};
+    (reviews || []).filter(function (review) { return review.is_visible !== false; }).forEach(function (review) {
+      const id = String(review.partner_id); const entry = totals[id] || { sum: 0, count: 0 };
+      entry.sum += Number(review.rating || 0); entry.count += 1; totals[id] = entry;
+    });
+    return (tickets || []).filter(function (ticket) {
+      return String(ticket.subject || '').indexOf('Partner katalog · ') === 0 && (!activeOnly || ticket.status === 'resolved');
+    }).map(function (ticket) {
+      const partner = partnerTicket(ticket); const total = totals[String(partner.id)] || { sum: 0, count: 0 };
+      partner.rating = total.count ? Math.round((total.sum / total.count) * 10) / 10 : null;
+      partner.reviewCount = total.count;
+      partner.rankingEligible = total.count >= 3;
+      return partner;
+    }).sort(function (first, second) {
+      const firstScore = first.rankingEligible ? first.rating : -1; const secondScore = second.rankingEligible ? second.rating : -1;
+      return secondScore - firstScore || second.reviewCount - first.reviewCount || first.company.localeCompare(second.company, 'sr');
+    });
+  }
+
   function toJob(row) {
     const workflow = row.workflow && typeof row.workflow === 'object' ? row.workflow : {};
     const job = Object.assign({}, workflow);
@@ -134,7 +157,7 @@ function createSupabaseApi(options) {
   async function handleAdmin(request, response, url) {
     const supportMatch = url.pathname.match(/^\/api\/admin\/support\/([^/]+)$/); const partnerMatch = url.pathname.match(/^\/api\/admin\/partners\/([^/]+)$/); const catalogMatch = url.pathname.match(/^\/api\/admin\/catalog\/([^/]+)$/);
     if (url.pathname === '/api/admin/partners' && request.method === 'GET') {
-      const rows = await database('GET', '/rest/v1/support_tickets?select=*&order=created_at.desc'); return reply(response, 200, (rows || []).filter(function (ticket) { return String(ticket.subject || '').indexOf('Partner katalog · ') === 0; }).map(partnerTicket));
+      return reply(response, 200, await loadPartnersWithRatings(false));
     }
     if (url.pathname === '/api/admin/partners' && request.method === 'POST') {
       const payload = await parseBody(request); const company = String(payload.company || '').trim(); const category = String(payload.category || '').trim(); const city = String(payload.city || '').trim(); const description = String(payload.description || '').trim();
@@ -241,10 +264,28 @@ function createSupabaseApi(options) {
     const messageMatch = url.pathname.match(/^\/api\/jobs\/([^/]+)\/messages$/);
     const photoMatch = url.pathname.match(/^\/api\/jobs\/([^/]+)\/photos$/);
     const reviewMatch = url.pathname.match(/^\/api\/jobs\/([^/]+)\/review$/);
+    const partnerReviewMatch = url.pathname.match(/^\/api\/partners\/([^/]+)\/reviews$/);
 
     if (url.pathname === '/api/providers' && request.method === 'GET') return reply(response, 200, providers);
     if (url.pathname === '/api/partners' && request.method === 'GET') {
-      const rows = await database('GET', '/rest/v1/support_tickets?select=*&order=created_at.desc'); return reply(response, 200, (rows || []).filter(function (ticket) { return String(ticket.subject || '').indexOf('Partner katalog · ') === 0 && ticket.status === 'resolved'; }).map(partnerTicket));
+      return reply(response, 200, await loadPartnersWithRatings(true));
+    }
+    if (url.pathname === '/api/partner-rankings' && request.method === 'GET') {
+      const partners = await loadPartnersWithRatings(true);
+      return reply(response, 200, { overall: partners.filter(function (partner) { return partner.rankingEligible; }).slice(0, 10), categories: partners.reduce(function (groups, partner) { if (!partner.rankingEligible) return groups; const key = partner.category; groups[key] = groups[key] || []; groups[key].push(partner); return groups; }, {}) });
+    }
+    if (partnerReviewMatch && request.method === 'POST') {
+      const current = await currentProfile(request);
+      if (current.profile.role !== 'customer') return reply(response, 403, { error: 'Partnere mogu oceniti samo prijavljeni klijenti.' });
+      const payload = await parseBody(request); const rating = Number(payload.rating); const comment = String(payload.comment || '').trim();
+      if (!Number.isInteger(rating) || rating < 1 || rating > 5 || comment.length > 500) return reply(response, 400, { error: 'Ocena mora biti od 1 do 5, a komentar do 500 znakova.' });
+      const partners = await loadPartnersWithRatings(true); const partner = partners.find(function (item) { return String(item.id) === String(partnerReviewMatch[1]); });
+      if (!partner) return reply(response, 404, { error: 'Aktivan partner nije pronađen.' });
+      const existing = await database('GET', '/rest/v1/partner_reviews?partner_id=eq.' + encodeURIComponent(partner.id) + '&profile_id=eq.' + encodeURIComponent(current.profile.id) + '&select=id');
+      const body = { rating: rating, comment: comment, is_visible: true, updated_at: new Date().toISOString() };
+      if (existing && existing[0]) await database('PATCH', '/rest/v1/partner_reviews?id=eq.' + encodeURIComponent(existing[0].id), body);
+      else await database('POST', '/rest/v1/partner_reviews', Object.assign({ partner_id: partner.id, profile_id: current.profile.id }, body));
+      return reply(response, 201, { ok: true, message: 'Ocena je sačuvana. Možeš je kasnije izmeniti.' });
     }
     if (url.pathname === '/api/catalog' && request.method === 'GET') {
       const partnerId = String(url.searchParams.get('partner_id') || '').trim();
