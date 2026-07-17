@@ -267,6 +267,7 @@ function createSupabaseApi(options) {
   async function handle(request, response, url) {
     const offerMatch = url.pathname.match(/^\/api\/jobs\/([^/]+)\/offers$/);
     const acceptMatch = url.pathname.match(/^\/api\/jobs\/([^/]+)\/accept$/);
+    const declineMatch = url.pathname.match(/^\/api\/jobs\/([^/]+)\/decline$/);
     const progressMatch = url.pathname.match(/^\/api\/jobs\/([^/]+)\/progress$/);
     const messageMatch = url.pathname.match(/^\/api\/jobs\/([^/]+)\/messages$/);
     const photoMatch = url.pathname.match(/^\/api\/jobs\/([^/]+)\/photos$/);
@@ -355,6 +356,15 @@ function createSupabaseApi(options) {
       job.progress = 'Dogovoren termin';
       job.updatedAt = new Date().toISOString();
       job.activity = [{ label: 'Majstor je izabran', at: job.updatedAt }];
+      return reply(response, 200, await saveJob(saved.row.id, job));
+    }
+    if (declineMatch && request.method === 'POST') {
+      const payload = await parseBody(request); const saved = await getJob(declineMatch[1]); const job = saved && saved.job;
+      const providerName = String(payload.providerName || '').trim(); const reason = String(payload.reason || '').trim().slice(0, 300);
+      if (!job || job.acceptedOfferId || !providerName) return reply(response, 400, { error: 'Ovaj posao više nije moguće odbiti.' });
+      job.declinedBy = (job.declinedBy || []).filter(function (item) { return item.providerName !== providerName; });
+      job.declinedBy.push({ providerName: providerName, reason: reason || 'Nisam trenutno dostupan', createdAt: new Date().toISOString() });
+      job.activity = job.activity || []; job.activity.push({ label: providerName + ' je odbio posao', at: new Date().toISOString() });
       return reply(response, 200, await saveJob(saved.row.id, job));
     }
     if (progressMatch && request.method === 'POST') {

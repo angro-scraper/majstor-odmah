@@ -120,7 +120,8 @@ function renderProgress(job, isPro) {
 function renderJob(job, isPro) {
   const offers = job.offers || [];
   const statusClass = job.acceptedOfferId ? 'confirmed' : (offers.length ? 'accepted' : '');
-  const proAction = isPro && !job.acceptedOfferId ? '<form class="offer-form" data-job-id="' + job.id + '"><input required name="amount" inputmode="numeric" placeholder="Cena RSD" /><input required name="eta" placeholder="npr. danas 17h" /><button class="secondary-button" type="submit">Pošalji ponudu</button></form>' : '';
+  const declined = (job.declinedBy || []).some(function (item) { return item.providerName === 'Milan Jovanović'; });
+  const proAction = isPro && !job.acceptedOfferId ? (declined ? '<p class="helper-note declined-note">Odbio si ovaj posao. Klijent je obavešten, a zahtev je uklonjen iz tvog prioriteta.</p>' : '<form class="offer-form" data-job-id="' + job.id + '"><input required name="amount" inputmode="numeric" placeholder="Cena RSD" /><input required name="eta" placeholder="npr. danas 17h" /><button class="secondary-button" type="submit">Pošalji ponudu</button><button class="decline-job" type="button" data-job-id="' + job.id + '">Odbij posao</button></form>') : '';
   const progress = renderProgress(job, isPro);
   const counterparty = isPro ? 'Klijent Ana Petrović · ★ 4,9 · pouzdanost 98% · bez otkazanih termina' : 'Majstor Milan Jovanović · ★ 4,9 (86 ocena) · pouzdanost 98%';
   return '<article class="dashboard-job"><div><b>' + escapeHtml(job.category) + ' · ' + escapeHtml(job.location) + '</b><p>' + escapeHtml(job.description) + '</p><p>' + dateLabel(job.createdAt) + '</p><p class="counterparty-rating">' + counterparty + '</p>' + renderImages(job) + '</div><span class="job-status ' + statusClass + '">' + escapeHtml(job.status || 'Novo') + '</span><div class="offer-panel">' + (isPro ? '<h4>Pošalji svoju ponudu</h4>' + proAction + (offers.length ? '<p class="helper-note">Na posao je stiglo ' + offers.length + ' ponuda.</p>' : '') : '<h4>Obavešteni majstori (' + (job.matches || []).length + ')</h4>' + renderMatches(job) + '<h4 style="margin-top:12px">Ponude majstora</h4>' + renderOffers(job)) + progress + renderWorkPhotos(job, isPro) + renderChat(job, isPro) + renderReview(job, isPro) + '</div></article>';
@@ -149,7 +150,7 @@ function renderPortfolioItem(item) {
 function renderProPanel() {
   const portfolio = getPortfolio();
   const available = localStorage.getItem('majstorOdmahAvailability') !== 'false';
-  return '<section class="pro-panel"><div class="pro-panel-top"><span class="pro-panel-avatar">MJ</span><div><h3>Milan Jovanović</h3><p>Verifikovan električar · 4,9 ★ · 86 ocena · pouzdanost 98%</p></div><label class="availability-toggle"><input id="availabilityToggle" type="checkbox"' + (available ? ' checked' : '') + ' /> ' + (available ? 'Dostupan danas' : 'Nisam dostupan') + '</label></div><div class="pro-panel-metrics"><div><b>86</b><span>završenih radova</span></div><div><b>~8 min</b><span>prosečan odgovor</span></div><div><b>20 km</b><span>radijus dolaska</span></div></div><p class="service-zones"><b>Zone rada:</b> Detelinara, Liman, Grbavica, Centar i Novi Sad</p>' + (typeof gpsMapMarkup === 'function' ? gpsMapMarkup('pro') : '') + '<p class="trust-note">Poslovi klijenata sa dobrom istorijom saradnje imaju prednost. Ponavljana otkazivanja i potvrđene prijave spuštaju prioritet, uz mogućnost žalbe.</p><div class="portfolio-head"><h4>Portfolio radova</h4><span>' + portfolio.length + ' prikazanih projekata</span></div><div class="portfolio-grid">' + portfolio.map(renderPortfolioItem).join('') + '</div><form class="portfolio-upload" id="portfolioUpload"><input required name="portfolioImage" type="file" accept="image/*" /><input required name="portfolioTitle" maxlength="42" placeholder="npr. Zamena plafonjere" /><button type="submit">Dodaj rad</button></form>' + renderAiAdvisor(true) + renderNotifications('pro') + '</section>';
+  return '<section class="pro-panel"><div class="pro-panel-top"><span class="pro-panel-avatar">MJ</span><div><h3>Milan Jovanović</h3><p>Verifikovan električar · 4,9 ★ · 86 ocena · pouzdanost 98%</p></div><label class="availability-toggle"><input id="availabilityToggle" type="checkbox"' + (available ? ' checked' : '') + ' /> ' + (available ? 'Dostupan danas' : 'Nisam dostupan') + '</label></div><div class="pro-panel-metrics"><div><b>86</b><span>završenih radova</span></div><div><b>~8 min</b><span>prosečan odgovor</span></div><div><b>20 km</b><span>radijus dolaska</span></div></div>' + (typeof gpsMapMarkup === 'function' ? gpsMapMarkup('pro') : '') + '<p class="trust-note">Poslovi klijenata sa dobrom istorijom saradnje imaju prednost. Ponavljana otkazivanja i potvrđene prijave spuštaju prioritet, uz mogućnost žalbe.</p><div class="portfolio-head"><h4>Portfolio radova</h4><span>' + portfolio.length + ' prikazanih projekata</span></div><div class="portfolio-grid">' + portfolio.map(renderPortfolioItem).join('') + '</div><form class="portfolio-upload" id="portfolioUpload"><input required name="portfolioImage" type="file" accept="image/*" /><input required name="portfolioTitle" maxlength="42" placeholder="npr. Zamena plafonjere" /><button type="submit">Dodaj rad</button></form>' + renderAiAdvisor(true) + renderNotifications('pro') + '</section>';
 }
 
 function renderCoverageMap() {
@@ -157,7 +158,7 @@ function renderCoverageMap() {
 }
 
 var baseProPanel = renderProPanel;
-renderProPanel = function () { return baseProPanel().replace('<p class="service-zones">', renderCoverageMap() + '<p class="service-zones">'); };
+renderProPanel = function () { return baseProPanel(); };
 var baseCustomerPanel = renderCustomerPanel;
 renderCustomerPanel = function () { return baseCustomerPanel().replace('<p class="trust-note">', '<section class="project-location"><span>⌖</span><div><b>Lokacija projekta</b><small>Detelinara, Novi Sad · 8 dostupnih majstora u blizini</small></div><em>GPS pretraga</em></section>' + (typeof gpsMapMarkup === 'function' ? gpsMapMarkup('customer') : '') + '<p class="trust-note">'); };
 
@@ -274,6 +275,12 @@ function showDashboard(role) {
   document.querySelectorAll('.offer-form').forEach(function (form) { form.addEventListener('submit', function (event) {
     event.preventDefault(); const jobId = form.dataset.jobId; const amount = form.querySelector('[name="amount"]').value; const eta = form.querySelector('[name="eta"]').value;
     requestWorkflow('/api/jobs/' + jobId + '/offers', { providerName: 'Milan Jovanović', amount: amount, eta: eta, note: 'Verifikovan električar · 4,9★' }).then(function () { addNotification('customer', 'Milan Jovanović je poslao ponudu za tvoj posao.'); refreshWorkflow(role); }).catch(function () { alert('Ponuda nije poslata. Pokušaj ponovo.'); });
+  }); });
+  document.querySelectorAll('.decline-job').forEach(function (button) { button.addEventListener('click', function () {
+    const reason = window.prompt('Kratko navedi razlog (opciono):', 'Nisam trenutno dostupan');
+    if (reason === null) return;
+    button.disabled = true; button.textContent = 'Odbijam…';
+    requestWorkflow('/api/jobs/' + button.dataset.jobId + '/decline', { providerName: 'Milan Jovanović', reason: reason }).then(function () { addNotification('customer', 'Milan trenutno ne može da prihvati tvoj zahtev. Sistem nastavlja da obaveštava druge majstore.'); refreshWorkflow(role); }).catch(function () { button.disabled = false; button.textContent = 'Odbij posao'; alert('Posao nije odbijen. Pokušaj ponovo.'); });
   }); });
   document.querySelectorAll('.accept-offer').forEach(function (button) { button.addEventListener('click', function () {
     requestWorkflow('/api/jobs/' + button.dataset.jobId + '/accept', { offerId: button.dataset.offerId }).then(function () { addNotification('pro', 'Ana Petrović je izabrala tvoju ponudu. Dogovorite termin u chatu.'); refreshWorkflow(role); }).catch(function () { alert('Ponuda nije izabrana. Pokušaj ponovo.'); });

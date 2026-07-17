@@ -112,6 +112,7 @@ const server = http.createServer(function (request, response) {
   }
   const offerMatch = url.pathname.match(/^\/api\/jobs\/(\d+)\/offers$/);
   const acceptMatch = url.pathname.match(/^\/api\/jobs\/(\d+)\/accept$/);
+  const declineMatch = url.pathname.match(/^\/api\/jobs\/(\d+)\/decline$/);
   const progressMatch = url.pathname.match(/^\/api\/jobs\/(\d+)\/progress$/);
   const messageMatch = url.pathname.match(/^\/api\/jobs\/(\d+)\/messages$/);
   const photoMatch = url.pathname.match(/^\/api\/jobs\/(\d+)\/photos$/);
@@ -165,6 +166,16 @@ const server = http.createServer(function (request, response) {
       job.acceptedOfferId = offer.id; job.status = 'Dogovoren termin'; job.updatedAt = new Date().toISOString();
       job.progress = 'Dogovoren termin';
       job.activity = [{ label: 'Majstor je izabran', at: job.updatedAt }];
+      writeData(data); reply(response, 200, job);
+    });
+  }
+  if (declineMatch && request.method === 'POST') {
+    return parseBody(request, function (error, payload) {
+      const data = readData(); const job = findJob(data, declineMatch[1]); const providerName = String(payload.providerName || '').trim();
+      if (error || !job || job.acceptedOfferId || !providerName) return reply(response, 400, { error: 'Ovaj posao više nije moguće odbiti.' });
+      job.declinedBy = (job.declinedBy || []).filter(function (item) { return item.providerName !== providerName; });
+      job.declinedBy.push({ providerName: providerName, reason: String(payload.reason || 'Nisam trenutno dostupan').trim().slice(0, 300), createdAt: new Date().toISOString() });
+      job.activity = job.activity || []; job.activity.push({ label: providerName + ' je odbio posao', at: new Date().toISOString() }); job.updatedAt = new Date().toISOString();
       writeData(data); reply(response, 200, job);
     });
   }
