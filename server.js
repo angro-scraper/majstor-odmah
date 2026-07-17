@@ -50,7 +50,7 @@ function findJob(data, id) { return data.jobs.find(function (job) { return job.i
 function partnerTicket(ticket) { const fields = {}; String(ticket.message || '').split('\n').forEach(function (line) { const index = line.indexOf(':'); if (index > 0) fields[line.slice(0, index).trim()] = line.slice(index + 1).trim(); }); return { id: ticket.id, company: String(ticket.subject || '').replace(/^Partner katalog ·\s*/, ''), category: fields.Kategorija || 'Ostalo', city: fields.Grad || '—', website: fields.Sajt || '', contact: fields.Kontakt || '', description: fields.Opis || '', featured: fields.Istaknuto === 'da', status: ticket.status === 'Rešeno' || ticket.status === 'resolved' ? 'active' : 'paused' }; }
 function partnerMessage(payload) { return ['Kategorija: ' + String(payload.category || '').trim(), 'Grad: ' + String(payload.city || '').trim(), 'Sajt: ' + String(payload.website || '').trim(), 'Kontakt: ' + String(payload.contact || '').trim(), 'Istaknuto: ' + (payload.featured ? 'da' : 'ne'), 'Opis: ' + String(payload.description || '').trim()].join('\n'); }
 function isAdmin(request) {
-  const expected = String(process.env.ADMIN_PASSWORD || ''); const received = String(request.headers['x-admin-password'] || '');
+  const expected = String(process.env.ADMIN_PASSWORD || '').trim(); const received = String(request.headers['x-admin-password'] || '').trim();
   if (!expected || !received || expected.length !== received.length) return false;
   return crypto.timingSafeEqual(Buffer.from(expected), Buffer.from(received));
 }
