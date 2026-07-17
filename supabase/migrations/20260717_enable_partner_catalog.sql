@@ -12,3 +12,7 @@ for all
 to service_role
 using (true)
 with check (true);
+
+grant select, insert, update, delete
+on table public.support_tickets
+to service_role;
