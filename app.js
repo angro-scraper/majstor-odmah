@@ -146,11 +146,16 @@ const openModal = (category = '') => {
 };
 const closeModal = () => { backdrop.classList.add('hidden'); document.body.style.overflow = ''; };
 
-['#openJobModal', '#openJobModal2', '#browseButton', '#showPros'].forEach(id => document.querySelector(id).addEventListener('click', () => openModal()));
+['#openJobModal', '#openJobModal2', '#showPros'].forEach(id => document.querySelector(id).addEventListener('click', () => openModal()));
 document.querySelector('#closeModal').addEventListener('click', closeModal);
 backdrop.addEventListener('click', event => { if (event.target === backdrop) closeModal(); });
 document.addEventListener('keydown', event => { if (event.key === 'Escape') closeModal(); });
-document.querySelectorAll('.category').forEach(button => button.addEventListener('click', () => openModal(button.dataset.category)));
+const finderDrawer = document.querySelector('#finderDrawer');
+const finderToggle = document.querySelector('#finderToggle');
+const closeFinder = () => { finderDrawer.classList.add('hidden'); finderToggle.setAttribute('aria-expanded', 'false'); };
+finderToggle.addEventListener('click', () => { const open = finderDrawer.classList.contains('hidden'); finderDrawer.classList.toggle('hidden', !open); finderToggle.setAttribute('aria-expanded', String(open)); });
+document.querySelector('#closeFinder').addEventListener('click', closeFinder);
+document.querySelectorAll('.category').forEach(button => button.addEventListener('click', () => { closeFinder(); openModal(button.dataset.category); }));
 document.querySelectorAll('.contact-pro').forEach(button => button.addEventListener('click', () => { openModal(); document.querySelector('#jobDescription').value = `Želim da pošaljem zahtev majstoru ${button.dataset.name}.`; }));
 
 function imageFilesToDataUrls(files) {

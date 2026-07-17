@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="pro-panel.css" />
     <link rel="stylesheet" href="customer-panel.css" />
     <link rel="stylesheet" href="rankings.css" />
+    <link rel="stylesheet" href="finder-menu.css" />
   </head>
   <body>
     <header class="topbar">
@@ -25,6 +26,11 @@
         <button class="button small" id="registerButton">Postani majstor</button>
       </nav>
     </header>
+    <button class="finder-menu-button" id="finderToggle" aria-expanded="false" aria-controls="finderDrawer"><span>⌕</span> Pronađi majstora</button>
+    <aside class="finder-drawer hidden" id="finderDrawer" aria-label="Kategorije majstora">
+      <div class="finder-drawer-head"><div><b>Pronađi majstora</b><small>Izaberi zanat koji ti treba.</small></div><button class="finder-close" id="closeFinder" aria-label="Zatvori kategorije">×</button></div>
+      <div class="finder-category-list category-grid" id="categoryGrid"></div>
+    </aside>
 
     <main>
       <section class="hero">
@@ -59,11 +65,6 @@
           </div>
           <div class="availability-pill"><b></b> 12 majstora dostupno sada</div>
         </div>
-      </section>
-
-      <section class="search-section" id="majstori">
-        <div class="section-heading"><div><p class="eyebrow"><span></span> Pronađi majstora</p><h2>Ko ti je potreban?</h2></div><button class="text-button see-all" id="browseButton">Pogledaj sve kategorije →</button></div>
-        <div class="category-grid" id="categoryGrid"></div>
       </section>
 
       <section class="process" id="kako-radi">
