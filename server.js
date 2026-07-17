@@ -2,6 +2,7 @@ const http = require('http');
 const fs = require('fs');
 const path = require('path');
 const URL = require('url').URL;
+const createSupabaseApi = require('./supabase-api').createSupabaseApi;
 
 const root = __dirname;
 const dataFile = path.join(root, 'data.json');
@@ -14,6 +15,7 @@ const providers = [
 ];
 function matchedProviders(category) { return providers.filter(function (provider) { return provider.category === category && provider.availability.indexOf('danas') >= 0; }); }
 const demoJob = { id: 1, category: 'Električar', location: 'Detelinara, Novi Sad', description: 'Povremeno izbacuje osigurač u kuhinji. Potreban pregled danas.', status: 'Traži majstora', createdAt: '2026-07-17T08:30:00.000Z', offers: [], matches: matchedProviders('Električar') };
+const supabaseApi = createSupabaseApi({ providers: providers, matchedProviders: matchedProviders, demoJob: demoJob });
 
 function readData() {
   try {
@@ -33,6 +35,13 @@ function findJob(data, id) { return data.jobs.find(function (job) { return job.i
 
 const server = http.createServer(function (request, response) {
   const url = new URL(request.url, 'http://localhost');
+  if (supabaseApi.enabled && url.pathname.indexOf('/api/') === 0) {
+    supabaseApi.handle(request, response, url).catch(function (error) {
+      console.error('Supabase API greška:', error.message);
+      reply(response, 502, { error: 'Privremeno nije moguće sačuvati podatke.' });
+    });
+    return;
+  }
   const offerMatch = url.pathname.match(/^\/api\/jobs\/(\d+)\/offers$/);
   const acceptMatch = url.pathname.match(/^\/api\/jobs\/(\d+)\/accept$/);
   const progressMatch = url.pathname.match(/^\/api\/jobs\/(\d+)\/progress$/);

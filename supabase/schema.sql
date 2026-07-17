@@ -56,6 +56,7 @@ create table public.jobs (
   desired_date date,
   status public.job_status not null default 'open',
   accepted_provider_id uuid references public.providers(id) on delete set null,
+  workflow jsonb not null default '{}'::jsonb,
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
 );
