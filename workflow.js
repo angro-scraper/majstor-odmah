@@ -2,7 +2,8 @@ function escapeHtml(value) {
   return String(value || '').replace(/[&<>'"]/g, function (character) { return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' })[character]; });
 }
 
-function updateLocalJobs(jobs) { localStorage.setItem('majstorOdmahJobs', JSON.stringify(jobs)); }
+function updateLocalJobs(jobs) { localStorage.setItem('majstorOdmahJobs', JSON.stringify(Array.isArray(jobs) ? jobs : [])); }
+function getWorkflowJobs() { try { const saved = JSON.parse(localStorage.getItem('majstorOdmahJobs') || '[]'); return Array.isArray(saved) ? saved : []; } catch (error) { return []; } }
 function syncJobsFromServer(role) {
   if (window.location.protocol === 'file:') return;
   fetch('/api/jobs').then(function (response) { return response.json(); }).then(function (jobs) {
@@ -217,7 +218,7 @@ function showDashboard(role) {
   accountWelcome.classList.add('hidden');
   dashboard.classList.remove('hidden');
   accountBackdrop.classList.add('dashboard-open');
-  const jobs = JSON.parse(localStorage.getItem('majstorOdmahJobs') || '[]');
+  const jobs = getWorkflowJobs();
   const isPro = role === 'pro';
   const profile = typeof getDemoProfile === 'function' ? getDemoProfile(role) : (isPro ? { name: 'Milan Jovanović', email: 'milan.demo@majstorodmah.rs' } : { name: 'Ana Petrović', email: 'ana.demo@majstorodmah.rs' });
   const offerCount = jobs.reduce(function (total, job) { return total + (job.offers || []).length; }, 0);
