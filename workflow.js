@@ -34,11 +34,24 @@ function renderMatches(job) {
   }).join('') + '</div>';
 }
 
+function renderProgress(job, isPro) {
+  if (!job.acceptedOfferId) return '';
+  const stages = ['Dogovoren termin', 'Potvrđen dolazak', 'Radovi u toku', 'Završeno'];
+  const current = stages.indexOf(job.progress || job.status);
+  const next = stages[current + 1];
+  const done = Math.max(current, 0);
+  const line = '<div class="timeline">' + stages.map(function (stage, index) { return '<i class="' + (index <= done ? 'done' : '') + '"></i>'; }).join('') + '</div>';
+  const latest = (job.activity || []).slice(-1)[0];
+  const activity = latest ? '<div class="activity-line"><b>' + escapeHtml(latest.label) + '</b><span>' + dateLabel(latest.at) + '</span></div>' : '';
+  const action = isPro && next ? '<button class="progress-action" data-job-id="' + job.id + '" data-progress="' + next + '">' + next + ' →</button>' : '';
+  return line + '<p class="helper-note">' + escapeHtml(job.progress || job.status) + '</p>' + activity + action;
+}
+
 function renderJob(job, isPro) {
   const offers = job.offers || [];
   const statusClass = job.acceptedOfferId ? 'confirmed' : (offers.length ? 'accepted' : '');
   const proAction = isPro && !job.acceptedOfferId ? '<form class="offer-form" data-job-id="' + job.id + '"><input required name="amount" inputmode="numeric" placeholder="Cena RSD" /><input required name="eta" placeholder="npr. danas 17h" /><button class="secondary-button" type="submit">Pošalji ponudu</button></form>' : '';
-  const progress = job.acceptedOfferId ? '<div class="timeline"><i class="done"></i><i class="done"></i><i></i></div><p class="helper-note">Dogovoren termin — sledeće: majstor potvrđuje dolazak.</p>' : '';
+  const progress = renderProgress(job, isPro);
   return '<article class="dashboard-job"><div><b>' + escapeHtml(job.category) + ' · ' + escapeHtml(job.location) + '</b><p>' + escapeHtml(job.description) + '</p><p>' + dateLabel(job.createdAt) + '</p></div><span class="job-status ' + statusClass + '">' + escapeHtml(job.status || 'Novo') + '</span><div class="offer-panel">' + (isPro ? '<h4>Pošalji svoju ponudu</h4>' + proAction + (offers.length ? '<p class="helper-note">Na posao je stiglo ' + offers.length + ' ponuda.</p>' : '') : '<h4>Obavešteni majstori (' + (job.matches || []).length + ')</h4>' + renderMatches(job) + '<h4 style="margin-top:12px">Ponude majstora</h4>' + renderOffers(job) + progress) + '</div></article>';
 }
 
@@ -58,6 +71,9 @@ function showDashboard(role) {
   }); });
   document.querySelectorAll('.accept-offer').forEach(function (button) { button.addEventListener('click', function () {
     requestWorkflow('/api/jobs/' + button.dataset.jobId + '/accept', { offerId: button.dataset.offerId }).then(function () { refreshWorkflow(role); }).catch(function () { alert('Ponuda nije izabrana. Pokušaj ponovo.'); });
+  }); });
+  document.querySelectorAll('.progress-action').forEach(function (button) { button.addEventListener('click', function () {
+    requestWorkflow('/api/jobs/' + button.dataset.jobId + '/progress', { progress: button.dataset.progress }).then(function () { refreshWorkflow(role); }).catch(function () { alert('Status nije promenjen. Pokušaj ponovo.'); });
   }); });
   document.querySelector('#switchRole').addEventListener('click', function () { localStorage.removeItem('majstorOdmahRole'); accountWelcome.classList.remove('hidden'); dashboard.classList.add('hidden'); });
 }

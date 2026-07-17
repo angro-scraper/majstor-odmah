@@ -35,6 +35,7 @@ const server = http.createServer(function (request, response) {
   const url = new URL(request.url, 'http://localhost');
   const offerMatch = url.pathname.match(/^\/api\/jobs\/(\d+)\/offers$/);
   const acceptMatch = url.pathname.match(/^\/api\/jobs\/(\d+)\/accept$/);
+  const progressMatch = url.pathname.match(/^\/api\/jobs\/(\d+)\/progress$/);
 
   if (url.pathname === '/api/providers' && request.method === 'GET') return reply(response, 200, providers);
   if (url.pathname === '/api/jobs' && request.method === 'GET') return reply(response, 200, readData().jobs);
@@ -68,6 +69,18 @@ const server = http.createServer(function (request, response) {
       const offer = job && (job.offers || []).find(function (item) { return item.id === Number(payload.offerId); });
       if (error || !offer) return reply(response, 400, { error: 'Ponuda nije pronađena.' });
       job.acceptedOfferId = offer.id; job.status = 'Dogovoren termin'; job.updatedAt = new Date().toISOString();
+      job.progress = 'Dogovoren termin';
+      job.activity = [{ label: 'Majstor je izabran', at: job.updatedAt }];
+      writeData(data); reply(response, 200, job);
+    });
+  }
+  if (progressMatch && request.method === 'POST') {
+    return parseBody(request, function (error, payload) {
+      const allowed = ['Potvrđen dolazak', 'Radovi u toku', 'Završeno'];
+      const data = readData(); const job = findJob(data, progressMatch[1]);
+      if (error || !job || !job.acceptedOfferId || allowed.indexOf(payload.progress) < 0) return reply(response, 400, { error: 'Status radova nije moguće promeniti.' });
+      job.progress = payload.progress; job.status = payload.progress; job.updatedAt = new Date().toISOString();
+      job.activity = job.activity || []; job.activity.push({ label: payload.progress, at: job.updatedAt });
       writeData(data); reply(response, 200, job);
     });
   }
