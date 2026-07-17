@@ -1,5 +1,5 @@
 function createSupabaseApi(options) {
-  const baseUrl = (process.env.SUPABASE_URL || '').replace(/\/$/, '');
+  const baseUrl = (process.env.SUPABASE_URL || '').replace(/\/$/, '').replace(/\/(?:rest|auth)\/v1$/, '');
   const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY || '';
   const enabled = Boolean(baseUrl && serviceRoleKey);
   const providers = options.providers;
