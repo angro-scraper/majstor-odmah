@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="sr-Latn">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#123e34" />
+    <title>Balkan Hub — lokalne usluge, stanovanje i auto</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="balkan.css" />
+  </head>
+  <body class="balkan-page">
+    <header class="hub-header">
+      <a class="hub-brand" href="balkan.html" aria-label="Balkan Hub početna"><span class="hub-mark">B</span><span>Balkan <b>hub</b></span></a>
+      <nav class="hub-nav" aria-label="Glavna navigacija">
+        <a href="#usluge" data-i18n="navServices">Usluge</a>
+        <a href="#zasto" data-i18n="navTrust">Bezbednost</a>
+        <a href="index.html" data-i18n="navTrades">Majstor odmah</a>
+      </nav>
+      <div class="hub-controls">
+        <label class="select-wrap"><span class="sr-only">Grad</span><select id="citySelect"><option>Novi Sad</option><option>Beograd</option><option>Niš</option><option>Sarajevo</option><option>Zagreb</option><option>Skoplje</option><option>Podgorica</option></select></label>
+        <label class="select-wrap language-wrap"><span class="sr-only">Jezik</span><select id="languageSelect"><option value="sr">Srpski</option><option value="hr">Hrvatski</option><option value="bs">Bosanski</option><option value="en">English</option><option value="mk">Македонски</option><option value="sq">Shqip</option></select></label>
+      </div>
+    </header>
+
+    <main class="hub-main">
+      <section class="hub-hero">
+        <div class="hero-copy">
+          <p class="hub-eyebrow"><span></span><span data-i18n="eyebrow">JEDNA APLIKACIJA ZA SVAKI DAN</span></p>
+          <h1 data-i18n="heroTitle">Sve što ti treba<br />u <em>tvom kraju.</em></h1>
+          <p class="hero-lead" data-i18n="heroLead">Pouzdane lokalne usluge, stanovanje, auto i termini — na jednom jasnom mestu.</p>
+          <form id="hubSearchForm" class="hub-search" role="search">
+            <span aria-hidden="true">⌕</span><input id="hubSearch" type="search" autocomplete="off" data-i18n-placeholder="searchPlaceholder" placeholder="Pretraži majstora, stan, servis ili termin" /><button type="submit" data-i18n="search">Pretraži</button>
+          </form>
+          <p class="search-hint" data-i18n="searchHint">Probaj: „vodoinstalater”, „cimer”, „registracija auta”</p>
+        </div>
+        <div class="hero-orbit" aria-label="Usluge Balkana">
+          <div class="orbit-card orbit-main"><span>⌂</span><b data-i18n="orbitMain">Tvoj lokalni svet</b><small data-i18n="orbitSub">proveren i bliži</small></div>
+          <div class="orbit-chip chip-one">⚒ <span data-i18n="trades">Majstori</span></div>
+          <div class="orbit-chip chip-two">⌘ <span data-i18n="housing">Stanovi</span></div>
+          <div class="orbit-chip chip-three">▣ <span data-i18n="auto">Auto</span></div>
+          <div class="orbit-chip chip-four">◷ <span data-i18n="queues">Termini</span></div>
+        </div>
+      </section>
+
+      <section id="usluge" class="services-section">
+        <div class="section-heading"><div><p class="hub-eyebrow"><span></span><span data-i18n="servicesEyebrow">IZABERI ŠTA TI TREBA</span></p><h2 data-i18n="servicesTitle">Jedan nalog, mnogo lakši dan.</h2></div><p data-i18n="servicesCopy">Svaki modul je napravljen da smanji čekanje, prevare i pozivanje na deset strana.</p></div>
+        <div class="module-grid" id="moduleGrid"></div>
+      </section>
+
+      <section class="hub-workspace" id="hubWorkspace" aria-live="polite">
+        <div class="workspace-label"><span class="status-dot"></span><span data-i18n="workspaceLabel">BRZI PREGLED</span></div>
+        <div id="workspaceContent"></div>
+      </section>
+
+      <section id="zasto" class="trust-section">
+        <div><p class="hub-eyebrow light"><span></span><span data-i18n="trustEyebrow">POVERENJE JE OSNOVA</span></p><h2 data-i18n="trustTitle">Manje rizika.<br />Više završenih stvari.</h2></div>
+        <div class="trust-points">
+          <article><b>✓</b><div><h3 data-i18n="trustOne">Verifikovani profili</h3><p data-i18n="trustOneCopy">Jasan identitet, ocene i istorija saradnje gde je usluga dostupna.</p></div></article>
+          <article><b>◌</b><div><h3 data-i18n="trustTwo">Lokalno i jasno</h3><p data-i18n="trustTwoCopy">Grad, okvirna cena i dostupnost pre nego što pošalješ zahtev.</p></div></article>
+          <article><b>⌁</b><div><h3 data-i18n="trustThree">Tvoj izbor</h3><p data-i18n="trustThreeCopy">Uporedi ponude i ocenjuj iskustvo nakon završenog posla.</p></div></article>
+        </div>
+      </section>
+    </main>
+    <footer class="hub-footer"><a class="hub-brand" href="balkan.html"><span class="hub-mark">B</span><span>Balkan <b>hub</b></span></a><p data-i18n="footer">Lokalne stvari, uređene za ljude.</p><a href="index.html" data-i18n="openTrades">Otvori Majstor odmah →</a></footer>
+    <div class="hub-toast" id="hubToast" role="status" aria-live="polite"></div>
+    <script src="balkan.js"></script>
+  </body>
+</html>
