@@ -110,6 +110,13 @@ function createSupabaseApi(options) {
     const tickets = await database('GET', '/rest/v1/support_tickets?select=*&order=created_at.desc');
     let reviews = [];
     try { reviews = await database('GET', '/rest/v1/partner_reviews?select=partner_id,rating,is_visible'); } catch (error) { console.warn('Partner ocene još nisu dostupne:', error.message); }
+    if (!reviews.length) {
+      reviews = (tickets || []).filter(function (ticket) { return String(ticket.subject || '').indexOf('Partner ocena · ') === 0; }).map(function (ticket) {
+        const parts = String(ticket.subject || '').split(' · '); const fields = {};
+        String(ticket.message || '').split('\n').forEach(function (line) { const index = line.indexOf(':'); if (index > 0) fields[line.slice(0, index).trim()] = line.slice(index + 1).trim(); });
+        return { partner_id: parts[1], rating: Number(fields.Ocena || 0), is_visible: ticket.status === 'resolved' };
+      });
+    }
     const totals = {};
     (reviews || []).filter(function (review) { return review.is_visible !== false; }).forEach(function (review) {
       const id = String(review.partner_id); const entry = totals[id] || { sum: 0, count: 0 };
@@ -281,10 +288,18 @@ function createSupabaseApi(options) {
       if (!Number.isInteger(rating) || rating < 1 || rating > 5 || comment.length > 500) return reply(response, 400, { error: 'Ocena mora biti od 1 do 5, a komentar do 500 znakova.' });
       const partners = await loadPartnersWithRatings(true); const partner = partners.find(function (item) { return String(item.id) === String(partnerReviewMatch[1]); });
       if (!partner) return reply(response, 404, { error: 'Aktivan partner nije pronađen.' });
-      const existing = await database('GET', '/rest/v1/partner_reviews?partner_id=eq.' + encodeURIComponent(partner.id) + '&profile_id=eq.' + encodeURIComponent(current.profile.id) + '&select=id');
       const body = { rating: rating, comment: comment, is_visible: true, updated_at: new Date().toISOString() };
-      if (existing && existing[0]) await database('PATCH', '/rest/v1/partner_reviews?id=eq.' + encodeURIComponent(existing[0].id), body);
-      else await database('POST', '/rest/v1/partner_reviews', Object.assign({ partner_id: partner.id, profile_id: current.profile.id }, body));
+      try {
+        const existing = await database('GET', '/rest/v1/partner_reviews?partner_id=eq.' + encodeURIComponent(partner.id) + '&profile_id=eq.' + encodeURIComponent(current.profile.id) + '&select=id');
+        if (existing && existing[0]) await database('PATCH', '/rest/v1/partner_reviews?id=eq.' + encodeURIComponent(existing[0].id), body);
+        else await database('POST', '/rest/v1/partner_reviews', Object.assign({ partner_id: partner.id, profile_id: current.profile.id }, body));
+      } catch (error) {
+        const subject = 'Partner ocena · ' + partner.id + ' · ' + current.profile.id;
+        const message = 'Ocena: ' + rating + '\nKomentar: ' + comment;
+        const tickets = await database('GET', '/rest/v1/support_tickets?subject=eq.' + encodeURIComponent(subject) + '&select=id');
+        if (tickets && tickets[0]) await database('PATCH', '/rest/v1/support_tickets?id=eq.' + encodeURIComponent(tickets[0].id), { message: message, status: 'resolved' });
+        else await database('POST', '/rest/v1/support_tickets', { subject: subject, message: message, status: 'resolved' });
+      }
       return reply(response, 201, { ok: true, message: 'Ocena je sačuvana. Možeš je kasnije izmeniti.' });
     }
     if (url.pathname === '/api/catalog' && request.method === 'GET') {
