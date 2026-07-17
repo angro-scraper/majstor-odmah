@@ -2,4 +2,6 @@
 .search-section{padding-top:62px;padding-bottom:62px}
 .pros-section{padding-top:38px;padding-bottom:62px}
 .material-spotlight + .pros-section .section-heading{margin-bottom:22px}
+.finder-category-list{grid-auto-rows:max-content;align-content:start}
+.finder-category-list .category{min-height:56px}
 @media(max-width:760px){.search-section{padding-top:44px;padding-bottom:44px}.pros-section{padding-top:28px;padding-bottom:45px}}
