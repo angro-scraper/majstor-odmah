@@ -25,14 +25,18 @@ function createSupabaseApi(options) {
   }
 
   async function database(method, path, body) {
+    // New Supabase secret keys (sb_secret_...) authorize via `apikey` only.
+    // They are opaque values rather than JWTs, so sending one as a Bearer
+    // token downgrades the database request and can trigger RLS errors.
+    const headers = {
+      apikey: serviceRoleKey,
+      'Content-Type': 'application/json',
+      Prefer: 'return=representation'
+    };
+    if (!serviceRoleKey.startsWith('sb_')) headers.Authorization = 'Bearer ' + serviceRoleKey;
     const response = await fetch(baseUrl + path, {
       method: method,
-      headers: {
-        apikey: serviceRoleKey,
-        Authorization: 'Bearer ' + serviceRoleKey,
-        'Content-Type': 'application/json',
-        Prefer: 'return=representation'
-      },
+      headers: headers,
       body: body === undefined ? undefined : JSON.stringify(body)
     });
     const text = await response.text();
