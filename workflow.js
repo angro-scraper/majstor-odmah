@@ -178,6 +178,7 @@ function renderCustomerPanel() {
 function showDashboard(role) {
   accountWelcome.classList.add('hidden');
   dashboard.classList.remove('hidden');
+  accountBackdrop.classList.add('dashboard-open');
   const jobs = JSON.parse(localStorage.getItem('majstorOdmahJobs') || '[]');
   const isPro = role === 'pro';
   const profile = typeof getDemoProfile === 'function' ? getDemoProfile(role) : (isPro ? { name: 'Milan Jovanović', email: 'milan.demo@majstorodmah.rs' } : { name: 'Ana Petrović', email: 'ana.demo@majstorodmah.rs' });
@@ -235,5 +236,5 @@ function showDashboard(role) {
   document.querySelectorAll('.review-form').forEach(function (form) { form.addEventListener('submit', function (event) {
     event.preventDefault(); requestWorkflow('/api/jobs/' + form.dataset.jobId + '/review', { author: isPro ? 'majstor' : 'klijent', rating: form.querySelector('[name="rating"]').value, comment: form.querySelector('[name="comment"]').value }).then(function () { addNotification(isPro ? 'customer' : 'pro', isPro ? 'Milan ti je ostavio ocenu za završeni posao.' : 'Ana ti je ostavila novu ocenu za završeni posao.'); refreshWorkflow(role); }).catch(function () { alert('Ocena nije poslata. Pokušaj ponovo.'); });
   }); });
-  document.querySelector('#switchRole').addEventListener('click', function () { localStorage.removeItem('majstorOdmahRole'); localStorage.removeItem('majstorOdmahDemoAccount'); document.querySelector('#loginButton').textContent = 'Moj nalog'; accountWelcome.classList.remove('hidden'); dashboard.classList.add('hidden'); });
+  document.querySelector('#switchRole').addEventListener('click', function () { localStorage.removeItem('majstorOdmahRole'); localStorage.removeItem('majstorOdmahDemoAccount'); document.querySelector('#loginButton').textContent = 'Moj nalog'; accountBackdrop.classList.remove('dashboard-open'); accountWelcome.classList.remove('hidden'); dashboard.classList.add('hidden'); });
 }

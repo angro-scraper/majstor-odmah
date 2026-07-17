@@ -180,12 +180,13 @@ const accountWelcome = document.querySelector('#accountWelcome');
 const dashboard = document.querySelector('#dashboard');
 const openAccount = () => {
   accountBackdrop.classList.remove('hidden');
+  accountBackdrop.classList.remove('dashboard-open');
   document.body.style.overflow = 'hidden';
   const role = localStorage.getItem('majstorOdmahRole');
   if (role) { setDemoProfile(role); showDashboard(role); syncJobsFromServer(role); }
   else { accountWelcome.classList.remove('hidden'); dashboard.classList.add('hidden'); }
 };
-const closeAccount = () => { accountBackdrop.classList.add('hidden'); document.body.style.overflow = ''; };
+const closeAccount = () => { accountBackdrop.classList.add('hidden'); accountBackdrop.classList.remove('dashboard-open'); document.body.style.overflow = ''; };
 const dateLabel = date => new Intl.DateTimeFormat('sr-RS', { day: 'numeric', month: 'short' }).format(new Date(date));
 
 function showDashboard(role) {
