@@ -6,7 +6,14 @@ const URL = require('url').URL;
 const root = __dirname;
 const dataFile = path.join(root, 'data.json');
 const mimeTypes = { '.html': 'text/html; charset=utf-8', '.js': 'application/javascript; charset=utf-8', '.css': 'text/css; charset=utf-8', '.json': 'application/json; charset=utf-8' };
-const demoJob = { id: 1, category: 'Električar', location: 'Detelinara, Novi Sad', description: 'Povremeno izbacuje osigurač u kuhinji. Potreban pregled danas.', status: 'Traži majstora', createdAt: '2026-07-17T08:30:00.000Z', offers: [] };
+const providers = [
+  { id: 'milan', name: 'Milan Jovanović', category: 'Električar', rating: '4,9', reviews: 86, responseTime: 'odgovara za ~8 min', availability: 'dostupan danas', verified: true },
+  { id: 'jelena', name: 'Jelena Marković', category: 'Električar', rating: '4,8', reviews: 42, responseTime: 'odgovara za ~15 min', availability: 'dostupna danas', verified: true },
+  { id: 'nikola', name: 'Nikola Petrović', category: 'Vodoinstalater', rating: '5,0', reviews: 64, responseTime: 'odgovara za ~8 min', availability: 'dostupan danas', verified: true },
+  { id: 'marko', name: 'Marko Ilić', category: 'Keramičar', rating: '4,8', reviews: 51, responseTime: 'odgovara za ~20 min', availability: 'dostupan sutra', verified: true }
+];
+function matchedProviders(category) { return providers.filter(function (provider) { return provider.category === category && provider.availability.indexOf('danas') >= 0; }); }
+const demoJob = { id: 1, category: 'Električar', location: 'Detelinara, Novi Sad', description: 'Povremeno izbacuje osigurač u kuhinji. Potreban pregled danas.', status: 'Traži majstora', createdAt: '2026-07-17T08:30:00.000Z', offers: [], matches: matchedProviders('Električar') };
 
 function readData() {
   try {
@@ -29,6 +36,7 @@ const server = http.createServer(function (request, response) {
   const offerMatch = url.pathname.match(/^\/api\/jobs\/(\d+)\/offers$/);
   const acceptMatch = url.pathname.match(/^\/api\/jobs\/(\d+)\/accept$/);
 
+  if (url.pathname === '/api/providers' && request.method === 'GET') return reply(response, 200, providers);
   if (url.pathname === '/api/jobs' && request.method === 'GET') return reply(response, 200, readData().jobs);
   if (url.pathname === '/api/jobs' && request.method === 'POST') {
     return parseBody(request, function (error, job) {
@@ -39,6 +47,7 @@ const server = http.createServer(function (request, response) {
       job.status = 'Traži majstora';
       job.createdAt = new Date().toISOString();
       job.offers = [];
+      job.matches = matchedProviders(job.category);
       data.jobs.unshift(job);
       writeData(data);
       reply(response, 201, job);

@@ -18,8 +18,8 @@ function saveJobToServer(job) {
     return response.json();
   }).then(function (savedJob) {
     const localJobs = JSON.parse(localStorage.getItem('majstorOdmahJobs') || '[]');
-    const matchingJob = localJobs.find(function (item) { return item.clientId === job.clientId; });
-    if (matchingJob) { matchingJob.id = savedJob.id; localStorage.setItem('majstorOdmahJobs', JSON.stringify(localJobs)); }
+    const matchingIndex = localJobs.findIndex(function (item) { return item.clientId === job.clientId; });
+    if (matchingIndex >= 0) { localJobs[matchingIndex] = savedJob; localStorage.setItem('majstorOdmahJobs', JSON.stringify(localJobs)); }
   }).catch(function () {
     console.info('Zahtev je bezbedno ostao lokalno sačuvan.');
   });

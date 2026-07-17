@@ -26,12 +26,20 @@ function renderOffers(job) {
   }).join('') + '</div>';
 }
 
+function renderMatches(job) {
+  const matches = job.matches || [];
+  if (!matches.length) return '';
+  return '<div class="match-grid">' + matches.map(function (provider) {
+    return '<div class="match-card"><b>✓ ' + escapeHtml(provider.name) + ' · ★ ' + escapeHtml(provider.rating) + '</b><span>' + escapeHtml(provider.responseTime) + '</span><em>' + escapeHtml(provider.availability) + '</em></div>';
+  }).join('') + '</div>';
+}
+
 function renderJob(job, isPro) {
   const offers = job.offers || [];
   const statusClass = job.acceptedOfferId ? 'confirmed' : (offers.length ? 'accepted' : '');
   const proAction = isPro && !job.acceptedOfferId ? '<form class="offer-form" data-job-id="' + job.id + '"><input required name="amount" inputmode="numeric" placeholder="Cena RSD" /><input required name="eta" placeholder="npr. danas 17h" /><button class="secondary-button" type="submit">Pošalji ponudu</button></form>' : '';
   const progress = job.acceptedOfferId ? '<div class="timeline"><i class="done"></i><i class="done"></i><i></i></div><p class="helper-note">Dogovoren termin — sledeće: majstor potvrđuje dolazak.</p>' : '';
-  return '<article class="dashboard-job"><div><b>' + escapeHtml(job.category) + ' · ' + escapeHtml(job.location) + '</b><p>' + escapeHtml(job.description) + '</p><p>' + dateLabel(job.createdAt) + '</p></div><span class="job-status ' + statusClass + '">' + escapeHtml(job.status || 'Novo') + '</span><div class="offer-panel">' + (isPro ? '<h4>Pošalji svoju ponudu</h4>' + proAction + (offers.length ? '<p class="helper-note">Na posao je stiglo ' + offers.length + ' ponuda.</p>' : '') : '<h4>Ponude majstora</h4>' + renderOffers(job) + progress) + '</div></article>';
+  return '<article class="dashboard-job"><div><b>' + escapeHtml(job.category) + ' · ' + escapeHtml(job.location) + '</b><p>' + escapeHtml(job.description) + '</p><p>' + dateLabel(job.createdAt) + '</p></div><span class="job-status ' + statusClass + '">' + escapeHtml(job.status || 'Novo') + '</span><div class="offer-panel">' + (isPro ? '<h4>Pošalji svoju ponudu</h4>' + proAction + (offers.length ? '<p class="helper-note">Na posao je stiglo ' + offers.length + ' ponuda.</p>' : '') : '<h4>Obavešteni majstori (' + (job.matches || []).length + ')</h4>' + renderMatches(job) + '<h4 style="margin-top:12px">Ponude majstora</h4>' + renderOffers(job) + progress) + '</div></article>';
 }
 
 function showDashboard(role) {
