@@ -17,12 +17,29 @@ function requestWorkflow(path, payload) {
 }
 function refreshWorkflow(role) { syncJobsFromServer(role); }
 
+function offerProfile(name) {
+  const profiles = {
+    'Milan Jovanović': { trade: 'Električar', rating: '4,9', reliability: '98%', jobs: '142 rada' },
+    'Nikola Petrović': { trade: 'Vodoinstalater', rating: '5,0', reliability: '99%', jobs: '118 radova' },
+    'Marko Ilić': { trade: 'Keramičar', rating: '4,8', reliability: '96%', jobs: '76 radova' }
+  };
+  return profiles[name] || { trade: 'Verifikovan majstor', rating: '4,8', reliability: '95%', jobs: 'završenih radova' };
+}
+
+function offerAmount(value) { return Number(String(value || '').replace(/[^0-9]/g, '')) || 0; }
+
 function renderOffers(job) {
   const offers = job.offers || [];
   if (!offers.length) return '<p class="helper-note">Majstori dobijaju obaveštenje. Prva ponuda obično stiže za nekoliko minuta.</p>';
-  return '<div class="offers">' + offers.map(function (offer) {
+  const prices = offers.map(function (offer) { return offerAmount(offer.amount); }).filter(Boolean);
+  const bestPrice = prices.length ? Math.min.apply(null, prices) : 0;
+  return '<p class="offer-comparison-note">Uporedi cenu, vreme dolaska i pouzdanost pre izbora.</p><div class="offers">' + offers.map(function (offer) {
     const accepted = job.acceptedOfferId === offer.id;
-    return '<div class="offer-card"><div><b>' + escapeHtml(offer.providerName) + ' · ' + escapeHtml(offer.amount) + ' RSD</b><span>Dolazak: ' + escapeHtml(offer.eta) + (offer.note ? ' · ' + escapeHtml(offer.note) : '') + '</span></div>' + (accepted ? '<span class="job-status confirmed">Izabran</span>' : (job.acceptedOfferId ? '' : '<button class="accept-offer" data-job-id="' + job.id + '" data-offer-id="' + offer.id + '">Izaberi</button>')) + '</div>';
+    const profile = offerProfile(offer.providerName);
+    const amount = offerAmount(offer.amount);
+    const best = !accepted && amount && amount === bestPrice;
+    const initials = String(offer.providerName || 'M').split(' ').map(function (part) { return part.charAt(0); }).join('').slice(0, 2);
+    return '<div class="offer-card' + (best ? ' best-price' : '') + '"><div class="offer-provider"><span class="offer-avatar">' + escapeHtml(initials) + '</span><div><b>' + escapeHtml(offer.providerName) + '</b><small>' + escapeHtml(profile.trade) + ' · ★ ' + profile.rating + '</small></div></div><div class="offer-price"><b>' + escapeHtml(offer.amount) + ' RSD</b>' + (best ? '<small>Najniža cena</small>' : '<small>Procena ponude</small>') + '</div><div class="offer-metrics"><span>Dolazak <b>' + escapeHtml(offer.eta) + '</b></span><span>Pouzdanost <b>' + profile.reliability + '</b></span><span>' + profile.jobs + '</span></div>' + (accepted ? '<span class="job-status confirmed">Izabran</span>' : (job.acceptedOfferId ? '' : '<button class="accept-offer" data-job-id="' + job.id + '" data-offer-id="' + offer.id + '">Izaberi majstora</button>')) + '</div>';
   }).join('') + '</div>';
 }
 
@@ -133,6 +150,15 @@ function renderProPanel() {
   const available = localStorage.getItem('majstorOdmahAvailability') !== 'false';
   return '<section class="pro-panel"><div class="pro-panel-top"><span class="pro-panel-avatar">MJ</span><div><h3>Milan Jovanović</h3><p>Verifikovan električar · 4,9 ★ · 86 ocena · pouzdanost 98%</p></div><label class="availability-toggle"><input id="availabilityToggle" type="checkbox"' + (available ? ' checked' : '') + ' /> ' + (available ? 'Dostupan danas' : 'Nisam dostupan') + '</label></div><div class="pro-panel-metrics"><div><b>86</b><span>završenih radova</span></div><div><b>~8 min</b><span>prosečan odgovor</span></div><div><b>20 km</b><span>radijus dolaska</span></div></div><p class="service-zones"><b>Zone rada:</b> Detelinara, Liman, Grbavica, Centar i Novi Sad</p><p class="trust-note">Poslovi klijenata sa dobrom istorijom saradnje imaju prednost. Ponavljana otkazivanja i potvrđene prijave spuštaju prioritet, uz mogućnost žalbe.</p><div class="portfolio-head"><h4>Portfolio radova</h4><span>' + portfolio.length + ' prikazanih projekata</span></div><div class="portfolio-grid">' + portfolio.map(renderPortfolioItem).join('') + '</div><form class="portfolio-upload" id="portfolioUpload"><input required name="portfolioImage" type="file" accept="image/*" /><input required name="portfolioTitle" maxlength="42" placeholder="npr. Zamena plafonjere" /><button type="submit">Dodaj rad</button></form>' + renderAiAdvisor(true) + renderNotifications('pro') + '</section>';
 }
+
+function renderCoverageMap() {
+  return '<section class="coverage-card"><div class="coverage-card-head"><div><b>Zona dolaska</b><small>Trenutno prima zahteve do 20 km</small></div><span>● Dostupan danas</span></div><div class="coverage-map" aria-label="Prikaz zone rada u Novom Sadu"><i class="coverage-ring ring-large"></i><i class="coverage-ring ring-small"></i><b class="coverage-origin">● Detelinara</b><span class="coverage-zone zone-centar">Centar</span><span class="coverage-zone zone-liman">Liman</span><span class="coverage-zone zone-grbavica">Grbavica</span><span class="coverage-zone zone-veternik">Veternik</span></div><div class="coverage-legend"><span>✓ 5 zona pokriveno</span><span>prosečan odgovor ~8 min</span></div></section>';
+}
+
+var baseProPanel = renderProPanel;
+renderProPanel = function () { return baseProPanel().replace('<p class="service-zones">', renderCoverageMap() + '<p class="service-zones">'); };
+var baseCustomerPanel = renderCustomerPanel;
+renderCustomerPanel = function () { return baseCustomerPanel().replace('<p class="trust-note">', '<section class="project-location"><span>⌖</span><div><b>Lokacija projekta</b><small>Detelinara, Novi Sad · 8 dostupnih majstora u blizini</small></div><em>Prikaži zonu</em></section><p class="trust-note">'); };
 
 function initialNotifications(role) {
   return role === 'pro' ? [
