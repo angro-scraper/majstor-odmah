@@ -4,7 +4,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#123e34" />
-    <title>balkan.works — lokalne usluge, stanovanje i auto</title>
+    <title>balkan.works — super-aplikacija za lokalni život</title>
+    <meta name="description" content="balkan.works okuplja proverene lokalne usluge, majstore, partnere i buduće module za stanovanje, auto i termine." />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap" rel="stylesheet" />
@@ -12,15 +13,16 @@
   </head>
   <body class="balkan-page">
     <header class="hub-header">
-      <a class="hub-brand" href="balkan.html" aria-label="balkan.works početna"><span class="hub-mark">B</span><span>balkan<b>.works</b></span></a>
+      <a class="hub-brand" href="/" aria-label="balkan.works početna"><span class="hub-mark">B</span><span>balkan<b>.works</b></span></a>
       <nav class="hub-nav" aria-label="Glavna navigacija">
         <a href="#usluge" data-i18n="navServices">Usluge</a>
+        <a href="#sistem" data-i18n="navSystem">Balkan sistem</a>
         <a href="#zasto" data-i18n="navTrust">Bezbednost</a>
-        <a href="index.html" data-i18n="navTrades">Majstor odmah</a>
       </nav>
       <div class="hub-controls">
         <label class="select-wrap"><span class="sr-only">Grad</span><select id="citySelect"><option>Novi Sad</option><option>Beograd</option><option>Niš</option><option>Sarajevo</option><option>Zagreb</option><option>Skoplje</option><option>Podgorica</option></select></label>
         <label class="select-wrap language-wrap"><span class="sr-only">Jezik</span><select id="languageSelect"><option value="sr">Srpski</option><option value="hr">Hrvatski</option><option value="bs">Bosanski</option><option value="en">English</option><option value="mk">Македонски</option><option value="sq">Shqip</option></select></label>
+        <button class="account-trigger" id="openBalkanAccount" type="button" data-i18n="myBalkan">Moj Balkan</button>
       </div>
     </header>
 
@@ -28,30 +30,47 @@
       <section class="hub-hero">
         <div class="hero-copy">
           <p class="hub-eyebrow"><span></span><span data-i18n="eyebrow">JEDNA APLIKACIJA ZA SVAKI DAN</span></p>
-          <h1 data-i18n="heroTitle">Sve što ti treba<br />u <em>tvom kraju.</em></h1>
-          <p class="hero-lead" data-i18n="heroLead">Pouzdane lokalne usluge, stanovanje, auto i termini — na jednom jasnom mestu.</p>
+          <h1 data-i18n="heroTitle">Balkan je jedan.<br /><em>Tvoj dan takođe.</em></h1>
+          <p class="hero-lead" data-i18n="heroLead">Jedan pouzdan ulaz za stvari koje završavaš lokalno — od majstora i materijala do narednih modula za stanovanje, auto i termine.</p>
           <form id="hubSearchForm" class="hub-search" role="search">
-            <span aria-hidden="true">⌕</span><input id="hubSearch" type="search" autocomplete="off" data-i18n-placeholder="searchPlaceholder" placeholder="Pretraži majstora, stan, servis ili termin" /><button type="submit" data-i18n="search">Pretraži</button>
+            <span aria-hidden="true">⌕</span><input id="hubSearch" type="search" autocomplete="off" data-i18n-placeholder="searchPlaceholder" placeholder="Pretraži uslugu, majstora, materijal ili auto" /><button type="submit" data-i18n="search">Pretraži</button>
           </form>
-          <p class="search-hint" data-i18n="searchHint">Probaj: „vodoinstalater”, „cimer”, „registracija auta”</p>
+          <div class="hero-actions">
+            <a class="primary-action" href="index.html" data-i18n="openTrades">Otvori Majstor odmah <span>→</span></a>
+            <a class="secondary-action" href="partneri.html" data-i18n="openPartners">Partneri i materijali</a>
+          </div>
+          <p class="search-hint" data-i18n="searchHint">Probaj: „vodoinstalater”, „pločice”, „cimer”, „registracija auta”</p>
         </div>
         <div class="hero-orbit" aria-label="Usluge Balkana">
-          <div class="orbit-card orbit-main"><span>⌂</span><b data-i18n="orbitMain">Tvoj lokalni svet</b><small data-i18n="orbitSub">proveren i bliži</small></div>
+          <div class="orbit-card orbit-main"><span>⌂</span><b data-i18n="orbitMain">Tvoj lokalni svet</b><small data-i18n="orbitSub">povezan, proverljiv, bliži</small></div>
           <div class="orbit-chip chip-one">⚒ <span data-i18n="trades">Majstori</span></div>
-          <div class="orbit-chip chip-two">⌘ <span data-i18n="housing">Stanovi</span></div>
+          <div class="orbit-chip chip-two">▦ <span data-i18n="materials">Materijali</span></div>
           <div class="orbit-chip chip-three">▣ <span data-i18n="auto">Auto</span></div>
           <div class="orbit-chip chip-four">◷ <span data-i18n="queues">Termini</span></div>
         </div>
       </section>
 
-      <section id="usluge" class="services-section">
-        <div class="section-heading"><div><p class="hub-eyebrow"><span></span><span data-i18n="servicesEyebrow">IZABERI ŠTA TI TREBA</span></p><h2 data-i18n="servicesTitle">Jedan nalog, mnogo lakši dan.</h2></div><p data-i18n="servicesCopy">Svaki modul je napravljen da smanji čekanje, prevare i pozivanje na deset strana.</p></div>
+      <section class="services-section" id="usluge">
+        <div class="section-heading"><div><p class="hub-eyebrow"><span></span><span data-i18n="servicesEyebrow">SVE POČINJE OVDE</span></p><h2 data-i18n="servicesTitle">Jedan krov. Jasni moduli.</h2></div><p data-i18n="servicesCopy">balkan.works je glavni ulaz. Svaka usluga ispod njega ostaje zasebna, jasna i proverljiva.</p></div>
         <div class="module-grid" id="moduleGrid"></div>
       </section>
 
       <section class="hub-workspace" id="hubWorkspace" aria-live="polite">
-        <div class="workspace-label"><span class="status-dot"></span><span data-i18n="workspaceLabel">BRZI PREGLED</span></div>
+        <div class="workspace-label"><span class="status-dot"></span><span data-i18n="workspaceLabel">MODUL U FOKUSU</span></div>
         <div id="workspaceContent"></div>
+      </section>
+
+      <section class="system-section" id="sistem">
+        <div class="system-heading"><div><p class="hub-eyebrow"><span></span><span data-i18n="systemEyebrow">KAKO JE SVE POVEZANO</span></p><h2 data-i18n="systemTitle">balkan.works je iznad svega ostalog.</h2></div><p data-i18n="systemCopy">Ne pravimo jedan nepregledan proizvod. Gradimo mrežu jasnih modula sa zajedničkim pravilima poverenja, lokacije i podrške.</p></div>
+        <div class="system-map">
+          <article class="system-root"><span class="system-mark">B</span><div><small data-i18n="rootLabel">KROVNA APLIKACIJA</small><h3>balkan.works</h3><p data-i18n="rootCopy">Početna, grad, jezik, podrška i tvoj pregled modula.</p></div></article>
+          <div class="system-branches">
+            <a class="system-branch active" href="index.html"><span>⚒</span><div><b>Majstor odmah</b><small data-i18n="activeNow">Aktivno sada</small></div><i>→</i></a>
+            <a class="system-branch active" href="partneri.html"><span>▦</span><div><b data-i18n="partners">Partneri i materijali</b><small data-i18n="activeNow">Aktivno sada</small></div><i>→</i></a>
+            <button class="system-branch" type="button" data-module-jump="housing"><span>⌂</span><div><b data-i18n="housing">Stanovi i cimeri</b><small data-i18n="nextPilot">Sledeći pilot</small></div><i>→</i></button>
+            <button class="system-branch" type="button" data-module-jump="auto"><span>▣</span><div><b data-i18n="autoFull">Sve za auto</b><small data-i18n="nextPilot">Sledeći pilot</small></div><i>→</i></button>
+          </div>
+        </div>
       </section>
 
       <section id="zasto" class="trust-section">
@@ -63,7 +82,19 @@
         </div>
       </section>
     </main>
-    <footer class="hub-footer"><a class="hub-brand" href="balkan.html"><span class="hub-mark">B</span><span>balkan<b>.works</b></span></a><p data-i18n="footer">Lokalne stvari, uređene za ljude.</p><a href="index.html" data-i18n="openTrades">Otvori Majstor odmah →</a></footer>
+    <footer class="hub-footer"><a class="hub-brand" href="/"><span class="hub-mark">B</span><span>balkan<b>.works</b></span></a><p data-i18n="footer">Lokalne stvari, uređene za ljude.</p><a href="index.html" data-i18n="openTrades">Otvori Majstor odmah →</a></footer>
+
+    <section class="balkan-account-modal hidden" id="balkanAccountModal" role="dialog" aria-modal="true" aria-labelledby="balkanAccountTitle">
+      <div class="balkan-account-card">
+        <button class="modal-close" id="closeBalkanAccount" type="button" aria-label="Zatvori">×</button>
+        <p class="hub-eyebrow"><span></span><span data-i18n="accountEyebrow">TVA POLAZNA TAČKA</span></p>
+        <h2 id="balkanAccountTitle" data-i18n="accountTitle">Moj Balkan</h2>
+        <p data-i18n="accountCopy">Sačuvaj grad i odaberi šta želiš prvo da vidiš. Pravi nalog se trenutno otvara u aktivnom modulu Majstor odmah.</p>
+        <div class="account-location"><label for="accountCity" data-i18n="cityLabel">Tvoj grad</label><select id="accountCity"><option>Novi Sad</option><option>Beograd</option><option>Niš</option><option>Sarajevo</option><option>Zagreb</option><option>Skoplje</option><option>Podgorica</option></select></div>
+        <div class="account-module-list" id="accountModuleList"></div>
+        <div class="account-actions"><button class="primary-action" id="saveBalkanAccount" type="button" data-i18n="savePreferences">Sačuvaj izbor</button><a class="secondary-action" href="index.html?account=1" data-i18n="openAccount">Otvori postojeći nalog</a></div>
+      </div>
+    </section>
     <div class="hub-toast" id="hubToast" role="status" aria-live="polite"></div>
     <script src="balkan.js"></script>
   </body>

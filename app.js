@@ -238,6 +238,9 @@ accountBackdrop.addEventListener('click', event => { if (event.target === accoun
 document.querySelectorAll('.role-card').forEach(button => button.addEventListener('click', () => { localStorage.setItem('majstorOdmahRole', button.dataset.role); setDemoProfile(button.dataset.role); showDashboard(button.dataset.role); syncJobsFromServer(button.dataset.role); }));
 window.addEventListener('majstor-authenticated', function (event) { const profile = event.detail; const role = profile.role === 'provider' ? 'pro' : 'customer'; localStorage.setItem('majstorOdmahRole', role); localStorage.setItem('majstorOdmahDemoAccount', JSON.stringify({ name: profile.full_name, label: profile.role === 'provider' ? 'majstor' : 'klijent', email: profile.email || '' })); setDemoProfile(role); accountWelcome.classList.add('hidden'); document.querySelector('#authView').classList.add('hidden'); showDashboard(role); });
 
+// balkan.works uses this link to continue into the active Majstor odmah account area.
+if (new URLSearchParams(window.location.search).get('account') === '1') openAccount();
+
 const supportBackdrop = document.querySelector('#supportBackdrop');
 document.querySelector('#supportButton').addEventListener('click', () => { supportBackdrop.classList.remove('hidden'); document.body.style.overflow = 'hidden'; });
 document.querySelector('#closeSupport').addEventListener('click', () => { supportBackdrop.classList.add('hidden'); document.body.style.overflow = ''; });
