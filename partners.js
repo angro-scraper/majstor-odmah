@@ -2,11 +2,31 @@ const materialSearch = document.querySelector('#materialSearch');
 const materialCards = Array.from(document.querySelectorAll('.partner-grid article'));
 const materialSearchNote = document.querySelector('#materialSearchNote');
 
+function normalizeSearch(value) {
+  return String(value || '').toLocaleLowerCase('sr').normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, ' ').trim();
+}
+
+function wordStem(value) {
+  return String(value || '').replace(/(ovima|evima|anje|enje|acija|acije|aciju|ama|ima|ski|ska|sko|nih|nim|nog|na|ni|ne|no|om|em|og|oj|e|a|i|u)$/i, '');
+}
+
+function wordsMatch(first, second) {
+  const a = wordStem(first); const b = wordStem(second);
+  return a === b || (a.length >= 5 && b.length >= 5 && (a.startsWith(b) || b.startsWith(a)));
+}
+
 function filterMaterials(value) {
-  const query = String(value || '').trim().toLocaleLowerCase('sr');
+  const terms = normalizeSearch(value).split(' ').filter(function (term) { return term.length > 1; });
+  const requiredMatches = terms.length < 3 ? 1 : Math.ceil(terms.length * 0.6);
   let visible = 0;
-  materialCards.forEach(function (card) { const matches = !query || card.dataset.search.toLocaleLowerCase('sr').includes(query); card.hidden = !matches; if (matches) visible += 1; });
-  materialSearchNote.textContent = query ? (visible ? 'Pronađeno kategorija: ' + visible : 'Nema podudaranja — probaj npr. „pločice”, „alat” ili „dostava”.') : '';
+  materialCards.forEach(function (card) {
+    const haystack = normalizeSearch(card.dataset.search).split(' ');
+    const score = terms.reduce(function (total, term) { return total + (haystack.some(function (word) { return wordsMatch(term, word); }) ? 1 : 0); }, 0);
+    const matches = !terms.length || score >= requiredMatches;
+    card.hidden = !matches;
+    if (matches) visible += 1;
+  });
+  materialSearchNote.textContent = terms.length ? (visible ? 'Pronađeno kategorija: ' + visible + '. Prikazujemo najrelevantnije rezultate.' : 'Nema dovoljno bliskog podudaranja — probaj kraće, npr. „pločice”, „alat” ili „dostava”.') : '';
 }
 
 materialSearch.addEventListener('input', function (event) { filterMaterials(event.target.value); });
