@@ -90,18 +90,19 @@ function createSupabaseApi(options) {
   async function handleAdmin(request, response, url) {
     const supportMatch = url.pathname.match(/^\/api\/admin\/support\/([^/]+)$/);
     const jobFlagMatch = url.pathname.match(/^\/api\/admin\/jobs\/([^/]+)\/flag$/);
+    const userBlockMatch = url.pathname.match(/^\/api\/admin\/users\/([^/]+)\/block$/);
     if (url.pathname === '/api/admin/overview' && request.method === 'GET') {
       const results = await Promise.all([
-        database('GET', '/rest/v1/profiles?select=id,full_name,role,city,phone_verified,identity_verified,created_at&order=created_at.desc'),
+        database('GET', '/rest/v1/profiles?select=id,full_name,role,city,phone_verified,identity_verified,is_blocked,blocked_at,blocked_reason,created_at&order=created_at.desc'),
         database('GET', '/rest/v1/providers?select=id,profile_id,trade,available,rating,review_count'),
         database('GET', '/rest/v1/jobs?select=*&order=created_at.desc'),
         database('GET', '/rest/v1/support_tickets?select=*&order=created_at.desc')
       ]);
       const profiles = results[0] || []; const providersRows = results[1] || []; const jobs = (results[2] || []).map(toJob); const tickets = results[3] || [];
-      return reply(response, 200, { stats: { users: profiles.length, providers: providersRows.length, openJobs: jobs.filter(function (job) { return ['Traži majstora', 'Primljene ponude'].indexOf(job.status) >= 0; }).length, activeJobs: jobs.filter(function (job) { return ['Dogovoren termin', 'Potvrđen dolazak', 'Radovi u toku'].indexOf(job.status) >= 0; }).length, openTickets: tickets.filter(function (ticket) { return ticket.status !== 'resolved'; }).length }, jobs: jobs.slice(0, 8), tickets: tickets.slice(0, 8) });
+      return reply(response, 200, { stats: { users: profiles.length, providers: providersRows.length, blocked: profiles.filter(function (profile) { return profile.is_blocked; }).length, openJobs: jobs.filter(function (job) { return ['Traži majstora', 'Primljene ponude'].indexOf(job.status) >= 0; }).length, activeJobs: jobs.filter(function (job) { return ['Dogovoren termin', 'Potvrđen dolazak', 'Radovi u toku'].indexOf(job.status) >= 0; }).length, openTickets: tickets.filter(function (ticket) { return ticket.status !== 'resolved'; }).length }, jobs: jobs.slice(0, 8), tickets: tickets.slice(0, 8) });
     }
     if (url.pathname === '/api/admin/users' && request.method === 'GET') {
-      const results = await Promise.all([database('GET', '/rest/v1/profiles?select=id,full_name,role,city,phone_verified,identity_verified,created_at&order=created_at.desc'), database('GET', '/rest/v1/providers?select=profile_id,trade,available,rating,review_count')]);
+      const results = await Promise.all([database('GET', '/rest/v1/profiles?select=id,full_name,role,city,phone_verified,identity_verified,is_blocked,blocked_at,blocked_reason,created_at&order=created_at.desc'), database('GET', '/rest/v1/providers?select=profile_id,trade,available,rating,review_count')]);
       const providerByProfile = {}; (results[1] || []).forEach(function (provider) { providerByProfile[provider.profile_id] = provider; });
       return reply(response, 200, (results[0] || []).map(function (profile) { return Object.assign({}, profile, { provider: providerByProfile[profile.id] || null }); }));
     }
@@ -121,6 +122,13 @@ function createSupabaseApi(options) {
       if (!saved) return reply(response, 404, { error: 'Posao nije pronađen.' });
       saved.job.adminFlag = Boolean(payload.flagged); saved.job.adminFlaggedAt = saved.job.adminFlag ? new Date().toISOString() : null;
       return reply(response, 200, await saveJob(saved.row.id, saved.job));
+    }
+    if (userBlockMatch && request.method === 'POST') {
+      const payload = await parseBody(request); const profileRows = await database('GET', '/rest/v1/profiles?id=eq.' + encodeURIComponent(userBlockMatch[1]) + '&select=id,role'); const profile = profileRows && profileRows[0];
+      if (!profile) return reply(response, 404, { error: 'Korisnik nije pronađen.' });
+      if (profile.role === 'admin') return reply(response, 403, { error: 'Administratorski nalog se ne može blokirati ovim putem.' });
+      const blocked = Boolean(payload.blocked); const rows = await database('PATCH', '/rest/v1/profiles?id=eq.' + encodeURIComponent(profile.id), { is_blocked: blocked, blocked_at: blocked ? new Date().toISOString() : null, blocked_reason: blocked ? String(payload.reason || 'Administrativna provera').trim().slice(0, 300) : null });
+      return reply(response, 200, rows && rows[0] ? rows[0] : { id: profile.id, is_blocked: blocked });
     }
     return reply(response, 404, { error: 'Admin ruta nije pronađena.' });
   }

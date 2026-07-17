@@ -21,6 +21,9 @@ create table public.profiles (
   avatar_path text,
   phone_verified boolean not null default false,
   identity_verified boolean not null default false,
+  is_blocked boolean not null default false,
+  blocked_at timestamptz,
+  blocked_reason text,
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
 );

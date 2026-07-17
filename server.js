@@ -52,12 +52,14 @@ function isAdmin(request) {
   if (!expected || !received || expected.length !== received.length) return false;
   return crypto.timingSafeEqual(Buffer.from(expected), Buffer.from(received));
 }
-function adminUsers() {
-  return [{ id: 'demo-customer', full_name: 'Ana Petrović', role: 'customer', city: 'Novi Sad', phone_verified: true, identity_verified: true, created_at: 'Demo nalog', provider: null }].concat(providers.map(function (provider) { return { id: provider.id, full_name: provider.name, role: 'provider', city: 'Novi Sad', phone_verified: true, identity_verified: provider.verified, created_at: 'Demo nalog', provider: { trade: provider.category, available: provider.availability.indexOf('danas') >= 0, rating: provider.rating, review_count: provider.reviews } }; }));
+function adminUsers(data) {
+  const moderation = data && data.userModeration ? data.userModeration : {};
+  return [{ id: 'demo-customer', full_name: 'Ana Petrović', role: 'customer', city: 'Novi Sad', phone_verified: true, identity_verified: true, created_at: 'Demo nalog', provider: null }].concat(providers.map(function (provider) { return { id: provider.id, full_name: provider.name, role: 'provider', city: 'Novi Sad', phone_verified: true, identity_verified: provider.verified, created_at: 'Demo nalog', provider: { trade: provider.category, available: provider.availability.indexOf('danas') >= 0, rating: provider.rating, review_count: provider.reviews } }; })).map(function (user) { return Object.assign({}, user, moderation[user.id] || {}); });
 }
 function adminOverview(data) {
   const jobs = data.jobs || []; const tickets = data.supportTickets || [];
-  return { stats: { users: adminUsers().length, providers: providers.length, openJobs: jobs.filter(function (job) { return ['Traži majstora', 'Primljene ponude'].indexOf(job.status) >= 0; }).length, activeJobs: jobs.filter(function (job) { return ['Dogovoren termin', 'Potvrđen dolazak', 'Radovi u toku'].indexOf(job.status) >= 0; }).length, openTickets: tickets.filter(function (ticket) { return ticket.status !== 'Rešeno'; }).length }, jobs: jobs.slice(0, 8), tickets: tickets.slice(0, 8) };
+  const users = adminUsers(data);
+  return { stats: { users: users.length, providers: providers.length, blocked: users.filter(function (user) { return user.is_blocked; }).length, openJobs: jobs.filter(function (job) { return ['Traži majstora', 'Primljene ponude'].indexOf(job.status) >= 0; }).length, activeJobs: jobs.filter(function (job) { return ['Dogovoren termin', 'Potvrđen dolazak', 'Radovi u toku'].indexOf(job.status) >= 0; }).length, openTickets: tickets.filter(function (ticket) { return ticket.status !== 'Rešeno'; }).length }, jobs: jobs.slice(0, 8), tickets: tickets.slice(0, 8) };
 }
 function aiLimit(name, fallback) { return Math.max(1, Number(process.env[name] || fallback)); }
 function canUseAi(request) {
@@ -78,13 +80,14 @@ const server = http.createServer(function (request, response) {
   if (url.pathname.indexOf('/api/admin/') === 0) {
     if (!isAdmin(request)) return reply(response, 401, { error: 'Administratorski pristup nije dozvoljen.' });
     if (supabaseApi.enabled) return supabaseApi.handleAdmin(request, response, url).catch(function (error) { console.error('Supabase admin greška:', error.message); reply(response, 502, { error: 'Admin podaci trenutno nisu dostupni.' }); });
-    const adminSupportMatch = url.pathname.match(/^\/api\/admin\/support\/(\d+)$/); const adminJobFlagMatch = url.pathname.match(/^\/api\/admin\/jobs\/(\d+)\/flag$/);
+    const adminSupportMatch = url.pathname.match(/^\/api\/admin\/support\/(\d+)$/); const adminJobFlagMatch = url.pathname.match(/^\/api\/admin\/jobs\/(\d+)\/flag$/); const adminUserBlockMatch = url.pathname.match(/^\/api\/admin\/users\/([^/]+)\/block$/);
     if (url.pathname === '/api/admin/overview' && request.method === 'GET') return reply(response, 200, adminOverview(readData()));
-    if (url.pathname === '/api/admin/users' && request.method === 'GET') return reply(response, 200, adminUsers());
+    if (url.pathname === '/api/admin/users' && request.method === 'GET') return reply(response, 200, adminUsers(readData()));
     if (url.pathname === '/api/admin/jobs' && request.method === 'GET') return reply(response, 200, readData().jobs);
     if (url.pathname === '/api/admin/support' && request.method === 'GET') return reply(response, 200, readData().supportTickets || []);
     if (adminSupportMatch && request.method === 'POST') return parseBody(request, function (error, payload) { const data = readData(); const ticket = (data.supportTickets || []).find(function (item) { return item.id === Number(adminSupportMatch[1]); }); const statuses = { open: 'Primljeno', in_progress: 'U obradi', resolved: 'Rešeno' }; if (error || !ticket || !statuses[payload.status]) return reply(response, 400, { error: 'Status podrške nije validan.' }); ticket.status = statuses[payload.status]; ticket.updatedAt = new Date().toISOString(); writeData(data); reply(response, 200, ticket); });
     if (adminJobFlagMatch && request.method === 'POST') return parseBody(request, function (error, payload) { const data = readData(); const job = findJob(data, adminJobFlagMatch[1]); if (error || !job) return reply(response, 404, { error: 'Posao nije pronađen.' }); job.adminFlag = Boolean(payload.flagged); job.adminFlaggedAt = job.adminFlag ? new Date().toISOString() : null; writeData(data); reply(response, 200, job); });
+    if (adminUserBlockMatch && request.method === 'POST') return parseBody(request, function (error, payload) { const data = readData(); const user = adminUsers(data).find(function (item) { return item.id === adminUserBlockMatch[1]; }); if (error || !user) return reply(response, 404, { error: 'Korisnik nije pronađen.' }); data.userModeration = data.userModeration || {}; const blocked = Boolean(payload.blocked); data.userModeration[user.id] = { is_blocked: blocked, blocked_at: blocked ? new Date().toISOString() : null, blocked_reason: blocked ? String(payload.reason || 'Administrativna provera').trim().slice(0, 300) : null }; writeData(data); reply(response, 200, Object.assign({}, user, data.userModeration[user.id])); });
     return reply(response, 404, { error: 'Admin ruta nije pronađena.' });
   }
   if (supabaseApi.enabled && url.pathname.indexOf('/api/') === 0 && url.pathname !== '/api/ai-advice') {
