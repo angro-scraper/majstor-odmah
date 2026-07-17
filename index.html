@@ -17,6 +17,7 @@
       <nav>
         <a href="#kako-radi">Kako radi</a>
         <a href="#majstori">Majstori</a>
+        <button class="text-button" id="supportButton">Podrška</button>
         <button class="text-button" id="loginButton">Moj nalog</button>
         <button class="button small" id="registerButton">Postani majstor</button>
       </nav>
@@ -95,12 +96,21 @@
           <label>Vrsta posla<select required id="jobCategory"><option value="">Izaberi kategoriju</option></select></label>
           <label>Gde ti je potreban majstor?<input required id="jobLocation" placeholder="npr. Detelinara, Novi Sad" /></label>
           <label>Opiši problem<textarea required id="jobDescription" rows="3" placeholder="npr. Curi voda ispod sudopere, potreban dolazak danas."></textarea></label>
+          <label class="image-upload">Dodaj do 3 fotografije problema<input id="jobImages" type="file" accept="image/*" multiple /><small>JPG, PNG ili HEIC; po mogućnosti manje od 400 KB po slici.</small></label>
           <div class="form-row"><label>Poželjni termin<select id="jobDate"><option>Danas</option><option>Sutra</option><option>Ove nedelje</option></select></label><label>Budžet (opciono)<input id="jobBudget" inputmode="numeric" placeholder="npr. 8.000 RSD" /></label></div>
           <button class="button full" type="submit">Pošalji zahtev <span>→</span></button>
         </form>
       </section>
     </div>
     <div class="toast hidden" id="toast"><span>✓</span><div><b>Zahtev je poslat!</b><p>Obavestili smo 8 dostupnih majstora u blizini.</p></div></div>
+    <div class="modal-backdrop hidden" id="supportBackdrop">
+      <section class="modal support-modal" aria-modal="true" role="dialog" aria-labelledby="supportTitle">
+        <button class="close" id="closeSupport" aria-label="Zatvori">×</button>
+        <p class="eyebrow"><span></span> Podrška</p><h2 id="supportTitle">Kako možemo da pomognemo?</h2>
+        <p class="modal-lead">Prijavi problem, postavi pitanje ili pošalji predlog. Tim podrške dobija tvoj zahtev odmah.</p>
+        <form id="supportForm"><label>Tema<input required id="supportSubject" maxlength="120" placeholder="npr. Problem sa dogovorenim terminom" /></label><label>Poruka<textarea required id="supportMessage" rows="4" maxlength="1500" placeholder="Opiši šta se dogodilo."></textarea></label><button class="button full" type="submit">Pošalji podršci <span>→</span></button></form>
+      </section>
+    </div>
     <div class="modal-backdrop hidden" id="accountBackdrop">
       <section class="account-modal" aria-modal="true" role="dialog" aria-labelledby="accountTitle">
         <button class="close" id="closeAccount" aria-label="Zatvori">×</button>

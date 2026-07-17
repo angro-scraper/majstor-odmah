@@ -34,6 +34,19 @@ function renderMatches(job) {
   }).join('') + '</div>';
 }
 
+function renderImages(job) {
+  const images = job.images || [];
+  if (!images.length) return '';
+  return '<div class="image-strip">' + images.map(function (image, index) { return '<img src="' + escapeHtml(image) + '" alt="Fotografija problema ' + (index + 1) + '" />'; }).join('') + '</div>';
+}
+
+function renderChat(job, isPro) {
+  if (!job.acceptedOfferId) return '';
+  const messages = job.messages || [];
+  const display = messages.length ? messages.map(function (message) { return '<div class="chat-message ' + (message.author === 'majstor' ? 'pro' : '') + '"><b>' + (message.author === 'majstor' ? 'Milan · majstor' : 'Klijent') + '</b>' + escapeHtml(message.text) + '</div>'; }).join('') : '<p class="helper-note">Dogovorite detalje posla ovde — sve poruke ostaju uz ovaj projekat.</p>';
+  return '<div class="chat"><h4>Poruke sa ' + (isPro ? 'klijentom' : 'majstorom') + '</h4><div class="chat-feed">' + display + '</div><form class="chat-form" data-job-id="' + job.id + '"><input required maxlength="600" name="message" placeholder="Napiši poruku…" /><button type="submit">Pošalji</button></form></div>';
+}
+
 function renderProgress(job, isPro) {
   if (!job.acceptedOfferId) return '';
   const stages = ['Dogovoren termin', 'Potvrđen dolazak', 'Radovi u toku', 'Završeno'];
@@ -52,7 +65,7 @@ function renderJob(job, isPro) {
   const statusClass = job.acceptedOfferId ? 'confirmed' : (offers.length ? 'accepted' : '');
   const proAction = isPro && !job.acceptedOfferId ? '<form class="offer-form" data-job-id="' + job.id + '"><input required name="amount" inputmode="numeric" placeholder="Cena RSD" /><input required name="eta" placeholder="npr. danas 17h" /><button class="secondary-button" type="submit">Pošalji ponudu</button></form>' : '';
   const progress = renderProgress(job, isPro);
-  return '<article class="dashboard-job"><div><b>' + escapeHtml(job.category) + ' · ' + escapeHtml(job.location) + '</b><p>' + escapeHtml(job.description) + '</p><p>' + dateLabel(job.createdAt) + '</p></div><span class="job-status ' + statusClass + '">' + escapeHtml(job.status || 'Novo') + '</span><div class="offer-panel">' + (isPro ? '<h4>Pošalji svoju ponudu</h4>' + proAction + (offers.length ? '<p class="helper-note">Na posao je stiglo ' + offers.length + ' ponuda.</p>' : '') : '<h4>Obavešteni majstori (' + (job.matches || []).length + ')</h4>' + renderMatches(job) + '<h4 style="margin-top:12px">Ponude majstora</h4>' + renderOffers(job) + progress) + '</div></article>';
+  return '<article class="dashboard-job"><div><b>' + escapeHtml(job.category) + ' · ' + escapeHtml(job.location) + '</b><p>' + escapeHtml(job.description) + '</p><p>' + dateLabel(job.createdAt) + '</p>' + renderImages(job) + '</div><span class="job-status ' + statusClass + '">' + escapeHtml(job.status || 'Novo') + '</span><div class="offer-panel">' + (isPro ? '<h4>Pošalji svoju ponudu</h4>' + proAction + (offers.length ? '<p class="helper-note">Na posao je stiglo ' + offers.length + ' ponuda.</p>' : '') : '<h4>Obavešteni majstori (' + (job.matches || []).length + ')</h4>' + renderMatches(job) + '<h4 style="margin-top:12px">Ponude majstora</h4>' + renderOffers(job)) + progress + renderChat(job, isPro) + '</div></article>';
 }
 
 function showDashboard(role) {
@@ -74,6 +87,10 @@ function showDashboard(role) {
   }); });
   document.querySelectorAll('.progress-action').forEach(function (button) { button.addEventListener('click', function () {
     requestWorkflow('/api/jobs/' + button.dataset.jobId + '/progress', { progress: button.dataset.progress }).then(function () { refreshWorkflow(role); }).catch(function () { alert('Status nije promenjen. Pokušaj ponovo.'); });
+  }); });
+  document.querySelectorAll('.chat-form').forEach(function (form) { form.addEventListener('submit', function (event) {
+    event.preventDefault(); const text = form.querySelector('[name="message"]').value;
+    requestWorkflow('/api/jobs/' + form.dataset.jobId + '/messages', { text: text, author: isPro ? 'majstor' : 'klijent' }).then(function () { refreshWorkflow(role); }).catch(function () { alert('Poruka nije poslata. Pokušaj ponovo.'); });
   }); });
   document.querySelector('#switchRole').addEventListener('click', function () { localStorage.removeItem('majstorOdmahRole'); accountWelcome.classList.remove('hidden'); dashboard.classList.add('hidden'); });
 }

@@ -26,7 +26,7 @@ function writeData(data) { fs.writeFileSync(dataFile, JSON.stringify(data, null,
 function reply(response, status, body) { response.writeHead(status, { 'Content-Type': 'application/json; charset=utf-8' }); response.end(JSON.stringify(body)); }
 function parseBody(request, done) {
   let raw = '';
-  request.on('data', function (chunk) { raw += chunk; if (raw.length > 100000) request.destroy(); });
+  request.on('data', function (chunk) { raw += chunk; if (raw.length > 1500000) request.destroy(); });
   request.on('end', function () { try { done(null, JSON.parse(raw || '{}')); } catch (error) { done(error); } });
 }
 function findJob(data, id) { return data.jobs.find(function (job) { return job.id === Number(id); }); }
@@ -36,6 +36,7 @@ const server = http.createServer(function (request, response) {
   const offerMatch = url.pathname.match(/^\/api\/jobs\/(\d+)\/offers$/);
   const acceptMatch = url.pathname.match(/^\/api\/jobs\/(\d+)\/accept$/);
   const progressMatch = url.pathname.match(/^\/api\/jobs\/(\d+)\/progress$/);
+  const messageMatch = url.pathname.match(/^\/api\/jobs\/(\d+)\/messages$/);
 
   if (url.pathname === '/api/providers' && request.method === 'GET') return reply(response, 200, providers);
   if (url.pathname === '/api/jobs' && request.method === 'GET') return reply(response, 200, readData().jobs);
@@ -49,6 +50,8 @@ const server = http.createServer(function (request, response) {
       job.createdAt = new Date().toISOString();
       job.offers = [];
       job.matches = matchedProviders(job.category);
+      job.images = Array.isArray(job.images) ? job.images.slice(0, 3) : [];
+      job.messages = [];
       data.jobs.unshift(job);
       writeData(data);
       reply(response, 201, job);
@@ -82,6 +85,24 @@ const server = http.createServer(function (request, response) {
       job.progress = payload.progress; job.status = payload.progress; job.updatedAt = new Date().toISOString();
       job.activity = job.activity || []; job.activity.push({ label: payload.progress, at: job.updatedAt });
       writeData(data); reply(response, 200, job);
+    });
+  }
+  if (messageMatch && request.method === 'POST') {
+    return parseBody(request, function (error, payload) {
+      const data = readData(); const job = findJob(data, messageMatch[1]);
+      const text = String(payload.text || '').trim();
+      if (error || !job || !job.acceptedOfferId || !text || text.length > 600) return reply(response, 400, { error: 'Poruka nije validna.' });
+      job.messages = job.messages || []; job.messages.push({ id: Date.now(), author: payload.author === 'majstor' ? 'majstor' : 'klijent', text: text, createdAt: new Date().toISOString() });
+      writeData(data); reply(response, 201, job);
+    });
+  }
+  if (url.pathname === '/api/support' && request.method === 'POST') {
+    return parseBody(request, function (error, ticket) {
+      const subject = String(ticket.subject || '').trim(); const message = String(ticket.message || '').trim();
+      if (error || !subject || !message || subject.length > 120 || message.length > 1500) return reply(response, 400, { error: 'Poruka za podršku nije validna.' });
+      const data = readData(); data.supportTickets = data.supportTickets || [];
+      const saved = { id: Date.now(), subject: subject, message: message, status: 'Primljeno', createdAt: new Date().toISOString() };
+      data.supportTickets.push(saved); writeData(data); reply(response, 201, saved);
     });
   }
   if (request.method !== 'GET' && request.method !== 'HEAD') return reply(response, 405, { error: 'Metod nije dozvoljen.' });

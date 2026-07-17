@@ -74,9 +74,17 @@ document.addEventListener('keydown', event => { if (event.key === 'Escape') clos
 document.querySelectorAll('.category').forEach(button => button.addEventListener('click', () => openModal(button.dataset.category)));
 document.querySelectorAll('.contact-pro').forEach(button => button.addEventListener('click', () => { openModal(); document.querySelector('#jobDescription').value = `Želim da pošaljem zahtev majstoru ${button.dataset.name}.`; }));
 
-document.querySelector('#jobForm').addEventListener('submit', event => {
+function imageFilesToDataUrls(files) {
+  const selected = Array.prototype.slice.call(files || []).slice(0, 3);
+  if (selected.some(function (file) { return file.size > 500000; })) return Promise.reject(new Error('Svaka fotografija mora biti manja od 500 KB.'));
+  return Promise.all(selected.map(function (file) { return new Promise(function (resolve, reject) { const reader = new FileReader(); reader.onload = function () { resolve(reader.result); }; reader.onerror = reject; reader.readAsDataURL(file); }); }));
+}
+
+document.querySelector('#jobForm').addEventListener('submit', async event => {
   event.preventDefault();
-  const job = { category: selector.value, location: document.querySelector('#jobLocation').value, description: document.querySelector('#jobDescription').value, createdAt: new Date().toISOString(), clientId: 'job-' + Date.now() };
+  let images;
+  try { images = await imageFilesToDataUrls(document.querySelector('#jobImages').files); } catch (error) { alert(error.message); return; }
+  const job = { category: selector.value, location: document.querySelector('#jobLocation').value, description: document.querySelector('#jobDescription').value, images: images, createdAt: new Date().toISOString(), clientId: 'job-' + Date.now() };
   const saved = JSON.parse(localStorage.getItem('majstorOdmahJobs') || '[]');
   saved.push(job);
   localStorage.setItem('majstorOdmahJobs', JSON.stringify(saved));
@@ -130,3 +138,15 @@ document.querySelector('#registerButton').addEventListener('click', openAccount)
 document.querySelector('#closeAccount').addEventListener('click', closeAccount);
 accountBackdrop.addEventListener('click', event => { if (event.target === accountBackdrop) closeAccount(); });
 document.querySelectorAll('.role-card').forEach(button => button.addEventListener('click', () => { localStorage.setItem('majstorOdmahRole', button.dataset.role); showDashboard(button.dataset.role); }));
+
+const supportBackdrop = document.querySelector('#supportBackdrop');
+document.querySelector('#supportButton').addEventListener('click', () => { supportBackdrop.classList.remove('hidden'); document.body.style.overflow = 'hidden'; });
+document.querySelector('#closeSupport').addEventListener('click', () => { supportBackdrop.classList.add('hidden'); document.body.style.overflow = ''; });
+supportBackdrop.addEventListener('click', event => { if (event.target === supportBackdrop) { supportBackdrop.classList.add('hidden'); document.body.style.overflow = ''; } });
+document.querySelector('#supportForm').addEventListener('submit', event => {
+  event.preventDefault();
+  fetch('/api/support', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ subject: document.querySelector('#supportSubject').value, message: document.querySelector('#supportMessage').value }) })
+    .then(response => { if (!response.ok) throw new Error(); return response.json(); })
+    .then(() => { document.querySelector('#supportForm').reset(); supportBackdrop.classList.add('hidden'); document.body.style.overflow = ''; alert('Zahtev je primljen. Podrška će ti odgovoriti kroz aplikaciju.'); })
+    .catch(() => alert('Zahtev nije poslat. Pokušaj ponovo.'));
+});
