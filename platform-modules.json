@@ -1,0 +1,50 @@
+[
+  {
+    "id": "core",
+    "name": "balkan.works Core Platform",
+    "phase": 1,
+    "status": "active-foundation",
+    "owns": ["identity", "profiles", "location", "languages", "notifications", "ratings", "chat"],
+    "notes": "Payments are deliberately outside MVP scope."
+  },
+  {
+    "id": "market",
+    "name": "balkan.works Market",
+    "phase": 1,
+    "status": "active",
+    "route": "/index.html",
+    "owns": ["local services", "trade jobs", "freelance jobs", "providers", "city search", "reviews"]
+  },
+  {
+    "id": "deals",
+    "name": "balkan.works Deals",
+    "phase": 1,
+    "status": "active",
+    "route": "/partneri.html",
+    "owns": ["digital catalogues", "offers", "coupons", "product search", "favourite stores"]
+  },
+  {
+    "id": "save-food",
+    "name": "Save Food integration",
+    "phase": 2,
+    "status": "planned",
+    "integration": "sacuvaj-hranu.rs",
+    "owns": ["surplus food offers", "package reservations", "QR pickup", "purchase history"]
+  },
+  {
+    "id": "business",
+    "name": "balkan.works Business",
+    "phase": 2,
+    "status": "planned",
+    "integration": "Opsnestone.com",
+    "owns": ["business profiles", "inventory", "sales", "invoices", "analytics", "offer management"]
+  },
+  {
+    "id": "money",
+    "name": "balkan.works Money",
+    "phase": 3,
+    "status": "planned",
+    "integration": "Stock-radar.com",
+    "owns": ["financial education", "market tracking", "personal budget", "financial tools"]
+  }
+]
