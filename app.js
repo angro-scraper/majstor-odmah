@@ -7,6 +7,20 @@ const categories = [
   { name: 'Stolar', icon: '▤', count: '23 dostupna' }
 ];
 
+const demoAccounts = {
+  customer: { name: 'Ana Petrović', label: 'demo klijent', email: 'ana.demo@majstorodmah.rs' },
+  pro: { name: 'Milan Jovanović', label: 'demo majstor', email: 'milan.demo@majstorodmah.rs' }
+};
+function getDemoProfile(role) {
+  const fallback = demoAccounts[role] || demoAccounts.customer;
+  try { return JSON.parse(localStorage.getItem('majstorOdmahDemoAccount') || 'null') || fallback; } catch (error) { return fallback; }
+}
+function setDemoProfile(role) {
+  const profile = demoAccounts[role] || demoAccounts.customer;
+  localStorage.setItem('majstorOdmahDemoAccount', JSON.stringify(profile));
+  document.querySelector('#loginButton').textContent = profile.name.split(' ')[0] + ' · demo';
+}
+
 function saveJobToServer(job) {
   if (window.location.protocol === 'file:') return;
   fetch('/api/jobs', {
@@ -103,7 +117,7 @@ const openAccount = () => {
   accountBackdrop.classList.remove('hidden');
   document.body.style.overflow = 'hidden';
   const role = localStorage.getItem('majstorOdmahRole');
-  if (role) { showDashboard(role); syncJobsFromServer(role); }
+  if (role) { setDemoProfile(role); showDashboard(role); syncJobsFromServer(role); }
   else { accountWelcome.classList.remove('hidden'); dashboard.classList.add('hidden'); }
 };
 const closeAccount = () => { accountBackdrop.classList.add('hidden'); document.body.style.overflow = ''; };
@@ -137,7 +151,7 @@ document.querySelector('#loginButton').addEventListener('click', openAccount);
 document.querySelector('#registerButton').addEventListener('click', openAccount);
 document.querySelector('#closeAccount').addEventListener('click', closeAccount);
 accountBackdrop.addEventListener('click', event => { if (event.target === accountBackdrop) closeAccount(); });
-document.querySelectorAll('.role-card').forEach(button => button.addEventListener('click', () => { localStorage.setItem('majstorOdmahRole', button.dataset.role); showDashboard(button.dataset.role); }));
+document.querySelectorAll('.role-card').forEach(button => button.addEventListener('click', () => { localStorage.setItem('majstorOdmahRole', button.dataset.role); setDemoProfile(button.dataset.role); showDashboard(button.dataset.role); syncJobsFromServer(button.dataset.role); }));
 
 const supportBackdrop = document.querySelector('#supportBackdrop');
 document.querySelector('#supportButton').addEventListener('click', () => { supportBackdrop.classList.remove('hidden'); document.body.style.overflow = 'hidden'; });
