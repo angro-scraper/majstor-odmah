@@ -187,7 +187,10 @@ function createSupabaseApi(options) {
       const rating = Number(payload.rating);
       const comment = String(payload.comment || '').trim();
       if (!job || job.progress !== 'Završeno' || rating < 1 || rating > 5 || !comment || comment.length > 500) return reply(response, 400, { error: 'Ocena nije validna.' });
-      job.review = { rating: rating, comment: comment, createdAt: new Date().toISOString() };
+      const author = payload.author === 'majstor' ? 'majstor' : 'klijent';
+      job.reviews = job.reviews || {};
+      job.reviews[author] = { rating: rating, comment: comment, createdAt: new Date().toISOString() };
+      if (author === 'klijent') job.review = job.reviews[author];
       return reply(response, 201, await saveJob(saved.row.id, job));
     }
     if (url.pathname === '/api/support' && request.method === 'POST') {

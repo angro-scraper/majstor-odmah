@@ -4,7 +4,46 @@ const categories = [
   { name: 'Keramičar', icon: '▦', count: '18 dostupno' },
   { name: 'Moler', icon: '◒', count: '26 dostupno' },
   { name: 'Bravar', icon: '🔑', count: '11 dostupno' },
-  { name: 'Stolar', icon: '▤', count: '23 dostupna' }
+  { name: 'Stolar', icon: '▤', count: '23 dostupna' },
+  { name: 'Klimatizer', icon: '❄', count: '14 dostupno' },
+  { name: 'Gipsar', icon: '▱', count: '17 dostupno' },
+  { name: 'Parketar', icon: '▥', count: '12 dostupno' },
+  { name: 'Podopolagač', icon: '▦', count: '9 dostupno' },
+  { name: 'Fasader', icon: '▤', count: '16 dostupno' },
+  { name: 'Krovopokrivač', icon: '⌂', count: '8 dostupno' },
+  { name: 'Limar', icon: '⌁', count: '10 dostupno' },
+  { name: 'Zidar', icon: '▰', count: '21 dostupno' },
+  { name: 'Armirač', icon: '╬', count: '7 dostupno' },
+  { name: 'Tapetar', icon: '▧', count: '6 dostupno' },
+  { name: 'Staklar', icon: '◇', count: '8 dostupno' },
+  { name: 'Roletnar', icon: '▤', count: '11 dostupno' },
+  { name: 'Dimnjačar', icon: '♨', count: '5 dostupno' },
+  { name: 'Serviser bele tehnike', icon: '◉', count: '18 dostupno' },
+  { name: 'Serviser računara', icon: '⌘', count: '15 dostupno' },
+  { name: 'Video nadzor', icon: '◌', count: '10 dostupno' },
+  { name: 'Solarni sistemi', icon: '☀', count: '6 dostupno' },
+  { name: 'Baštovan', icon: '♣', count: '19 dostupno' },
+  { name: 'Pejzažni arhitekta', icon: '🌿', count: '7 dostupno' },
+  { name: 'Čistač / održavanje', icon: '✦', count: '28 dostupno' },
+  { name: 'Odgušenje kanalizacije', icon: '◉', count: '12 dostupno' },
+  { name: 'Septičke jame', icon: '◌', count: '5 dostupno' },
+  { name: 'Pest kontrola', icon: '◈', count: '9 dostupno' },
+  { name: 'Protivpožarna zaštita', icon: '🧯', count: '6 dostupno' },
+  { name: 'Alarmni sistemi', icon: '🔔', count: '11 dostupno' },
+  { name: 'Mreže i internet', icon: '⌁', count: '13 dostupno' },
+  { name: 'Antene i sateliti', icon: '◒', count: '8 dostupno' },
+  { name: 'Kućni aparati', icon: '▣', count: '18 dostupno' },
+  { name: 'Servis bojlera', icon: '♨', count: '16 dostupno' },
+  { name: 'Grejanje i radijatori', icon: '♨', count: '20 dostupno' },
+  { name: 'Toplotne pumpe', icon: '❄', count: '7 dostupno' },
+  { name: 'Lift servis', icon: '↕', count: '4 dostupno' },
+  { name: 'Selidbe', icon: '▰', count: '25 dostupno' },
+  { name: 'Montaža nameštaja', icon: '▤', count: '22 dostupno' },
+  { name: 'PVC i ALU stolarija', icon: '▯', count: '15 dostupno' },
+  { name: 'Zavarivač', icon: '⚙', count: '10 dostupno' },
+  { name: 'Bunar i pumpe', icon: '◍', count: '6 dostupno' },
+  { name: 'Izolater', icon: '▨', count: '14 dostupno' },
+  { name: 'Majstor za sitne popravke', icon: '🛠', count: '34 dostupno' }
 ];
 
 const demoAccounts = {
@@ -60,15 +99,15 @@ const pros = [
 ];
 
 const rankedPros = [
-  { name: 'Nikola Petrović', category: 'Vodoinstalater', area: 'Liman', rating: 5.0, jobs: 118, score: 98 },
-  { name: 'Milan Jovanović', category: 'Električar', area: 'Detelinara', rating: 4.9, jobs: 142, score: 97 },
-  { name: 'Jelena Marković', category: 'Električar', area: 'Centar', rating: 4.8, jobs: 91, score: 92 },
-  { name: 'Marko Ilić', category: 'Keramičar', area: 'Grbavica', rating: 4.8, jobs: 76, score: 91 },
-  { name: 'Stefan Savić', category: 'Vodoinstalater', area: 'Novo naselje', rating: 4.8, jobs: 69, score: 90 },
-  { name: 'Ivana Ristić', category: 'Moler', area: 'Liman', rating: 4.9, jobs: 82, score: 90 },
-  { name: 'Luka Pavlović', category: 'Stolar', area: 'Veternik', rating: 4.9, jobs: 57, score: 88 },
-  { name: 'Vuk Kovačević', category: 'Bravar', area: 'Sajmište', rating: 4.7, jobs: 88, score: 87 },
-  { name: 'Tamara Babić', category: 'Moler', area: 'Telep', rating: 4.7, jobs: 54, score: 85 }
+  { name: 'Nikola Petrović', category: 'Vodoinstalater', area: 'Liman', rating: 5.0, jobs: 118, score: 98, reliability: 99 },
+  { name: 'Milan Jovanović', category: 'Električar', area: 'Detelinara', rating: 4.9, jobs: 142, score: 97, reliability: 98 },
+  { name: 'Jelena Marković', category: 'Električar', area: 'Centar', rating: 4.8, jobs: 91, score: 92, reliability: 97 },
+  { name: 'Marko Ilić', category: 'Keramičar', area: 'Grbavica', rating: 4.8, jobs: 76, score: 91, reliability: 96 },
+  { name: 'Stefan Savić', category: 'Vodoinstalater', area: 'Novo naselje', rating: 4.8, jobs: 69, score: 90, reliability: 95 },
+  { name: 'Ivana Ristić', category: 'Moler', area: 'Liman', rating: 4.9, jobs: 82, score: 90, reliability: 97 },
+  { name: 'Luka Pavlović', category: 'Stolar', area: 'Veternik', rating: 4.9, jobs: 57, score: 88, reliability: 96 },
+  { name: 'Vuk Kovačević', category: 'Bravar', area: 'Sajmište', rating: 4.7, jobs: 88, score: 87, reliability: 93 },
+  { name: 'Tamara Babić', category: 'Moler', area: 'Telep', rating: 4.7, jobs: 54, score: 85, reliability: 94 }
 ];
 
 const grid = document.querySelector('#categoryGrid');
@@ -86,7 +125,7 @@ document.querySelector('#prosGrid').innerHTML = pros.map(pro => `
   </article>`).join('');
 
 function rankingEntry(pro, index) {
-  return `<li class="ranking-entry"><span class="ranking-place">${index + 1}</span><div><b>${pro.name}</b><small>${pro.category} · ${pro.area} · ${pro.jobs} radova</small></div><div class="ranking-score"><b><span class="ranking-star">★</span> ${pro.rating.toFixed(1).replace('.', ',')}</b><small>${pro.score}/100</small></div></li>`;
+  return `<li class="ranking-entry"><span class="ranking-place">${index + 1}</span><div><b>${pro.name}</b><small>${pro.category} · ${pro.area} · ${pro.jobs} radova</small></div><div class="ranking-score"><b><span class="ranking-star">★</span> ${pro.rating.toFixed(1).replace('.', ',')}</b><small>${pro.score}/100 · pouzdanost ${pro.reliability}%</small></div></li>`;
 }
 function renderRanking(category) {
   const inCategory = rankedPros.filter(pro => pro.category === category).sort((a, b) => b.score - a.score).slice(0, 3);

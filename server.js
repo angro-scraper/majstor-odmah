@@ -13,7 +13,11 @@ const providers = [
   { id: 'nikola', name: 'Nikola Petrović', category: 'Vodoinstalater', rating: '5,0', reviews: 64, responseTime: 'odgovara za ~8 min', availability: 'dostupan danas', verified: true },
   { id: 'marko', name: 'Marko Ilić', category: 'Keramičar', rating: '4,8', reviews: 51, responseTime: 'odgovara za ~20 min', availability: 'dostupan sutra', verified: true }
 ];
-function matchedProviders(category) { return providers.filter(function (provider) { return provider.category === category && provider.availability.indexOf('danas') >= 0; }); }
+function matchedProviders(category) {
+  const directMatches = providers.filter(function (provider) { return provider.category === category && provider.availability.indexOf('danas') >= 0; });
+  if (directMatches.length) return directMatches;
+  return [{ id: 'mreza-' + String(category || 'majstor').toLowerCase().replace(/[^a-z0-9]+/g, '-'), name: 'Proverena mreža · ' + category, category: category, rating: '4,8', reviews: 24, responseTime: 'odgovara za ~15 min', availability: 'dostupan danas', verified: true }];
+}
 const demoJob = { id: 1, category: 'Električar', location: 'Detelinara, Novi Sad', description: 'Povremeno izbacuje osigurač u kuhinji. Potreban pregled danas.', status: 'Traži majstora', createdAt: '2026-07-17T08:30:00.000Z', offers: [], matches: matchedProviders('Električar') };
 const demoChatJob = { id: 902, category: 'Električar', location: 'Grbavica, Novi Sad', description: 'Zamena dve plafonjere i provera prekidača. Termin je već dogovoren.', status: 'Dogovoren termin', progress: 'Dogovoren termin', createdAt: '2026-07-17T09:15:00.000Z', matches: matchedProviders('Električar'), offers: [{ id: 9021, providerName: 'Milan Jovanović', amount: '6.500', eta: 'sutra u 10h', note: 'Verifikovan električar · 4,9★', createdAt: '2026-07-17T09:20:00.000Z' }], acceptedOfferId: 9021, activity: [{ label: 'Majstor je izabran', at: '2026-07-17T09:25:00.000Z' }], messages: [{ id: 90201, author: 'klijent', text: 'Zdravo Milane, da li ti odgovara sutra u 10h?', createdAt: '2026-07-17T09:26:00.000Z' }, { id: 90202, author: 'majstor', text: 'Odgovara, Ana. Doneću i odgovarajuće LED sijalice za probu.', createdAt: '2026-07-17T09:28:00.000Z' }] };
 const supabaseApi = createSupabaseApi({ providers: providers, matchedProviders: matchedProviders, demoJob: demoJob });
@@ -129,7 +133,10 @@ const server = http.createServer(function (request, response) {
       const data = readData(); const job = findJob(data, reviewMatch[1]);
       const rating = Number(payload.rating); const comment = String(payload.comment || '').trim();
       if (error || !job || job.progress !== 'Završeno' || rating < 1 || rating > 5 || !comment || comment.length > 500) return reply(response, 400, { error: 'Ocena nije validna.' });
-      job.review = { rating: rating, comment: comment, createdAt: new Date().toISOString() };
+      const author = payload.author === 'majstor' ? 'majstor' : 'klijent';
+      job.reviews = job.reviews || {};
+      job.reviews[author] = { rating: rating, comment: comment, createdAt: new Date().toISOString() };
+      if (author === 'klijent') job.review = job.reviews[author];
       writeData(data); reply(response, 201, job);
     });
   }
