@@ -109,7 +109,60 @@ function renderPortfolioItem(item) {
 function renderProPanel() {
   const portfolio = getPortfolio();
   const available = localStorage.getItem('majstorOdmahAvailability') !== 'false';
-  return '<section class="pro-panel"><div class="pro-panel-top"><span class="pro-panel-avatar">MJ</span><div><h3>Milan Jovanović</h3><p>Verifikovan električar · 4,9 ★ · 86 ocena</p></div><label class="availability-toggle"><input id="availabilityToggle" type="checkbox"' + (available ? ' checked' : '') + ' /> ' + (available ? 'Dostupan danas' : 'Nisam dostupan') + '</label></div><div class="pro-panel-metrics"><div><b>86</b><span>završenih radova</span></div><div><b>~8 min</b><span>prosečan odgovor</span></div><div><b>20 km</b><span>radijus dolaska</span></div></div><p class="service-zones"><b>Zone rada:</b> Detelinara, Liman, Grbavica, Centar i Novi Sad</p><div class="portfolio-head"><h4>Portfolio radova</h4><span>' + portfolio.length + ' prikazanih projekata</span></div><div class="portfolio-grid">' + portfolio.map(renderPortfolioItem).join('') + '</div><form class="portfolio-upload" id="portfolioUpload"><input required name="portfolioImage" type="file" accept="image/*" /><input required name="portfolioTitle" maxlength="42" placeholder="npr. Zamena plafonjere" /><button type="submit">Dodaj rad</button></form></section>';
+  return '<section class="pro-panel"><div class="pro-panel-top"><span class="pro-panel-avatar">MJ</span><div><h3>Milan Jovanović</h3><p>Verifikovan električar · 4,9 ★ · 86 ocena</p></div><label class="availability-toggle"><input id="availabilityToggle" type="checkbox"' + (available ? ' checked' : '') + ' /> ' + (available ? 'Dostupan danas' : 'Nisam dostupan') + '</label></div><div class="pro-panel-metrics"><div><b>86</b><span>završenih radova</span></div><div><b>~8 min</b><span>prosečan odgovor</span></div><div><b>20 km</b><span>radijus dolaska</span></div></div><p class="service-zones"><b>Zone rada:</b> Detelinara, Liman, Grbavica, Centar i Novi Sad</p><div class="portfolio-head"><h4>Portfolio radova</h4><span>' + portfolio.length + ' prikazanih projekata</span></div><div class="portfolio-grid">' + portfolio.map(renderPortfolioItem).join('') + '</div><form class="portfolio-upload" id="portfolioUpload"><input required name="portfolioImage" type="file" accept="image/*" /><input required name="portfolioTitle" maxlength="42" placeholder="npr. Zamena plafonjere" /><button type="submit">Dodaj rad</button></form>' + renderNotifications('pro') + '</section>';
+}
+
+function initialNotifications(role) {
+  return role === 'pro' ? [
+    { text: 'Novi zahtev za električara u Detelinari je u tvom radijusu.', at: 'sada' },
+    { text: 'Ana Petrović je otvorila detalje posla.', at: 'pre 3 min' }
+  ] : [
+    { text: 'Tri dostupna majstora su obaveštena o tvom zahtevu.', at: 'sada' },
+    { text: 'Milan Jovanović je dostupan danas.', at: 'pre 8 min' }
+  ];
+}
+
+function getNotifications(role) {
+  try {
+    const saved = JSON.parse(localStorage.getItem('majstorOdmahNotifications_' + role) || '[]');
+    return saved.concat(initialNotifications(role)).slice(0, 5);
+  } catch (error) { return initialNotifications(role); }
+}
+
+function addNotification(role, text) {
+  let saved = [];
+  try { saved = JSON.parse(localStorage.getItem('majstorOdmahNotifications_' + role) || '[]'); } catch (error) { saved = []; }
+  saved.unshift({ text: text, at: 'upravo sada' });
+  localStorage.setItem('majstorOdmahNotifications_' + role, JSON.stringify(saved.slice(0, 5)));
+}
+
+function renderNotifications(role) {
+  const notifications = getNotifications(role);
+  return '<section class="notification-center"><div class="notification-heading"><h4>Obaveštenja</h4><span class="notification-count">' + notifications.length + '</span></div><div class="notification-list">' + notifications.slice(0, 3).map(function (item) { return '<article class="notification-item ' + (role === 'pro' ? 'pro' : '') + '"><i class="notification-dot"></i><div><p>' + escapeHtml(item.text) + '</p><small>' + escapeHtml(item.at) + '</small></div></article>'; }).join('') + '</div></section>';
+}
+
+function defaultCustomerPortfolio() {
+  return [
+    { title: 'Kuhinja', detail: 'Rasveta i utičnice', symbol: '🍳', color: '#b97755' },
+    { title: 'Kupatilo', detail: 'Planirano renoviranje', symbol: '◫', color: '#6d90a2' },
+    { title: 'Dnevni boravak', detail: 'Pametna rasveta', symbol: '⌂', color: '#8a7764' }
+  ];
+}
+
+function getCustomerPortfolio() {
+  try {
+    const saved = JSON.parse(localStorage.getItem('majstorOdmahCustomerPortfolio') || 'null');
+    return Array.isArray(saved) && saved.length ? saved : defaultCustomerPortfolio();
+  } catch (error) { return defaultCustomerPortfolio(); }
+}
+
+function renderCustomerPanel() {
+  const portfolio = getCustomerPortfolio();
+  const cards = portfolio.map(function (item) {
+    const visual = item.image ? '<img src="' + escapeHtml(item.image) + '" alt="Prostor: ' + escapeHtml(item.title) + '" />' : '<span class="customer-symbol">' + escapeHtml(item.symbol || '⌂') + '</span>';
+    return '<article class="customer-project" style="background:' + escapeHtml(item.color || '#b97755') + '">' + visual + '<div><b>' + escapeHtml(item.title) + '</b><small>' + escapeHtml(item.detail || 'Moj projekat') + '</small></div></article>';
+  }).join('');
+  return '<section class="customer-panel"><div class="customer-panel-top"><span class="customer-panel-avatar">AP</span><div><h3>Ana Petrović</h3><p>Moj dom · Detelinara, Novi Sad</p></div><span class="home-tag">KLIJENT</span></div><div class="portfolio-head"><h4>Moj dom i projekti</h4><span>dodaj prostor za sledeći posao</span></div><div class="customer-projects">' + cards + '</div><form class="customer-upload" id="customerPortfolioUpload"><input required name="customerImage" type="file" accept="image/*" /><input required name="customerTitle" maxlength="42" placeholder="npr. Terasa" /><button type="submit">Dodaj prostor</button></form>' + renderNotifications('customer') + '</section>';
 }
 
 function showDashboard(role) {
@@ -121,7 +174,7 @@ function showDashboard(role) {
   const offerCount = jobs.reduce(function (total, job) { return total + (job.offers || []).length; }, 0);
   const selectedCount = jobs.filter(function (job) { return job.acceptedOfferId; }).length;
   const list = jobs.length ? jobs.map(function (job) { return renderJob(job, isPro); }).join('') : '<div class="empty-jobs">Trenutno nema otvorenih poslova u ovoj zoni.</div>';
-  dashboard.innerHTML = '<div class="dashboard-header"><div><p class="eyebrow"><span></span> ' + escapeHtml(profile.email) + '</p><h2>Zdravo, ' + escapeHtml(profile.name.split(' ')[0]) + '.</h2><p>' + (isPro ? 'Tvoj demo nalog prikazuje poslove iz blizine. Pošalji jasnu ponudu i Ana može odmah da te izabere.' : 'Tvoj demo nalog prikazuje zahteve, ponude i ceo tok dogovora sa Milanom.') + '</p></div><span class="dashboard-role">' + (isPro ? 'DEMO MAJSTOR' : 'DEMO KLIJENT') + '</span></div>' + (isPro ? renderProPanel() : '') + '<div class="dashboard-stats"><div class="dashboard-stat"><b>' + jobs.length + '</b><span>' + (isPro ? 'otvorena posla' : 'aktivni zahtevi') + '</span></div><div class="dashboard-stat"><b>' + (isPro ? '4,9' : offerCount) + '</b><span>' + (isPro ? 'prosečna ocena' : 'primljene ponude') + '</span></div><div class="dashboard-stat"><b>' + selectedCount + '</b><span>dogovoreni termini</span></div></div><h3>' + (isPro ? 'Poslovi za tvoju delatnost' : 'Tok posla') + '</h3><div class="job-list">' + list + '</div><div class="dashboard-actions"><button class="button" id="dashboardPrimary">' + (isPro ? 'Osveži poslove' : 'Objavi posao') + ' →</button><button class="secondary-button" id="switchRole">Promeni demo nalog</button></div>';
+  dashboard.innerHTML = '<div class="dashboard-header"><div><p class="eyebrow"><span></span> ' + escapeHtml(profile.email) + '</p><h2>Zdravo, ' + escapeHtml(profile.name.split(' ')[0]) + '.</h2><p>' + (isPro ? 'Tvoj demo nalog prikazuje poslove iz blizine. Pošalji jasnu ponudu i Ana može odmah da te izabere.' : 'Tvoj demo nalog prikazuje zahteve, ponude i ceo tok dogovora sa Milanom.') + '</p></div><span class="dashboard-role">' + (isPro ? 'DEMO MAJSTOR' : 'DEMO KLIJENT') + '</span></div>' + (isPro ? renderProPanel() : renderCustomerPanel()) + '<div class="dashboard-stats"><div class="dashboard-stat"><b>' + jobs.length + '</b><span>' + (isPro ? 'otvorena posla' : 'aktivni zahtevi') + '</span></div><div class="dashboard-stat"><b>' + (isPro ? '4,9' : offerCount) + '</b><span>' + (isPro ? 'prosečna ocena' : 'primljene ponude') + '</span></div><div class="dashboard-stat"><b>' + selectedCount + '</b><span>dogovoreni termini</span></div></div><h3>' + (isPro ? 'Poslovi za tvoju delatnost' : 'Tok posla') + '</h3><div class="job-list">' + list + '</div><div class="dashboard-actions"><button class="button" id="dashboardPrimary">' + (isPro ? 'Osveži poslove' : 'Objavi posao') + ' →</button><button class="secondary-button" id="switchRole">Promeni demo nalog</button></div>';
   document.querySelector('#dashboardPrimary').addEventListener('click', function () { if (isPro) refreshWorkflow(role); else { closeAccount(); openModal(); } });
   if (isPro) {
     document.querySelector('#availabilityToggle').addEventListener('change', function (event) { localStorage.setItem('majstorOdmahAvailability', event.target.checked ? 'true' : 'false'); showDashboard(role); });
@@ -137,27 +190,40 @@ function showDashboard(role) {
         showDashboard(role);
       }).catch(function (error) { alert(error.message || 'Fotografija nije dodata.'); });
     });
+  } else {
+    document.querySelector('#customerPortfolioUpload').addEventListener('submit', function (event) {
+      event.preventDefault();
+      const form = event.currentTarget;
+      const file = form.querySelector('[name="customerImage"]').files[0];
+      const title = form.querySelector('[name="customerTitle"]').value.trim();
+      fileToDataUrl(file).then(function (image) {
+        const portfolio = getCustomerPortfolio();
+        portfolio.unshift({ title: title, detail: 'Moj prostor', image: image, color: '#b97755' });
+        localStorage.setItem('majstorOdmahCustomerPortfolio', JSON.stringify(portfolio.slice(0, 6)));
+        showDashboard(role);
+      }).catch(function (error) { alert(error.message || 'Fotografija nije dodata.'); });
+    });
   }
   document.querySelectorAll('.offer-form').forEach(function (form) { form.addEventListener('submit', function (event) {
     event.preventDefault(); const jobId = form.dataset.jobId; const amount = form.querySelector('[name="amount"]').value; const eta = form.querySelector('[name="eta"]').value;
-    requestWorkflow('/api/jobs/' + jobId + '/offers', { providerName: 'Milan Jovanović', amount: amount, eta: eta, note: 'Verifikovan električar · 4,9★' }).then(function () { refreshWorkflow(role); }).catch(function () { alert('Ponuda nije poslata. Pokušaj ponovo.'); });
+    requestWorkflow('/api/jobs/' + jobId + '/offers', { providerName: 'Milan Jovanović', amount: amount, eta: eta, note: 'Verifikovan električar · 4,9★' }).then(function () { addNotification('customer', 'Milan Jovanović je poslao ponudu za tvoj posao.'); refreshWorkflow(role); }).catch(function () { alert('Ponuda nije poslata. Pokušaj ponovo.'); });
   }); });
   document.querySelectorAll('.accept-offer').forEach(function (button) { button.addEventListener('click', function () {
-    requestWorkflow('/api/jobs/' + button.dataset.jobId + '/accept', { offerId: button.dataset.offerId }).then(function () { refreshWorkflow(role); }).catch(function () { alert('Ponuda nije izabrana. Pokušaj ponovo.'); });
+    requestWorkflow('/api/jobs/' + button.dataset.jobId + '/accept', { offerId: button.dataset.offerId }).then(function () { addNotification('pro', 'Ana Petrović je izabrala tvoju ponudu. Dogovorite termin u chatu.'); refreshWorkflow(role); }).catch(function () { alert('Ponuda nije izabrana. Pokušaj ponovo.'); });
   }); });
   document.querySelectorAll('.progress-action').forEach(function (button) { button.addEventListener('click', function () {
-    requestWorkflow('/api/jobs/' + button.dataset.jobId + '/progress', { progress: button.dataset.progress }).then(function () { refreshWorkflow(role); }).catch(function () { alert('Status nije promenjen. Pokušaj ponovo.'); });
+    requestWorkflow('/api/jobs/' + button.dataset.jobId + '/progress', { progress: button.dataset.progress }).then(function () { if (isPro) addNotification('customer', 'Milan je ažurirao status radova: ' + button.dataset.progress + '.'); refreshWorkflow(role); }).catch(function () { alert('Status nije promenjen. Pokušaj ponovo.'); });
   }); });
   document.querySelectorAll('.chat-form').forEach(function (form) { form.addEventListener('submit', function (event) {
     event.preventDefault(); const text = form.querySelector('[name="message"]').value;
-    requestWorkflow('/api/jobs/' + form.dataset.jobId + '/messages', { text: text, author: isPro ? 'majstor' : 'klijent' }).then(function () { refreshWorkflow(role); }).catch(function () { alert('Poruka nije poslata. Pokušaj ponovo.'); });
+    requestWorkflow('/api/jobs/' + form.dataset.jobId + '/messages', { text: text, author: isPro ? 'majstor' : 'klijent' }).then(function () { addNotification(isPro ? 'customer' : 'pro', (isPro ? 'Milan' : 'Ana') + ' ti je poslao/la novu poruku.'); refreshWorkflow(role); }).catch(function () { alert('Poruka nije poslata. Pokušaj ponovo.'); });
   }); });
   document.querySelectorAll('.work-photo-form').forEach(function (form) { form.addEventListener('submit', function (event) {
     event.preventDefault(); const file = form.querySelector('[name="workPhoto"]').files[0]; const caption = form.querySelector('[name="caption"]').value;
-    fileToDataUrl(file).then(function (image) { return requestWorkflow('/api/jobs/' + form.dataset.jobId + '/photos', { image: image, caption: caption }); }).then(function () { refreshWorkflow(role); }).catch(function (error) { alert(error.message || 'Fotografija nije poslata.'); });
+    fileToDataUrl(file).then(function (image) { return requestWorkflow('/api/jobs/' + form.dataset.jobId + '/photos', { image: image, caption: caption }); }).then(function () { addNotification('customer', 'Milan je dodao novu fotografiju sa radova.'); refreshWorkflow(role); }).catch(function (error) { alert(error.message || 'Fotografija nije poslata.'); });
   }); });
   document.querySelectorAll('.review-form').forEach(function (form) { form.addEventListener('submit', function (event) {
-    event.preventDefault(); requestWorkflow('/api/jobs/' + form.dataset.jobId + '/review', { rating: form.querySelector('[name="rating"]').value, comment: form.querySelector('[name="comment"]').value }).then(function () { refreshWorkflow(role); }).catch(function () { alert('Ocena nije poslata. Pokušaj ponovo.'); });
+    event.preventDefault(); requestWorkflow('/api/jobs/' + form.dataset.jobId + '/review', { rating: form.querySelector('[name="rating"]').value, comment: form.querySelector('[name="comment"]').value }).then(function () { addNotification('pro', 'Ana ti je ostavila novu ocenu za završen posao.'); refreshWorkflow(role); }).catch(function () { alert('Ocena nije poslata. Pokušaj ponovo.'); });
   }); });
   document.querySelector('#switchRole').addEventListener('click', function () { localStorage.removeItem('majstorOdmahRole'); localStorage.removeItem('majstorOdmahDemoAccount'); document.querySelector('#loginButton').textContent = 'Moj nalog'; accountWelcome.classList.remove('hidden'); dashboard.classList.add('hidden'); });
 }
