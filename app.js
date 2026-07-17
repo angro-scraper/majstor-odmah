@@ -153,7 +153,7 @@ document.addEventListener('keydown', event => { if (event.key === 'Escape') clos
 const finderDrawer = document.querySelector('#finderDrawer');
 const finderToggle = document.querySelector('#finderToggle');
 const closeFinder = () => { finderDrawer.classList.add('hidden'); finderToggle.setAttribute('aria-expanded', 'false'); };
-finderToggle.addEventListener('click', () => { const open = finderDrawer.classList.contains('hidden'); finderDrawer.classList.toggle('hidden', !open); finderToggle.setAttribute('aria-expanded', String(open)); });
+finderToggle.addEventListener('click', () => { const open = finderDrawer.classList.contains('hidden'); finderDrawer.classList.toggle('hidden', !open); finderToggle.setAttribute('aria-expanded', String(open)); if (open) { finderSearch.value = ''; filterFinder(''); document.querySelector('#categoryGrid').scrollTop = 0; setTimeout(() => finderSearch.focus(), 0); } });
 document.querySelector('#closeFinder').addEventListener('click', closeFinder);
 document.querySelectorAll('.category').forEach(button => button.addEventListener('click', () => { closeFinder(); openModal(button.dataset.category); }));
 const finderSearch = document.querySelector('#finderSearch');
