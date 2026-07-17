@@ -229,7 +229,8 @@ const server = http.createServer(function (request, response) {
     });
   }
   if (request.method !== 'GET' && request.method !== 'HEAD') return reply(response, 405, { error: 'Metod nije dozvoljen.' });
-  const relativePath = url.pathname === '/' ? '/index.html' : url.pathname;
+  // balkan.works is the public super-app entry point; Majstor odmah remains at /index.html.
+  const relativePath = url.pathname === '/' ? '/balkan.html' : url.pathname;
   const filePath = path.normalize(path.join(root, relativePath));
   if (filePath.indexOf(root) !== 0) return reply(response, 403, { error: 'Zabranjeno.' });
   fs.readFile(filePath, function (error, file) {
