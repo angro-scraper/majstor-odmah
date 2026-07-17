@@ -9,8 +9,11 @@ const mimeTypes = { '.html': 'text/html; charset=utf-8', '.js': 'application/jav
 const demoJob = { id: 1, category: 'Električar', location: 'Detelinara, Novi Sad', description: 'Povremeno izbacuje osigurač u kuhinji. Potreban pregled danas.', status: 'Traži majstora', createdAt: '2026-07-17T08:30:00.000Z', offers: [] };
 
 function readData() {
-  try { return JSON.parse(fs.readFileSync(dataFile, 'utf8')); }
-  catch (error) { return { jobs: [demoJob], nextJobId: 2, nextOfferId: 1 }; }
+  try {
+    const data = JSON.parse(fs.readFileSync(dataFile, 'utf8'));
+    if (!data.jobs || !data.jobs.length) return { jobs: [demoJob], nextJobId: 2, nextOfferId: data.nextOfferId || 1 };
+    return data;
+  } catch (error) { return { jobs: [demoJob], nextJobId: 2, nextOfferId: 1 }; }
 }
 function writeData(data) { fs.writeFileSync(dataFile, JSON.stringify(data, null, 2), 'utf8'); }
 function reply(response, status, body) { response.writeHead(status, { 'Content-Type': 'application/json; charset=utf-8' }); response.end(JSON.stringify(body)); }
