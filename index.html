@@ -12,6 +12,7 @@
     <link rel="stylesheet" href="workflow.css" />
     <link rel="stylesheet" href="pro-panel.css" />
     <link rel="stylesheet" href="customer-panel.css" />
+    <link rel="stylesheet" href="rankings.css" />
   </head>
   <body>
     <header class="topbar">
@@ -77,6 +78,14 @@
       <section class="pros-section">
         <div class="section-heading"><div><p class="eyebrow"><span></span> Preporučeni u Novom Sadu</p><h2>Majstori kojima komšije veruju.</h2></div><button class="text-button see-all" id="showPros">Vidi sve majstore →</button></div>
         <div class="pros-grid" id="prosGrid"></div>
+      </section>
+
+      <section class="rankings-section" id="rang-lista">
+        <div class="section-heading"><div><p class="eyebrow"><span></span> Rang lista majstora</p><h2>Najbolji, jasno poređani.</h2></div><p class="ranking-method">Rang: ocene, završeni radovi i brzina odgovora.</p></div>
+        <div class="ranking-layout">
+          <article class="ranking-card category-ranking"><div class="ranking-card-head"><div><h3>Po kategoriji</h3><p>Uporedi majstore istog zanata.</p></div><span class="ranking-label">TOP 3</span></div><div class="ranking-tabs" id="rankingTabs"></div><ol class="ranking-list" id="categoryRankingList"></ol></article>
+          <article class="ranking-card overall-ranking"><div class="ranking-card-head"><div><h3>Ukupna rang lista</h3><p>Najbolji majstori preko svih profesija.</p></div><span class="ranking-label gold">SVE PROFESIJE</span></div><ol class="ranking-list" id="overallRankingList"></ol></article>
+        </div>
       </section>
 
       <section class="trust-strip">

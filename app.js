@@ -59,6 +59,18 @@ const pros = [
   { name: 'Marko Ilić', trade: 'Keramičar · Grbavica', rating: '4,8 (51)', color: '#e2e3f3', emoji: '▦', label: 'Dostupan sutra' }
 ];
 
+const rankedPros = [
+  { name: 'Nikola Petrović', category: 'Vodoinstalater', area: 'Liman', rating: 5.0, jobs: 118, score: 98 },
+  { name: 'Milan Jovanović', category: 'Električar', area: 'Detelinara', rating: 4.9, jobs: 142, score: 97 },
+  { name: 'Jelena Marković', category: 'Električar', area: 'Centar', rating: 4.8, jobs: 91, score: 92 },
+  { name: 'Marko Ilić', category: 'Keramičar', area: 'Grbavica', rating: 4.8, jobs: 76, score: 91 },
+  { name: 'Stefan Savić', category: 'Vodoinstalater', area: 'Novo naselje', rating: 4.8, jobs: 69, score: 90 },
+  { name: 'Ivana Ristić', category: 'Moler', area: 'Liman', rating: 4.9, jobs: 82, score: 90 },
+  { name: 'Luka Pavlović', category: 'Stolar', area: 'Veternik', rating: 4.9, jobs: 57, score: 88 },
+  { name: 'Vuk Kovačević', category: 'Bravar', area: 'Sajmište', rating: 4.7, jobs: 88, score: 87 },
+  { name: 'Tamara Babić', category: 'Moler', area: 'Telep', rating: 4.7, jobs: 54, score: 85 }
+];
+
 const grid = document.querySelector('#categoryGrid');
 const selector = document.querySelector('#jobCategory');
 categories.forEach(category => {
@@ -72,6 +84,20 @@ document.querySelector('#prosGrid').innerHTML = pros.map(pro => `
     <div class="pro-header"><span class="pro-avatar" style="background:${pro.color}">${pro.emoji}</span><div><h3>${pro.name}</h3><p>${pro.trade}</p></div></div>
     <div class="pro-meta"><span class="star">★ ${pro.rating}</span><button class="contact-pro" data-name="${pro.name}">Pošalji zahtev →</button></div>
   </article>`).join('');
+
+function rankingEntry(pro, index) {
+  return `<li class="ranking-entry"><span class="ranking-place">${index + 1}</span><div><b>${pro.name}</b><small>${pro.category} · ${pro.area} · ${pro.jobs} radova</small></div><div class="ranking-score"><b><span class="ranking-star">★</span> ${pro.rating.toFixed(1).replace('.', ',')}</b><small>${pro.score}/100</small></div></li>`;
+}
+function renderRanking(category) {
+  const inCategory = rankedPros.filter(pro => pro.category === category).sort((a, b) => b.score - a.score).slice(0, 3);
+  document.querySelector('#categoryRankingList').innerHTML = inCategory.length ? inCategory.map(rankingEntry).join('') : '<li class="ranking-entry"><div></div><div><b>Uskoro</b><small>Prikupljamo prve ocene za ovu kategoriju.</small></div></li>';
+  document.querySelectorAll('.ranking-tab').forEach(tab => tab.classList.toggle('active', tab.dataset.category === category));
+}
+const rankingCategories = Array.from(new Set(rankedPros.map(pro => pro.category)));
+document.querySelector('#rankingTabs').innerHTML = rankingCategories.map(category => `<button class="ranking-tab" data-category="${category}">${category}</button>`).join('');
+document.querySelector('#overallRankingList').innerHTML = rankedPros.slice().sort((a, b) => b.score - a.score).slice(0, 5).map(rankingEntry).join('');
+document.querySelectorAll('.ranking-tab').forEach(tab => tab.addEventListener('click', () => renderRanking(tab.dataset.category)));
+renderRanking('Električar');
 
 const backdrop = document.querySelector('#modalBackdrop');
 const openModal = (category = '') => {
