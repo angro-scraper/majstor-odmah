@@ -290,5 +290,17 @@ function showDashboard(role) {
   document.querySelectorAll('.review-form').forEach(function (form) { form.addEventListener('submit', function (event) {
     event.preventDefault(); requestWorkflow('/api/jobs/' + form.dataset.jobId + '/review', { author: isPro ? 'majstor' : 'klijent', rating: form.querySelector('[name="rating"]').value, comment: form.querySelector('[name="comment"]').value }).then(function () { addNotification(isPro ? 'customer' : 'pro', isPro ? 'Milan ti je ostavio ocenu za završeni posao.' : 'Ana ti je ostavila novu ocenu za završeni posao.'); refreshWorkflow(role); }).catch(function () { alert('Ocena nije poslata. Pokušaj ponovo.'); });
   }); });
-  document.querySelector('#switchRole').addEventListener('click', function () { localStorage.removeItem('majstorOdmahRole'); localStorage.removeItem('majstorOdmahDemoAccount'); document.querySelector('#loginButton').textContent = 'Moj nalog'; accountBackdrop.classList.remove('dashboard-open'); accountWelcome.classList.remove('hidden'); dashboard.classList.add('hidden'); });
+document.querySelector('#switchRole').addEventListener('click', function () { localStorage.removeItem('majstorOdmahRole'); localStorage.removeItem('majstorOdmahDemoAccount'); document.querySelector('#loginButton').textContent = 'Moj nalog'; accountBackdrop.classList.remove('dashboard-open'); accountWelcome.classList.remove('hidden'); dashboard.classList.add('hidden'); });
 }
+
+var workflowDashboard = showDashboard;
+showDashboard = function (role) {
+  try { workflowDashboard(role === 'pro' ? 'pro' : 'customer'); }
+  catch (error) {
+    console.error('Prikaz naloga nije uspeo:', error);
+    accountWelcome.classList.add('hidden'); dashboard.classList.remove('hidden'); accountBackdrop.classList.add('dashboard-open');
+    dashboard.innerHTML = '<section class="dashboard-recovery"><span>✓</span><h2>Nalog je bezbedan.</h2><p>Prikaz se osvežava. Možeš odmah da se vratiš na izbor naloga ili pokušaš ponovo.</p><div><button class="button" id="retryDashboard">Pokušaj ponovo</button><button class="secondary-button" id="resetDashboard">Izaberi nalog</button></div></section>';
+    document.querySelector('#retryDashboard').addEventListener('click', function () { workflowDashboard(role === 'pro' ? 'pro' : 'customer'); });
+    document.querySelector('#resetDashboard').addEventListener('click', function () { localStorage.removeItem('majstorOdmahRole'); localStorage.removeItem('majstorOdmahDemoAccount'); accountBackdrop.classList.remove('dashboard-open'); accountWelcome.classList.remove('hidden'); dashboard.classList.add('hidden'); });
+  }
+};

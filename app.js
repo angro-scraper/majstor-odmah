@@ -166,6 +166,7 @@ function filterFinder(query) {
   finderProviderResults.querySelectorAll('button').forEach(function (button) { button.addEventListener('click', function () { closeFinder(); openModal(button.dataset.category); }); });
 }
 finderSearch.addEventListener('input', function (event) { filterFinder(event.target.value); });
+document.querySelectorAll('.material-cards article').forEach(function (card) { card.tabIndex = 0; card.setAttribute('role', 'link'); card.setAttribute('aria-label', 'Pogledaj partnerske ponude: ' + card.innerText); const openPartners = function () { window.location.href = 'partneri.html?search=' + encodeURIComponent(card.dataset.partnerSearch || card.innerText); }; card.addEventListener('click', openPartners); card.addEventListener('keydown', function (event) { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); openPartners(); } }); });
 document.querySelectorAll('.contact-pro').forEach(button => button.addEventListener('click', () => { openModal(); document.querySelector('#jobDescription').value = `Želim da pošaljem zahtev majstoru ${button.dataset.name}.`; }));
 
 function imageFilesToDataUrls(files) {
