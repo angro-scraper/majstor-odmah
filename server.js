@@ -84,7 +84,7 @@ const server = http.createServer(function (request, response) {
   }
   if (url.pathname.indexOf('/api/core/') === 0) {
     if (!supabaseApi.enabled) return reply(response, 503, { error: 'Balkan Core još nije povezan sa bazom.' });
-    return supabaseApi.handleCore(request, response, url).catch(function (error) { console.error('Balkan Core greška:', error.message); reply(response, 502, { error: error.message || 'Balkan Core trenutno nije dostupan.' }); });
+    return supabaseApi.handleCore(request, response, url).catch(function (error) { const message = error.message || 'Balkan Core trenutno nije dostupan.'; const status = message.indexOf('Prijavi se') === 0 ? 401 : message.indexOf('blokiran') >= 0 ? 403 : 502; console.error('Balkan Core greška:', message); reply(response, status, { error: message }); });
   }
   if (url.pathname.indexOf('/api/admin/') === 0) {
     if (!isAdmin(request)) return reply(response, 401, { error: 'Administratorski pristup nije dozvoljen.' });
