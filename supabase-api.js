@@ -102,6 +102,10 @@ function createSupabaseApi(options) {
 
   function partnerMessage(payload) { return ['Kategorija: ' + String(payload.category || '').trim(), 'Grad: ' + String(payload.city || '').trim(), 'Sajt: ' + String(payload.website || '').trim(), 'Kontakt: ' + String(payload.contact || '').trim(), 'Istaknuto: ' + (payload.featured ? 'da' : 'ne'), 'Opis: ' + String(payload.description || '').trim()].join('\n'); }
 
+  function catalogItem(row) {
+    return { id: row.id, partnerId: row.partner_id, title: row.title, description: row.description || '', priceLabel: row.price_label || '', linkUrl: row.link_url || '', imageUrl: row.image_url || '', active: row.is_active !== false, createdAt: row.created_at };
+  }
+
   function toJob(row) {
     const workflow = row.workflow && typeof row.workflow === 'object' ? row.workflow : {};
     const job = Object.assign({}, workflow);
@@ -128,7 +132,7 @@ function createSupabaseApi(options) {
   }
 
   async function handleAdmin(request, response, url) {
-    const supportMatch = url.pathname.match(/^\/api\/admin\/support\/([^/]+)$/); const partnerMatch = url.pathname.match(/^\/api\/admin\/partners\/([^/]+)$/);
+    const supportMatch = url.pathname.match(/^\/api\/admin\/support\/([^/]+)$/); const partnerMatch = url.pathname.match(/^\/api\/admin\/partners\/([^/]+)$/); const catalogMatch = url.pathname.match(/^\/api\/admin\/catalog\/([^/]+)$/);
     if (url.pathname === '/api/admin/partners' && request.method === 'GET') {
       const rows = await database('GET', '/rest/v1/support_tickets?select=*&order=created_at.desc'); return reply(response, 200, (rows || []).filter(function (ticket) { return String(ticket.subject || '').indexOf('Partner katalog · ') === 0; }).map(partnerTicket));
     }
@@ -139,6 +143,19 @@ function createSupabaseApi(options) {
     }
     if (partnerMatch && request.method === 'POST') {
       const payload = await parseBody(request); const status = payload.status === 'active' ? 'resolved' : 'open'; const rows = await database('PATCH', '/rest/v1/support_tickets?id=eq.' + encodeURIComponent(partnerMatch[1]), { status: status }); return reply(response, 200, partnerTicket(rows && rows[0] ? rows[0] : { id: partnerMatch[1], status: status }));
+    }
+    if (url.pathname === '/api/admin/catalog' && request.method === 'GET') {
+      const partnerId = String(url.searchParams.get('partner_id') || '').trim();
+      const query = '/rest/v1/partner_catalog_items?select=*&order=created_at.desc' + (partnerId ? '&partner_id=eq.' + encodeURIComponent(partnerId) : '');
+      const rows = await database('GET', query); return reply(response, 200, (rows || []).map(catalogItem));
+    }
+    if (url.pathname === '/api/admin/catalog' && request.method === 'POST') {
+      const payload = await parseBody(request); const partnerId = String(payload.partnerId || '').trim(); const title = String(payload.title || '').trim(); const description = String(payload.description || '').trim(); const priceLabel = String(payload.priceLabel || '').trim(); const linkUrl = String(payload.linkUrl || '').trim(); const imageUrl = String(payload.imageUrl || '').trim();
+      if (!partnerId || !title || title.length > 120 || description.length > 700 || priceLabel.length > 80 || linkUrl.length > 300 || imageUrl.length > 500) return reply(response, 400, { error: 'Proveri partnera, naziv i podatke stavke kataloga.' });
+      const rows = await database('POST', '/rest/v1/partner_catalog_items', { partner_id: partnerId, title: title, description: description, price_label: priceLabel, link_url: linkUrl, image_url: imageUrl, is_active: payload.active !== false }); return reply(response, 201, catalogItem(rows[0]));
+    }
+    if (catalogMatch && request.method === 'POST') {
+      const payload = await parseBody(request); const rows = await database('PATCH', '/rest/v1/partner_catalog_items?id=eq.' + encodeURIComponent(catalogMatch[1]), { is_active: Boolean(payload.active) }); return reply(response, 200, catalogItem(rows && rows[0] ? rows[0] : { id: catalogMatch[1], is_active: Boolean(payload.active) }));
     }
     const jobFlagMatch = url.pathname.match(/^\/api\/admin\/jobs\/([^/]+)\/flag$/);
     const userBlockMatch = url.pathname.match(/^\/api\/admin\/users\/([^/]+)\/block$/);
@@ -228,6 +245,11 @@ function createSupabaseApi(options) {
     if (url.pathname === '/api/providers' && request.method === 'GET') return reply(response, 200, providers);
     if (url.pathname === '/api/partners' && request.method === 'GET') {
       const rows = await database('GET', '/rest/v1/support_tickets?select=*&order=created_at.desc'); return reply(response, 200, (rows || []).filter(function (ticket) { return String(ticket.subject || '').indexOf('Partner katalog · ') === 0 && ticket.status === 'resolved'; }).map(partnerTicket));
+    }
+    if (url.pathname === '/api/catalog' && request.method === 'GET') {
+      const partnerId = String(url.searchParams.get('partner_id') || '').trim();
+      const query = '/rest/v1/partner_catalog_items?select=*&is_active=eq.true&order=created_at.desc' + (partnerId ? '&partner_id=eq.' + encodeURIComponent(partnerId) : '');
+      const rows = await database('GET', query); return reply(response, 200, (rows || []).map(catalogItem));
     }
     if (url.pathname === '/api/jobs' && request.method === 'GET') {
       const rows = await database('GET', '/rest/v1/jobs?select=*&order=created_at.desc');
