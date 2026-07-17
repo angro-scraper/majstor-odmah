@@ -80,20 +80,20 @@ function imageFilesToDataUrls(files) {
   return Promise.all(selected.map(function (file) { return new Promise(function (resolve, reject) { const reader = new FileReader(); reader.onload = function () { resolve(reader.result); }; reader.onerror = reject; reader.readAsDataURL(file); }); }));
 }
 
-document.querySelector('#jobForm').addEventListener('submit', async event => {
+document.querySelector('#jobForm').addEventListener('submit', function (event) {
   event.preventDefault();
-  let images;
-  try { images = await imageFilesToDataUrls(document.querySelector('#jobImages').files); } catch (error) { alert(error.message); return; }
-  const job = { category: selector.value, location: document.querySelector('#jobLocation').value, description: document.querySelector('#jobDescription').value, images: images, createdAt: new Date().toISOString(), clientId: 'job-' + Date.now() };
-  const saved = JSON.parse(localStorage.getItem('majstorOdmahJobs') || '[]');
-  saved.push(job);
-  localStorage.setItem('majstorOdmahJobs', JSON.stringify(saved));
-  saveJobToServer(job);
-  closeModal();
-  document.querySelector('#jobForm').reset();
-  const toast = document.querySelector('#toast');
-  toast.classList.remove('hidden');
-  setTimeout(() => toast.classList.add('hidden'), 4500);
+  imageFilesToDataUrls(document.querySelector('#jobImages').files).then(function (images) {
+    const job = { category: selector.value, location: document.querySelector('#jobLocation').value, description: document.querySelector('#jobDescription').value, images: images, createdAt: new Date().toISOString(), clientId: 'job-' + Date.now() };
+    const saved = JSON.parse(localStorage.getItem('majstorOdmahJobs') || '[]');
+    saved.push(job);
+    localStorage.setItem('majstorOdmahJobs', JSON.stringify(saved));
+    saveJobToServer(job);
+    closeModal();
+    document.querySelector('#jobForm').reset();
+    const toast = document.querySelector('#toast');
+    toast.classList.remove('hidden');
+    setTimeout(() => toast.classList.add('hidden'), 4500);
+  }).catch(function (error) { alert(error.message); });
 });
 
 const accountBackdrop = document.querySelector('#accountBackdrop');
