@@ -37,6 +37,8 @@ const server = http.createServer(function (request, response) {
   const acceptMatch = url.pathname.match(/^\/api\/jobs\/(\d+)\/accept$/);
   const progressMatch = url.pathname.match(/^\/api\/jobs\/(\d+)\/progress$/);
   const messageMatch = url.pathname.match(/^\/api\/jobs\/(\d+)\/messages$/);
+  const photoMatch = url.pathname.match(/^\/api\/jobs\/(\d+)\/photos$/);
+  const reviewMatch = url.pathname.match(/^\/api\/jobs\/(\d+)\/review$/);
 
   if (url.pathname === '/api/providers' && request.method === 'GET') return reply(response, 200, providers);
   if (url.pathname === '/api/jobs' && request.method === 'GET') return reply(response, 200, readData().jobs);
@@ -93,6 +95,24 @@ const server = http.createServer(function (request, response) {
       const text = String(payload.text || '').trim();
       if (error || !job || !job.acceptedOfferId || !text || text.length > 600) return reply(response, 400, { error: 'Poruka nije validna.' });
       job.messages = job.messages || []; job.messages.push({ id: Date.now(), author: payload.author === 'majstor' ? 'majstor' : 'klijent', text: text, createdAt: new Date().toISOString() });
+      writeData(data); reply(response, 201, job);
+    });
+  }
+  if (photoMatch && request.method === 'POST') {
+    return parseBody(request, function (error, payload) {
+      const data = readData(); const job = findJob(data, photoMatch[1]);
+      const image = String(payload.image || ''); const caption = String(payload.caption || '').trim();
+      if (error || !job || !job.acceptedOfferId || image.indexOf('data:image/') !== 0 || image.length > 650000) return reply(response, 400, { error: 'Fotografija nije validna.' });
+      job.workPhotos = job.workPhotos || []; job.workPhotos.push({ id: Date.now(), image: image, caption: caption.slice(0, 120), createdAt: new Date().toISOString() });
+      writeData(data); reply(response, 201, job);
+    });
+  }
+  if (reviewMatch && request.method === 'POST') {
+    return parseBody(request, function (error, payload) {
+      const data = readData(); const job = findJob(data, reviewMatch[1]);
+      const rating = Number(payload.rating); const comment = String(payload.comment || '').trim();
+      if (error || !job || job.progress !== 'Završeno' || rating < 1 || rating > 5 || !comment || comment.length > 500) return reply(response, 400, { error: 'Ocena nije validna.' });
+      job.review = { rating: rating, comment: comment, createdAt: new Date().toISOString() };
       writeData(data); reply(response, 201, job);
     });
   }
