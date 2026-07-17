@@ -61,7 +61,11 @@ async function analyzeProject(payload) {
     error.status = response.status === 429 ? 429 : 502;
     throw error;
   }
-  try { return JSON.parse(body.output_text); } catch (error) {
+  const outputText = typeof body.output_text === 'string' ? body.output_text : (body.output || []).map(function (item) {
+    return (item.content || []).map(function (content) { return content.text || ''; }).join('');
+  }).join('');
+  const jsonText = String(outputText || '').replace(/^\s*```(?:json)?\s*/i, '').replace(/\s*```\s*$/, '');
+  try { return JSON.parse(jsonText); } catch (error) {
     const parseError = new Error('AI savetnik nije vratio čitljiv predlog.');
     parseError.status = 502;
     throw parseError;
