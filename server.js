@@ -1,6 +1,7 @@
 const http = require('http');
 const fs = require('fs');
 const path = require('path');
+const crypto = require('crypto');
 const URL = require('url').URL;
 const createSupabaseApi = require('./supabase-api').createSupabaseApi;
 const analyzeProject = require('./ai-advisor').analyzeProject;
@@ -46,6 +47,18 @@ function parseBody(request, done) {
   request.on('end', function () { try { done(null, JSON.parse(raw || '{}')); } catch (error) { done(error); } });
 }
 function findJob(data, id) { return data.jobs.find(function (job) { return job.id === Number(id); }); }
+function isAdmin(request) {
+  const expected = String(process.env.ADMIN_PASSWORD || ''); const received = String(request.headers['x-admin-password'] || '');
+  if (!expected || !received || expected.length !== received.length) return false;
+  return crypto.timingSafeEqual(Buffer.from(expected), Buffer.from(received));
+}
+function adminUsers() {
+  return [{ id: 'demo-customer', full_name: 'Ana Petrović', role: 'customer', city: 'Novi Sad', phone_verified: true, identity_verified: true, created_at: 'Demo nalog', provider: null }].concat(providers.map(function (provider) { return { id: provider.id, full_name: provider.name, role: 'provider', city: 'Novi Sad', phone_verified: true, identity_verified: provider.verified, created_at: 'Demo nalog', provider: { trade: provider.category, available: provider.availability.indexOf('danas') >= 0, rating: provider.rating, review_count: provider.reviews } }; }));
+}
+function adminOverview(data) {
+  const jobs = data.jobs || []; const tickets = data.supportTickets || [];
+  return { stats: { users: adminUsers().length, providers: providers.length, openJobs: jobs.filter(function (job) { return ['Traži majstora', 'Primljene ponude'].indexOf(job.status) >= 0; }).length, activeJobs: jobs.filter(function (job) { return ['Dogovoren termin', 'Potvrđen dolazak', 'Radovi u toku'].indexOf(job.status) >= 0; }).length, openTickets: tickets.filter(function (ticket) { return ticket.status !== 'Rešeno'; }).length }, jobs: jobs.slice(0, 8), tickets: tickets.slice(0, 8) };
+}
 function aiLimit(name, fallback) { return Math.max(1, Number(process.env[name] || fallback)); }
 function canUseAi(request) {
   const address = request.socket.remoteAddress || 'unknown'; const now = Date.now(); const day = new Date().toISOString().slice(0, 10);
@@ -62,6 +75,18 @@ function canUseAi(request) {
 
 const server = http.createServer(function (request, response) {
   const url = new URL(request.url, 'http://localhost');
+  if (url.pathname.indexOf('/api/admin/') === 0) {
+    if (!isAdmin(request)) return reply(response, 401, { error: 'Administratorski pristup nije dozvoljen.' });
+    if (supabaseApi.enabled) return supabaseApi.handleAdmin(request, response, url).catch(function (error) { console.error('Supabase admin greška:', error.message); reply(response, 502, { error: 'Admin podaci trenutno nisu dostupni.' }); });
+    const adminSupportMatch = url.pathname.match(/^\/api\/admin\/support\/(\d+)$/); const adminJobFlagMatch = url.pathname.match(/^\/api\/admin\/jobs\/(\d+)\/flag$/);
+    if (url.pathname === '/api/admin/overview' && request.method === 'GET') return reply(response, 200, adminOverview(readData()));
+    if (url.pathname === '/api/admin/users' && request.method === 'GET') return reply(response, 200, adminUsers());
+    if (url.pathname === '/api/admin/jobs' && request.method === 'GET') return reply(response, 200, readData().jobs);
+    if (url.pathname === '/api/admin/support' && request.method === 'GET') return reply(response, 200, readData().supportTickets || []);
+    if (adminSupportMatch && request.method === 'POST') return parseBody(request, function (error, payload) { const data = readData(); const ticket = (data.supportTickets || []).find(function (item) { return item.id === Number(adminSupportMatch[1]); }); const statuses = { open: 'Primljeno', in_progress: 'U obradi', resolved: 'Rešeno' }; if (error || !ticket || !statuses[payload.status]) return reply(response, 400, { error: 'Status podrške nije validan.' }); ticket.status = statuses[payload.status]; ticket.updatedAt = new Date().toISOString(); writeData(data); reply(response, 200, ticket); });
+    if (adminJobFlagMatch && request.method === 'POST') return parseBody(request, function (error, payload) { const data = readData(); const job = findJob(data, adminJobFlagMatch[1]); if (error || !job) return reply(response, 404, { error: 'Posao nije pronađen.' }); job.adminFlag = Boolean(payload.flagged); job.adminFlaggedAt = job.adminFlag ? new Date().toISOString() : null; writeData(data); reply(response, 200, job); });
+    return reply(response, 404, { error: 'Admin ruta nije pronađena.' });
+  }
   if (supabaseApi.enabled && url.pathname.indexOf('/api/') === 0 && url.pathname !== '/api/ai-advice') {
     supabaseApi.handle(request, response, url).catch(function (error) {
       console.error('Supabase API greška:', error.message);

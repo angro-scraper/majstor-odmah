@@ -87,6 +87,44 @@ function createSupabaseApi(options) {
     return rows && rows[0] ? toJob(rows[0]) : job;
   }
 
+  async function handleAdmin(request, response, url) {
+    const supportMatch = url.pathname.match(/^\/api\/admin\/support\/([^/]+)$/);
+    const jobFlagMatch = url.pathname.match(/^\/api\/admin\/jobs\/([^/]+)\/flag$/);
+    if (url.pathname === '/api/admin/overview' && request.method === 'GET') {
+      const results = await Promise.all([
+        database('GET', '/rest/v1/profiles?select=id,full_name,role,city,phone_verified,identity_verified,created_at&order=created_at.desc'),
+        database('GET', '/rest/v1/providers?select=id,profile_id,trade,available,rating,review_count'),
+        database('GET', '/rest/v1/jobs?select=*&order=created_at.desc'),
+        database('GET', '/rest/v1/support_tickets?select=*&order=created_at.desc')
+      ]);
+      const profiles = results[0] || []; const providersRows = results[1] || []; const jobs = (results[2] || []).map(toJob); const tickets = results[3] || [];
+      return reply(response, 200, { stats: { users: profiles.length, providers: providersRows.length, openJobs: jobs.filter(function (job) { return ['Traži majstora', 'Primljene ponude'].indexOf(job.status) >= 0; }).length, activeJobs: jobs.filter(function (job) { return ['Dogovoren termin', 'Potvrđen dolazak', 'Radovi u toku'].indexOf(job.status) >= 0; }).length, openTickets: tickets.filter(function (ticket) { return ticket.status !== 'resolved'; }).length }, jobs: jobs.slice(0, 8), tickets: tickets.slice(0, 8) });
+    }
+    if (url.pathname === '/api/admin/users' && request.method === 'GET') {
+      const results = await Promise.all([database('GET', '/rest/v1/profiles?select=id,full_name,role,city,phone_verified,identity_verified,created_at&order=created_at.desc'), database('GET', '/rest/v1/providers?select=profile_id,trade,available,rating,review_count')]);
+      const providerByProfile = {}; (results[1] || []).forEach(function (provider) { providerByProfile[provider.profile_id] = provider; });
+      return reply(response, 200, (results[0] || []).map(function (profile) { return Object.assign({}, profile, { provider: providerByProfile[profile.id] || null }); }));
+    }
+    if (url.pathname === '/api/admin/jobs' && request.method === 'GET') {
+      const rows = await database('GET', '/rest/v1/jobs?select=*&order=created_at.desc'); return reply(response, 200, (rows || []).map(toJob));
+    }
+    if (url.pathname === '/api/admin/support' && request.method === 'GET') {
+      const tickets = await database('GET', '/rest/v1/support_tickets?select=*&order=created_at.desc'); return reply(response, 200, tickets || []);
+    }
+    if (supportMatch && request.method === 'POST') {
+      const payload = await parseBody(request); const status = String(payload.status || '');
+      if (['open', 'in_progress', 'resolved'].indexOf(status) < 0) return reply(response, 400, { error: 'Status podrške nije validan.' });
+      const rows = await database('PATCH', '/rest/v1/support_tickets?id=eq.' + encodeURIComponent(supportMatch[1]), { status: status }); return reply(response, 200, rows && rows[0] ? rows[0] : { status: status });
+    }
+    if (jobFlagMatch && request.method === 'POST') {
+      const payload = await parseBody(request); const saved = await getJob(jobFlagMatch[1]);
+      if (!saved) return reply(response, 404, { error: 'Posao nije pronađen.' });
+      saved.job.adminFlag = Boolean(payload.flagged); saved.job.adminFlaggedAt = saved.job.adminFlag ? new Date().toISOString() : null;
+      return reply(response, 200, await saveJob(saved.row.id, saved.job));
+    }
+    return reply(response, 404, { error: 'Admin ruta nije pronađena.' });
+  }
+
   async function handle(request, response, url) {
     const offerMatch = url.pathname.match(/^\/api\/jobs\/([^/]+)\/offers$/);
     const acceptMatch = url.pathname.match(/^\/api\/jobs\/([^/]+)\/accept$/);
@@ -204,7 +242,7 @@ function createSupabaseApi(options) {
     return reply(response, 404, { error: 'API ruta nije pronađena.' });
   }
 
-  return { enabled: enabled, handle: handle };
+  return { enabled: enabled, handle: handle, handleAdmin: handleAdmin };
 }
 
 module.exports = { createSupabaseApi: createSupabaseApi };
