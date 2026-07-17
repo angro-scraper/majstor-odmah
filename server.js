@@ -15,14 +15,22 @@ const providers = [
 ];
 function matchedProviders(category) { return providers.filter(function (provider) { return provider.category === category && provider.availability.indexOf('danas') >= 0; }); }
 const demoJob = { id: 1, category: 'Električar', location: 'Detelinara, Novi Sad', description: 'Povremeno izbacuje osigurač u kuhinji. Potreban pregled danas.', status: 'Traži majstora', createdAt: '2026-07-17T08:30:00.000Z', offers: [], matches: matchedProviders('Električar') };
+const demoChatJob = { id: 902, category: 'Električar', location: 'Grbavica, Novi Sad', description: 'Zamena dve plafonjere i provera prekidača. Termin je već dogovoren.', status: 'Dogovoren termin', progress: 'Dogovoren termin', createdAt: '2026-07-17T09:15:00.000Z', matches: matchedProviders('Električar'), offers: [{ id: 9021, providerName: 'Milan Jovanović', amount: '6.500', eta: 'sutra u 10h', note: 'Verifikovan električar · 4,9★', createdAt: '2026-07-17T09:20:00.000Z' }], acceptedOfferId: 9021, activity: [{ label: 'Majstor je izabran', at: '2026-07-17T09:25:00.000Z' }], messages: [{ id: 90201, author: 'klijent', text: 'Zdravo Milane, da li ti odgovara sutra u 10h?', createdAt: '2026-07-17T09:26:00.000Z' }, { id: 90202, author: 'majstor', text: 'Odgovara, Ana. Doneću i odgovarajuće LED sijalice za probu.', createdAt: '2026-07-17T09:28:00.000Z' }] };
 const supabaseApi = createSupabaseApi({ providers: providers, matchedProviders: matchedProviders, demoJob: demoJob });
 
+function seedDemoJobs(data) {
+  const jobs = Array.isArray(data.jobs) ? data.jobs : [];
+  if (!jobs.some(function (job) { return Number(job.id) === demoChatJob.id; })) jobs.unshift(JSON.parse(JSON.stringify(demoChatJob)));
+  if (!jobs.some(function (job) { return Number(job.id) === demoJob.id; })) jobs.push(JSON.parse(JSON.stringify(demoJob)));
+  data.jobs = jobs;
+  data.nextJobId = Math.max(Number(data.nextJobId || 2), 903);
+  return data;
+}
 function readData() {
   try {
     const data = JSON.parse(fs.readFileSync(dataFile, 'utf8'));
-    if (!data.jobs || !data.jobs.length) return { jobs: [demoJob], nextJobId: 2, nextOfferId: data.nextOfferId || 1 };
-    return data;
-  } catch (error) { return { jobs: [demoJob], nextJobId: 2, nextOfferId: 1 }; }
+    return seedDemoJobs(data);
+  } catch (error) { return seedDemoJobs({ jobs: [], nextJobId: 903, nextOfferId: 1 }); }
 }
 function writeData(data) { fs.writeFileSync(dataFile, JSON.stringify(data, null, 2), 'utf8'); }
 function reply(response, status, body) { response.writeHead(status, { 'Content-Type': 'application/json; charset=utf-8' }); response.end(JSON.stringify(body)); }
