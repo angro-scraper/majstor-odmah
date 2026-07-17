@@ -82,6 +82,10 @@ const server = http.createServer(function (request, response) {
   if (url.pathname.indexOf('/api/auth/') === 0 || url.pathname.indexOf('/api/notifications') === 0) {
     return supabaseApi.handleAuth(request, response, url).catch(function (error) { console.error('Auth greška:', error.message); reply(response, 400, { error: error.message || 'Prijava nije uspela.' }); });
   }
+  if (url.pathname.indexOf('/api/core/') === 0) {
+    if (!supabaseApi.enabled) return reply(response, 503, { error: 'Balkan Core još nije povezan sa bazom.' });
+    return supabaseApi.handleCore(request, response, url).catch(function (error) { console.error('Balkan Core greška:', error.message); reply(response, 502, { error: error.message || 'Balkan Core trenutno nije dostupan.' }); });
+  }
   if (url.pathname.indexOf('/api/admin/') === 0) {
     if (!isAdmin(request)) return reply(response, 401, { error: 'Administratorski pristup nije dozvoljen.' });
     if (supabaseApi.enabled) return supabaseApi.handleAdmin(request, response, url).catch(function (error) { console.error('Supabase admin greška:', error.message); reply(response, 502, { error: 'Admin podaci trenutno nisu dostupni.' }); });

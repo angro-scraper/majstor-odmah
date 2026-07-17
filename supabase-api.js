@@ -77,6 +77,115 @@ function createSupabaseApi(options) {
     return { profile: profile, token: token };
   }
 
+  const coreModuleKeys = ['market', 'deals', 'save-food', 'business', 'money'];
+  const businessTypes = ['sole_trader', 'company', 'store', 'service_provider', 'nonprofit', 'other'];
+
+  function coreProfile(profile) {
+    return {
+      id: profile.id,
+      fullName: profile.full_name,
+      role: profile.role,
+      city: profile.city || '',
+      countryCode: profile.country_code || '',
+      preferredLocale: profile.preferred_locale || 'sr',
+      phoneVerified: Boolean(profile.phone_verified),
+      identityVerified: Boolean(profile.identity_verified),
+      verificationStatus: profile.verification_status,
+      latitude: profile.latitude,
+      longitude: profile.longitude
+    };
+  }
+
+  function businessView(business) {
+    return {
+      id: business.id,
+      legalName: business.legal_name,
+      displayName: business.display_name,
+      businessType: business.business_type,
+      city: business.city,
+      countryCode: business.country_code || '',
+      website: business.website || '',
+      description: business.description || '',
+      phone: business.phone || '',
+      email: business.email || '',
+      verificationStatus: business.verification_status,
+      active: business.is_active !== false
+    };
+  }
+
+  async function handleCore(request, response, url) {
+    if (!enabled) return reply(response, 503, { error: 'Balkan Core još nije povezan sa bazom.' });
+    const current = await currentProfile(request);
+    const profileId = current.profile.id;
+    const businessMatch = url.pathname.match(/^\/api\/core\/businesses\/([^/]+)$/);
+
+    if (url.pathname === '/api/core/me' && request.method === 'GET') {
+      const [businesses, preferences] = await Promise.all([
+        database('GET', '/rest/v1/business_profiles?owner_profile_id=eq.' + encodeURIComponent(profileId) + '&select=*&order=created_at.desc'),
+        database('GET', '/rest/v1/profile_module_preferences?profile_id=eq.' + encodeURIComponent(profileId) + '&select=module_key,is_pinned,notifications_enabled&order=module_key.asc')
+      ]);
+      return reply(response, 200, { profile: coreProfile(current.profile), businesses: (businesses || []).map(businessView), modulePreferences: preferences || [] });
+    }
+
+    if (url.pathname === '/api/core/me' && request.method === 'PATCH') {
+      const payload = await parseBody(request);
+      const fullName = payload.fullName === undefined ? current.profile.full_name : String(payload.fullName || '').trim();
+      const city = payload.city === undefined ? current.profile.city : String(payload.city || '').trim();
+      const preferredLocale = payload.preferredLocale === undefined ? (current.profile.preferred_locale || 'sr') : String(payload.preferredLocale || '').trim();
+      const countryCode = payload.countryCode === undefined ? (current.profile.country_code || null) : String(payload.countryCode || '').trim().toUpperCase().slice(0, 2);
+      if (fullName.length < 2 || fullName.length > 120 || city.length < 2 || city.length > 80 || ['sr', 'hr', 'bs', 'mk', 'sq', 'en', 'de'].indexOf(preferredLocale) < 0) return reply(response, 400, { error: 'Proveri ime, grad i jezik profila.' });
+      const rows = await database('PATCH', '/rest/v1/profiles?id=eq.' + encodeURIComponent(profileId), { full_name: fullName, city: city, preferred_locale: preferredLocale, country_code: countryCode || null });
+      return reply(response, 200, { profile: coreProfile(rows && rows[0] ? rows[0] : Object.assign({}, current.profile, { full_name: fullName, city: city, preferred_locale: preferredLocale, country_code: countryCode })) });
+    }
+
+    if (url.pathname === '/api/core/module-preferences' && request.method === 'PUT') {
+      const payload = await parseBody(request);
+      const preferences = Array.isArray(payload.preferences) ? payload.preferences : [];
+      if (preferences.length > coreModuleKeys.length || preferences.some(function (item) { return !item || coreModuleKeys.indexOf(item.moduleKey) < 0; })) return reply(response, 400, { error: 'Lista modula nije validna.' });
+      await database('DELETE', '/rest/v1/profile_module_preferences?profile_id=eq.' + encodeURIComponent(profileId));
+      const rows = preferences.length ? await database('POST', '/rest/v1/profile_module_preferences', preferences.map(function (item) { return { profile_id: profileId, module_key: item.moduleKey, is_pinned: item.isPinned !== false, notifications_enabled: item.notificationsEnabled !== false }; })) : [];
+      return reply(response, 200, { modulePreferences: rows || [] });
+    }
+
+    if (url.pathname === '/api/core/businesses' && request.method === 'GET') {
+      const rows = await database('GET', '/rest/v1/business_profiles?owner_profile_id=eq.' + encodeURIComponent(profileId) + '&select=*&order=created_at.desc');
+      return reply(response, 200, { businesses: (rows || []).map(businessView) });
+    }
+
+    if (url.pathname === '/api/core/businesses' && request.method === 'POST') {
+      const payload = await parseBody(request);
+      const legalName = String(payload.legalName || '').trim(); const displayName = String(payload.displayName || '').trim(); const businessType = String(payload.businessType || '').trim(); const city = String(payload.city || current.profile.city || '').trim();
+      if (legalName.length < 2 || legalName.length > 180 || displayName.length < 2 || displayName.length > 120 || businessTypes.indexOf(businessType) < 0 || city.length < 2 || city.length > 80) return reply(response, 400, { error: 'Proveri naziv firme, tip i grad.' });
+      const rows = await database('POST', '/rest/v1/business_profiles', { owner_profile_id: profileId, legal_name: legalName, display_name: displayName, business_type: businessType, city: city, country_code: String(payload.countryCode || current.profile.country_code || '').trim().toUpperCase().slice(0, 2) || null, website: String(payload.website || '').trim().slice(0, 300) || null, description: String(payload.description || '').trim().slice(0, 2000) || null, phone: String(payload.phone || '').trim().slice(0, 50) || null, email: String(payload.email || '').trim().toLowerCase().slice(0, 160) || null });
+      await database('POST', '/rest/v1/notifications', { profile_id: profileId, title: 'Firma je dodata', body: 'Poslovni profil čeka administrativnu verifikaciju.' });
+      return reply(response, 201, { business: businessView(rows[0]) });
+    }
+
+    if (businessMatch && request.method === 'PATCH') {
+      const owned = await database('GET', '/rest/v1/business_profiles?id=eq.' + encodeURIComponent(businessMatch[1]) + '&owner_profile_id=eq.' + encodeURIComponent(profileId) + '&select=id');
+      if (!owned || !owned[0]) return reply(response, 404, { error: 'Poslovni profil nije pronađen.' });
+      const payload = await parseBody(request); const patch = {};
+      if (payload.displayName !== undefined) patch.display_name = String(payload.displayName || '').trim().slice(0, 120);
+      if (payload.city !== undefined) patch.city = String(payload.city || '').trim().slice(0, 80);
+      if (payload.website !== undefined) patch.website = String(payload.website || '').trim().slice(0, 300) || null;
+      if (payload.description !== undefined) patch.description = String(payload.description || '').trim().slice(0, 2000) || null;
+      if (payload.phone !== undefined) patch.phone = String(payload.phone || '').trim().slice(0, 50) || null;
+      if (payload.email !== undefined) patch.email = String(payload.email || '').trim().toLowerCase().slice(0, 160) || null;
+      if (!Object.keys(patch).length || (patch.display_name !== undefined && patch.display_name.length < 2) || (patch.city !== undefined && patch.city.length < 2)) return reply(response, 400, { error: 'Nema validnih izmena poslovnog profila.' });
+      const rows = await database('PATCH', '/rest/v1/business_profiles?id=eq.' + encodeURIComponent(businessMatch[1]) + '&owner_profile_id=eq.' + encodeURIComponent(profileId), patch);
+      return reply(response, 200, { business: businessView(rows[0]) });
+    }
+
+    if (url.pathname === '/api/core/ratings' && request.method === 'POST') {
+      const payload = await parseBody(request); const rating = Number(payload.rating); const moduleKey = String(payload.moduleKey || '').trim(); const subjectProfileId = String(payload.subjectProfileId || '').trim(); const businessProfileId = String(payload.businessProfileId || '').trim();
+      if (!Number.isInteger(rating) || rating < 1 || rating > 5 || coreModuleKeys.indexOf(moduleKey) < 0 || Boolean(subjectProfileId) === Boolean(businessProfileId)) return reply(response, 400, { error: 'Ocena mora imati modul i tačno jednog primaoca.' });
+      const rows = await database('POST', '/rest/v1/platform_ratings', { reviewer_profile_id: profileId, subject_profile_id: subjectProfileId || null, business_profile_id: businessProfileId || null, module_key: moduleKey, reference_id: String(payload.referenceId || '').trim().slice(0, 120) || null, rating: rating, comment: String(payload.comment || '').trim().slice(0, 1000) || null, is_visible: true });
+      return reply(response, 201, { rating: rows && rows[0] ? rows[0] : null });
+    }
+
+    return reply(response, 404, { error: 'Balkan Core ruta nije pronađena.' });
+  }
+
   function dbStatus(label) {
     const map = {
       'Traži majstora': 'open',
@@ -265,6 +374,7 @@ function createSupabaseApi(options) {
   }
 
   async function handle(request, response, url) {
+    if (url.pathname.indexOf('/api/core/') === 0) return handleCore(request, response, url);
     const offerMatch = url.pathname.match(/^\/api\/jobs\/([^/]+)\/offers$/);
     const acceptMatch = url.pathname.match(/^\/api\/jobs\/([^/]+)\/accept$/);
     const declineMatch = url.pathname.match(/^\/api\/jobs\/([^/]+)\/decline$/);
@@ -425,7 +535,7 @@ function createSupabaseApi(options) {
     return reply(response, 404, { error: 'API ruta nije pronađena.' });
   }
 
-  return { enabled: enabled, handle: handle, handleAdmin: handleAdmin, handleAuth: handleAuth };
+  return { enabled: enabled, handle: handle, handleAdmin: handleAdmin, handleAuth: handleAuth, handleCore: handleCore };
 }
 
 module.exports = { createSupabaseApi: createSupabaseApi };

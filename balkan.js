@@ -28,9 +28,20 @@ const details = {
 let language = localStorage.getItem('balkan-language') || 'sr';
 let selected = localStorage.getItem('balkan-last-module') || 'market';
 let toastTimer;
+let coreAccount = null;
 const commonLabels = { market: 'Market', deals: 'Deals', saveFood: 'Save Food', business: 'Business' };
 const t = key => I18N[language]?.[key] ?? I18N.sr[key] ?? commonLabels[key] ?? key;
 const byId = id => modules.find(module => module.id === id);
+
+function authSession() { try { return JSON.parse(localStorage.getItem('majstorAuthSession') || 'null'); } catch (error) { return null; } }
+async function coreRequest(path, options) {
+  const active = authSession();
+  if (!active || !active.access_token) throw new Error('Prijavi se da sačuvaš podatke u Balkan nalogu.');
+  const response = await fetch(path, Object.assign({}, options || {}, { headers: Object.assign({ 'Content-Type': 'application/json', Authorization: 'Bearer ' + active.access_token }, (options && options.headers) || {}) }));
+  const body = await response.json();
+  if (!response.ok) throw new Error(body.error || 'Balkan Core trenutno nije dostupan.');
+  return body;
+}
 
 function moduleText(module) {
   if (language === 'en' || language === 'de') {
@@ -69,7 +80,8 @@ function renderWorkspace() {
 }
 
 function renderAccountModules() {
-  const selectedModules = JSON.parse(localStorage.getItem('balkan-pinned-modules') || '["market","deals"]');
+  const storedModules = JSON.parse(localStorage.getItem('balkan-pinned-modules') || '["market","deals"]');
+  const selectedModules = coreAccount && Array.isArray(coreAccount.modulePreferences) ? coreAccount.modulePreferences.filter(item => item.is_pinned !== false).map(item => item.module_key) : storedModules;
   document.getElementById('accountModuleList').innerHTML = modules.map(module => `<label class="account-module-option"><input type="checkbox" value="${module.id}" ${selectedModules.includes(module.id) ? 'checked' : ''} /><span>${module.icon}</span><b>${moduleText(module).title}</b><small>${module.link ? t('activeNow') : module.tag}</small></label>`).join('');
 }
 
@@ -81,13 +93,30 @@ function showToast(message) {
   toastTimer = setTimeout(() => toast.classList.remove('show'), 4200);
 }
 
-function openAccount() {
+async function openAccount() {
   const modal = document.getElementById('balkanAccountModal');
   const city = localStorage.getItem('balkan-city') || 'Novi Sad';
+  const identity = document.getElementById('accountIdentity');
+  const businessBox = document.getElementById('businessProfileBox');
   document.getElementById('accountCity').value = city;
   renderAccountModules();
   modal.classList.remove('hidden');
   document.body.style.overflow = 'hidden';
+  identity.textContent = 'Lokalna podešavanja su spremna. Prijavi se za zajednički Balkan nalog.';
+  businessBox.classList.add('hidden');
+  const active = authSession();
+  if (!active || !active.access_token) return;
+  try {
+    coreAccount = await coreRequest('/api/core/me');
+    const profile = coreAccount.profile || {};
+    if (profile.city) { document.getElementById('accountCity').value = profile.city; document.getElementById('citySelect').value = profile.city; }
+    if (profile.preferredLocale && I18N[profile.preferredLocale]) { language = profile.preferredLocale; localStorage.setItem('balkan-language', language); setText(); }
+    identity.textContent = `Prijavljen nalog: ${profile.fullName || 'Balkan korisnik'} · ${profile.city || 'grad nije podešen'}.`;
+    businessBox.classList.remove('hidden');
+    const formCity = document.querySelector('#businessProfileForm [name="city"]'); if (formCity) formCity.value = profile.city || city;
+  } catch (error) {
+    identity.textContent = 'Nalog je prijavljen, ali Core podaci će biti dostupni nakon pokretanja nove migracije.';
+  }
 }
 
 function closeAccount() {
@@ -127,14 +156,31 @@ document.getElementById('citySelect').addEventListener('change', event => { loca
 document.getElementById('openBalkanAccount').addEventListener('click', openAccount);
 document.getElementById('closeBalkanAccount').addEventListener('click', closeAccount);
 document.getElementById('balkanAccountModal').addEventListener('click', event => { if (event.target === event.currentTarget) closeAccount(); });
-document.getElementById('saveBalkanAccount').addEventListener('click', () => {
+document.getElementById('saveBalkanAccount').addEventListener('click', async () => {
   const city = document.getElementById('accountCity').value;
   const pinned = Array.from(document.querySelectorAll('#accountModuleList input:checked')).map(input => input.value);
   localStorage.setItem('balkan-city', city);
   localStorage.setItem('balkan-pinned-modules', JSON.stringify(pinned));
   document.getElementById('citySelect').value = city;
-  closeAccount();
-  showToast(t('saved'));
+  try {
+    if (authSession()) {
+      const profileResult = await coreRequest('/api/core/me', { method: 'PATCH', body: JSON.stringify({ city: city, preferredLocale: language }) });
+      const preferenceResult = await coreRequest('/api/core/module-preferences', { method: 'PUT', body: JSON.stringify({ preferences: pinned.map(moduleKey => ({ moduleKey: moduleKey, isPinned: true, notificationsEnabled: true })) }) });
+      coreAccount = Object.assign({}, coreAccount || {}, { profile: profileResult.profile, modulePreferences: preferenceResult.modulePreferences });
+    }
+    closeAccount();
+    showToast(t('saved'));
+  } catch (error) { showToast(error.message); }
+});
+document.getElementById('businessProfileForm').addEventListener('submit', async event => {
+  event.preventDefault();
+  const form = event.currentTarget; const status = document.getElementById('businessFormStatus');
+  const payload = { legalName: form.legalName.value, displayName: form.displayName.value, businessType: form.businessType.value, city: form.city.value, website: form.website.value, description: form.description.value };
+  try {
+    const result = await coreRequest('/api/core/businesses', { method: 'POST', body: JSON.stringify(payload) });
+    coreAccount = Object.assign({}, coreAccount || {}, { businesses: (coreAccount && coreAccount.businesses || []).concat(result.business) });
+    form.reset(); status.textContent = 'Firma je sačuvana i čeka verifikaciju.';
+  } catch (error) { status.textContent = error.message; }
 });
 document.getElementById('citySelect').value = localStorage.getItem('balkan-city') || 'Novi Sad';
 setText();
