@@ -99,6 +99,10 @@ const server = http.createServer(function (request, response) {
     if (adminVerificationMatch && request.method === 'POST') return parseBody(request, function (error, payload) { const data = readData(); const user = adminUsers(data).find(function (item) { return item.id === adminVerificationMatch[1] && item.role === 'provider'; }); const status = String(payload.status || ''); if (error || !user || ['pending', 'verified', 'rejected'].indexOf(status) < 0) return reply(response, 400, { error: 'Status verifikacije nije validan.' }); data.userModeration = data.userModeration || {}; data.userModeration[user.id] = Object.assign({}, data.userModeration[user.id] || {}, { verification_status: status, identity_verified: status === 'verified' }); writeData(data); reply(response, 200, Object.assign({}, user, data.userModeration[user.id])); });
     return reply(response, 404, { error: 'Admin ruta nije pronađena.' });
   }
+  if (supabaseApi.enabled && url.pathname === '/api/partners') {
+    supabaseApi.handle(request, response, url).catch(function (error) { console.error('Partnerski katalog greška:', error.message); reply(response, 502, { error: error.message || 'Partnerski katalog trenutno nije dostupan.' }); });
+    return;
+  }
   if (supabaseApi.enabled && url.pathname.indexOf('/api/') === 0 && url.pathname !== '/api/ai-advice') {
     supabaseApi.handle(request, response, url).catch(function (error) {
       console.error('Supabase API greška:', error.message);
