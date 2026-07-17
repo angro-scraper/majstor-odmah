@@ -126,7 +126,7 @@ function createSupabaseApi(options) {
   async function handleAdmin(request, response, url) {
     const supportMatch = url.pathname.match(/^\/api\/admin\/support\/([^/]+)$/); const partnerMatch = url.pathname.match(/^\/api\/admin\/partners\/([^/]+)$/);
     if (url.pathname === '/api/admin/partners' && request.method === 'GET') {
-      const rows = await database('GET', '/rest/v1/support_tickets?subject=like.' + encodeURIComponent('Partner katalog ·%') + '&select=*&order=created_at.desc'); return reply(response, 200, (rows || []).map(partnerTicket));
+      const rows = await database('GET', '/rest/v1/support_tickets?subject=like.' + encodeURIComponent('Partner katalog ·*') + '&select=*&order=created_at.desc'); return reply(response, 200, (rows || []).map(partnerTicket));
     }
     if (url.pathname === '/api/admin/partners' && request.method === 'POST') {
       const payload = await parseBody(request); const company = String(payload.company || '').trim(); const category = String(payload.category || '').trim(); const city = String(payload.city || '').trim(); const description = String(payload.description || '').trim();
@@ -223,7 +223,7 @@ function createSupabaseApi(options) {
 
     if (url.pathname === '/api/providers' && request.method === 'GET') return reply(response, 200, providers);
     if (url.pathname === '/api/partners' && request.method === 'GET') {
-      const rows = await database('GET', '/rest/v1/support_tickets?subject=like.' + encodeURIComponent('Partner katalog ·%') + '&status=eq.resolved&select=*&order=created_at.desc'); return reply(response, 200, (rows || []).map(partnerTicket));
+      const rows = await database('GET', '/rest/v1/support_tickets?subject=like.' + encodeURIComponent('Partner katalog ·*') + '&status=eq.resolved&select=*&order=created_at.desc'); return reply(response, 200, (rows || []).map(partnerTicket));
     }
     if (url.pathname === '/api/jobs' && request.method === 'GET') {
       const rows = await database('GET', '/rest/v1/jobs?select=*&order=created_at.desc');
