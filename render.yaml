@@ -37,6 +37,8 @@ services:
 
 databases:
   - name: balkanworks-db
-    plan: free
+    # The workspace already has an active free database.  Use Render's
+    # smallest paid PostgreSQL tier without disturbing that existing database.
+    plan: basic-256mb
     databaseName: balkanworks
     user: balkanworks
