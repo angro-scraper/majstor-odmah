@@ -21,6 +21,26 @@ enum BusinessStatus {
   BLOCKED
 }
 
+enum VerificationStatus {
+  UNVERIFIED
+  PENDING
+  VERIFIED
+  REJECTED
+}
+
+enum ReviewStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum ContactType {
+  PHONE
+  EMAIL
+  MESSAGE
+  LOCATION
+}
+
 enum NotificationType {
   IMPORTANT
   RECOMMENDATION
@@ -92,6 +112,8 @@ model Profile {
   countryId   String?  @map("country_id") @db.Uuid
   cityId      String?  @map("city_id") @db.Uuid
   preferences Json     @default("{}")
+  interests   Json     @default("[]")
+  language    String?  @default("sr")
   user        User     @relation(fields: [userId], references: [id])
   country     Country? @relation(fields: [countryId], references: [id])
   city        City?    @relation(fields: [cityId], references: [id])
@@ -180,6 +202,8 @@ model Business {
   id          String             @id @default(uuid()) @db.Uuid
   ownerId     String             @map("owner_id") @db.Uuid
   name        String
+  // Nullable during the staged migration; backfill before making this required.
+  slug        String?            @unique
   description String?
   logoUrl     String?            @map("logo_url")
   categoryId  String?            @map("category_id") @db.Uuid
@@ -187,12 +211,18 @@ model Business {
   email       String?
   website     String?
   status      BusinessStatus     @default(DRAFT)
+  verificationStatus VerificationStatus @default(UNVERIFIED) @map("verification_status")
   owner       User               @relation(fields: [ownerId], references: [id])
   category    Category?          @relation(fields: [categoryId], references: [id])
   locations   BusinessLocation[]
   offers      Offer[]
+  services    Service[]
+  images      BusinessImage[]
   favorites   Favorite[]
   reviews     Review[]
+  views       BusinessView[]
+  contacts    ContactEvent[]
+  subscriptions Subscription[]
   events      Event[]
   createdAt   DateTime           @default(now()) @map("created_at")
   updatedAt   DateTime           @updatedAt @map("updated_at")
@@ -266,6 +296,7 @@ model Review {
   businessId String    @map("business_id") @db.Uuid
   rating     Int
   comment    String?
+  status     ReviewStatus @default(PENDING)
   user       User      @relation(fields: [userId], references: [id])
   business   Business  @relation(fields: [businessId], references: [id])
   createdAt  DateTime  @default(now()) @map("created_at")
@@ -275,6 +306,36 @@ model Review {
   @@unique([userId, businessId])
   @@index([businessId, createdAt])
   @@map("reviews")
+}
+
+model Service {
+  id          String   @id @default(uuid()) @db.Uuid
+  businessId  String   @map("business_id") @db.Uuid
+  name        String
+  description String?
+  priceRange  String?  @map("price_range")
+  business    Business @relation(fields: [businessId], references: [id])
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+  deletedAt   DateTime? @map("deleted_at")
+
+  @@index([businessId])
+  @@map("services")
+}
+
+model BusinessImage {
+  id         String   @id @default(uuid()) @db.Uuid
+  businessId String   @map("business_id") @db.Uuid
+  url        String
+  type       String?
+  orderIndex Int      @default(0) @map("order_index")
+  business   Business @relation(fields: [businessId], references: [id])
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
+  deletedAt  DateTime? @map("deleted_at")
+
+  @@index([businessId, orderIndex])
+  @@map("business_images")
 }
 
 model Event {
@@ -310,6 +371,60 @@ model SearchQuery {
 
   @@index([userId, createdAt])
   @@map("searches")
+}
+
+model BusinessView {
+  id         String   @id @default(uuid()) @db.Uuid
+  businessId String   @map("business_id") @db.Uuid
+  userId     String?  @map("user_id") @db.Uuid
+  source     String?
+  business   Business @relation(fields: [businessId], references: [id])
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  @@index([businessId, createdAt])
+  @@map("business_views")
+}
+
+model ContactEvent {
+  id         String      @id @default(uuid()) @db.Uuid
+  userId     String?     @map("user_id") @db.Uuid
+  businessId String      @map("business_id") @db.Uuid
+  type       ContactType
+  metadata   Json        @default("{}")
+  business   Business    @relation(fields: [businessId], references: [id])
+  createdAt  DateTime    @default(now()) @map("created_at")
+
+  @@index([businessId, createdAt])
+  @@map("contact_events")
+}
+
+model Subscription {
+  id         String   @id @default(uuid()) @db.Uuid
+  businessId String   @map("business_id") @db.Uuid
+  plan       String
+  status     String
+  startedAt  DateTime @map("started_at")
+  expiresAt  DateTime? @map("expires_at")
+  business   Business @relation(fields: [businessId], references: [id])
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
+  deletedAt  DateTime? @map("deleted_at")
+
+  @@index([businessId, status])
+  @@map("subscriptions")
+}
+
+model Embedding {
+  id         String   @id @default(uuid()) @db.Uuid
+  entityType String   @map("entity_type")
+  entityId   String   @map("entity_id")
+  vector     Json
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
+  deletedAt  DateTime? @map("deleted_at")
+
+  @@unique([entityType, entityId])
+  @@map("embeddings")
 }
 
 model BusinessLocation {
