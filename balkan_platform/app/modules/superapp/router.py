@@ -10,7 +10,7 @@ from app.modules.identity.models import Profile, User
 from app.modules.marketplace.models import Favorite, Listing, Message, Review
 from app.modules.payments.models import Wallet
 from app.modules.save_food.models import FoodReservation
-from app.modules.superapp.models import UserModule
+from app.modules.superapp.models import UserModule, UserModuleLayout
 
 router = APIRouter(prefix="/super-app", tags=["Super App Hub"])
 
@@ -28,14 +28,39 @@ class ModuleChange(BaseModel):
     is_active: bool = True
 
 
-def module_payload(rows: list[UserModule]) -> list[dict]:
-    return [{"key": item.module_key, "active": item.is_active, **MODULE_CATALOG[item.module_key]} for item in rows if item.module_key in MODULE_CATALOG]
+class ModuleLayoutChange(BaseModel):
+    module_keys: list[str]
+
+
+def module_payload(rows: list[UserModule], layouts: dict[str, UserModuleLayout] | None = None) -> list[dict]:
+    result = []
+    for item in rows:
+        if item.module_key not in MODULE_CATALOG:
+            continue
+        layout = (layouts or {}).get(item.module_key)
+        result.append({"key": item.module_key, "active": item.is_active, "position": layout.position if layout else 9999,
+                       "pinned": layout.is_pinned if layout else False, **MODULE_CATALOG[item.module_key]})
+    return sorted(result, key=lambda item: (not item["pinned"], item["position"], item["name"]))
+
+
+def layouts_for(user: User, db: Session) -> dict[str, UserModuleLayout]:
+    rows = list(db.scalars(select(UserModuleLayout).where(UserModuleLayout.user_id == user.id)))
+    return {item.module_key: item for item in rows}
+
+
+def ensure_layout(user: User, key: str, db: Session) -> UserModuleLayout:
+    layout = db.scalar(select(UserModuleLayout).where(UserModuleLayout.user_id == user.id, UserModuleLayout.module_key == key))
+    if layout is None:
+        position = db.scalar(select(func.max(UserModuleLayout.position)).where(UserModuleLayout.user_id == user.id))
+        layout = UserModuleLayout(user_id=user.id, module_key=key, position=(position or 0) + 1)
+        db.add(layout)
+    return layout
 
 
 @router.get("/modules")
 def my_modules(current_user: User = Depends(get_current_user), db: Session = Depends(get_db)) -> dict:
     rows = list(db.scalars(select(UserModule).where(UserModule.user_id == current_user.id, UserModule.is_active.is_(True)).order_by(UserModule.created_at.asc())))
-    return {"active_modules": module_payload(rows), "catalog": [{"key": key, **value} for key, value in MODULE_CATALOG.items()]}
+    return {"active_modules": module_payload(rows, layouts_for(current_user, db)), "catalog": [{"key": key, **value} for key, value in MODULE_CATALOG.items()]}
 
 
 @router.put("/modules")
@@ -49,8 +74,33 @@ def set_module(payload: ModuleChange, current_user: User = Depends(get_current_u
         db.add(row)
     else:
         row.is_active = payload.is_active
+    if payload.is_active:
+        ensure_layout(current_user, key, db)
     db.commit(); db.refresh(row)
-    return {"key": key, "active": row.is_active, **MODULE_CATALOG[key]}
+    layout = layouts_for(current_user, db).get(key)
+    return {"key": key, "active": row.is_active, "position": layout.position if layout else None, **MODULE_CATALOG[key]}
+
+
+@router.put("/modules/layout")
+def set_module_layout(payload: ModuleLayoutChange, current_user: User = Depends(get_current_user), db: Session = Depends(get_db)) -> dict:
+    requested = [key.strip().lower() for key in payload.module_keys]
+    if len(requested) != len(set(requested)) or any(key not in MODULE_CATALOG for key in requested):
+        raise HTTPException(status_code=422, detail="Neispravan raspored modula.")
+    active = {item.module_key for item in db.scalars(select(UserModule).where(UserModule.user_id == current_user.id, UserModule.is_active.is_(True)))}
+    if set(requested) != active:
+        raise HTTPException(status_code=422, detail="Raspored mora sadržati sve i samo aktivirane module.")
+    for position, key in enumerate(requested, start=1):
+        layout = ensure_layout(current_user, key, db)
+        layout.position = position
+    db.commit()
+    rows = list(db.scalars(select(UserModule).where(UserModule.user_id == current_user.id, UserModule.is_active.is_(True))))
+    return {"active_modules": module_payload(rows, layouts_for(current_user, db))}
+
+
+@router.get("/dashboard")
+def dashboard(current_user: User = Depends(get_current_user), db: Session = Depends(get_db)) -> dict:
+    rows = list(db.scalars(select(UserModule).where(UserModule.user_id == current_user.id, UserModule.is_active.is_(True))))
+    return {"layout": "personal_module_dashboard", "modules": module_payload(rows, layouts_for(current_user, db)), "empty_state": "Izaberi module u Profile delu da oblikuješ svoj Home."}
 
 
 @router.get("/profile")
@@ -66,7 +116,7 @@ def profile_center(current_user: User = Depends(get_current_user), db: Session =
         "wallet": {"balance": wallet.balance, "currency": wallet.currency, "status": "provider_not_connected"},
         "rewards": {"points": int(favorites * 2 + reservations * 10), "status": "active"},
         "verifications": [{"key": "email", "label": "Email", "verified": current_user.email_verified}, {"key": "phone", "label": "Telefon", "verified": current_user.phone_verified}, {"key": "location", "label": "Lokacija", "verified": bool(profile and profile.country_code and profile.city_name)}],
-        "active_modules": module_payload(active),
+        "active_modules": module_payload(active, layouts_for(current_user, db)),
         "settings": {"locale": profile.preferred_locale if profile else "sr", "country_code": profile.country_code if profile else None, "city_name": profile.city_name if profile else None},
     }
 
