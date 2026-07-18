@@ -74,3 +74,7 @@ The evidence-first investor narrative draft is in [BALKAN_WORKS_INVESTOR_READY.m
 ## Ten-year vision
 
 The long-horizon strategic direction is in [BALKAN_WORKS_10_YEAR_VISION.md](docs/BALKAN_WORKS_10_YEAR_VISION.md).
+
+## Master roadmap
+
+The single source of prioritization across phases is [BALKAN_WORKS_MASTER_ROADMAP.md](docs/BALKAN_WORKS_MASTER_ROADMAP.md).
