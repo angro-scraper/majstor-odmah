@@ -211,6 +211,11 @@ async def super_app_hub(request: Request) -> JSONResponse:
     return await core_module(request, "/api/super-app/hub", require_auth=True)
 
 
+@app.get("/api/platform/registry", response_class=JSONResponse, include_in_schema=False)
+async def platform_registry(request: Request) -> JSONResponse:
+    return await core_module(request, "/api/platform/registry")
+
+
 @app.get("/api/market/listings", response_class=JSONResponse, include_in_schema=False)
 async def market_listings(request: Request) -> JSONResponse:
     return await core_module(request, "/api/marketplace/listings")

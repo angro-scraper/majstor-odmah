@@ -20,6 +20,7 @@ from app.modules.media.router import router as media_router
 from app.modules.notifications.router import router as notifications_router
 from app.modules.offers.router import router as offers_router
 from app.modules.payments.router import router as payments_router
+from app.modules.platform.router import router as platform_router
 from app.modules.save_food.router import router as save_food_router
 from app.modules.superapp.router import router as superapp_router
 from app.modules.support.router import router as support_router
@@ -73,6 +74,7 @@ for router in (
     superapp_router,
     support_router,
     payments_router,
+    platform_router,
     notifications_router,
     business_tools_router,
     admin_router,
