@@ -19,6 +19,20 @@ class Settings(BaseSettings):
     supabase_storage_bucket: str = "balkan-media"
     media_max_bytes: int = 10 * 1024 * 1024
     media_signed_url_ttl_seconds: int = 900
+    deals_enabled: bool = True
+    save_food_enabled: bool = True
+    business_enabled: bool = True
+    notifications_enabled: bool = True
+    rewards_enabled: bool = False
+    marketplace_enabled: bool = False
+    services_enabled: bool = False
+    jobs_enabled: bool = False
+    wallet_enabled: bool = False
+    payments_enabled: bool = False
+    ai_assistant_enabled: bool = False
+    health_enabled: bool = False
+    auto_enabled: bool = False
+    real_estate_enabled: bool = False
 
     model_config = SettingsConfigDict(env_file=".env", case_sensitive=False, extra="ignore")
 

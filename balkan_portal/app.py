@@ -14,7 +14,7 @@ from dashboard_page import render_dashboard_page
 from modules_page import render_module_page
 from search_page import render_search_page
 from hub_page import render_hub_page
-from superapp_v5 import render_superapp_page
+from superapp_v6 import render_superapp_page
 from everyday_page import render_everyday_page
 
 APP_NAME = "Balkan.works"
@@ -230,6 +230,11 @@ async def super_app_modules(request: Request, payload: dict | None = None) -> JS
 @app.get("/api/platform/registry", response_class=JSONResponse, include_in_schema=False)
 async def platform_registry(request: Request) -> JSONResponse:
     return await core_module(request, "/api/platform/registry")
+
+
+@app.get("/api/platform/features", response_class=JSONResponse, include_in_schema=False)
+async def platform_features(request: Request) -> JSONResponse:
+    return await core_module(request, "/api/platform/features")
 
 
 @app.get("/api/market/listings", response_class=JSONResponse, include_in_schema=False)

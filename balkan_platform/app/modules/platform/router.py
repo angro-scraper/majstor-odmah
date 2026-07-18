@@ -5,8 +5,25 @@ calls their domains, exchanges user records, or treats them as a second login.
 """
 
 from fastapi import APIRouter
+from app.core.config import get_settings
 
 router = APIRouter(prefix="/platform", tags=["Platform Foundation"])
+
+
+@router.get("/features")
+def features() -> dict:
+    """Public MVP release gates. Routes may exist while their product surface stays disabled."""
+    settings = get_settings()
+    return {"release": "mvp_v1", "features": {
+        "deals": settings.deals_enabled, "save_food": settings.save_food_enabled,
+        "business": settings.business_enabled, "notifications": settings.notifications_enabled,
+        "rewards": settings.rewards_enabled, "marketplace": settings.marketplace_enabled,
+        "services": settings.services_enabled, "jobs": settings.jobs_enabled,
+        "money": settings.wallet_enabled, "wallet": settings.wallet_enabled,
+        "payments": settings.payments_enabled, "assistant": settings.ai_assistant_enabled,
+        "health": settings.health_enabled, "auto": settings.auto_enabled,
+        "real_estate": settings.real_estate_enabled,
+    }}
 
 
 @router.get("/registry")
