@@ -20,12 +20,12 @@ export function LogoMark({ className }: { className?: string }) {
       <rect x="1" y="1" width="38" height="38" rx="11" fill="url(#bw-tile)" />
       {/* Subtle top highlight */}
       <rect x="1" y="1" width="38" height="18" rx="11" fill="#ffffff" fillOpacity="0.12" />
-      {/* Letter "b" in center */}
-      <text x="18" y="26" fontSize="28" fontWeight="800" fontFamily="system-ui, -apple-system, sans-serif" fill="#ffffff" textAnchor="middle" dominantBaseline="middle">
-        b
+      {/* Text "bw" in center */}
+      <text x="20" y="26" fontSize="22" fontWeight="900" fontFamily="system-ui, -apple-system, sans-serif" fill="#ffffff" textAnchor="middle" dominantBaseline="middle">
+        bw
       </text>
-      {/* Green dot inside b */}
-      <circle cx="23" cy="15" r="3" fill="#10b981" />
+      {/* Green dot after w */}
+      <circle cx="31" cy="16" r="2.5" fill="#10b981" />
     </svg>
   )
 }
