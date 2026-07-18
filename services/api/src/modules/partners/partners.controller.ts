@@ -28,6 +28,10 @@ export class PartnersController {
   @UseGuards(JwtAuthGuard, AdminGuard)
   async createApiKey(@CurrentUser() user: AuthenticatedUser, @Param("id") id: string, @Body() input: CreatePartnerKeyDto) { return ok(await this.partners.createApiKey(user.id, id, input), "Partner API key created"); }
 
+  @Post(":id/api-keys/:keyId/revoke")
+  @UseGuards(JwtAuthGuard, AdminGuard)
+  async revokeApiKey(@CurrentUser() user: AuthenticatedUser, @Param("id") id: string, @Param("keyId") keyId: string) { return ok(await this.partners.revokeApiKey(user.id, id, keyId), "Partner API key revoked"); }
+
   @Post(":id/integrations")
   @UseGuards(JwtAuthGuard, AdminGuard)
   async createIntegration(@CurrentUser() user: AuthenticatedUser, @Param("id") id: string, @Body() input: CreateIntegrationDto) { return ok(await this.partners.createIntegration(user.id, id, input), "Partner integration created"); }

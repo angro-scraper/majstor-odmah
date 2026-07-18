@@ -57,11 +57,22 @@ export class PartnersService {
 
   async createIntegration(actorUserId: string, partnerId: string, input: CreateIntegrationDto) {
     await this.requirePartner(partnerId);
+    if (this.containsSensitiveConfiguration(input.configuration)) {
+      throw new BadRequestException("PARTNER_CONFIGURATION_MUST_NOT_CONTAIN_SECRETS");
+    }
     const integration = await this.prisma.partnerIntegration.create({
       data: { partnerId, name: input.name.trim(), integrationType: input.integrationType.trim(), status: input.status ?? PartnerIntegrationStatus.PLANNED, scopes: input.scopes ?? [], configuration: (input.configuration ?? {}) as Prisma.InputJsonValue, startedAt: input.startedAt ? new Date(input.startedAt) : null },
     });
     await this.audit(actorUserId, "PARTNER_INTEGRATION_CREATED", integration.id, { partnerId, integrationType: integration.integrationType });
     return integration;
+  }
+
+  async revokeApiKey(actorUserId: string, partnerId: string, keyId: string) {
+    const key = await this.prisma.partnerApiKey.findFirst({ where: { id: keyId, partnerId, deletedAt: null }, select: { id: true, revokedAt: true } });
+    if (!key) throw new NotFoundException("PARTNER_API_KEY_NOT_FOUND");
+    if (!key.revokedAt) await this.prisma.partnerApiKey.update({ where: { id: keyId }, data: { revokedAt: new Date() } });
+    await this.audit(actorUserId, "PARTNER_API_KEY_REVOKED", keyId, { partnerId });
+    return { id: keyId, revoked: true };
   }
 
   async publicProfile(slug: string) {
@@ -96,5 +107,11 @@ export class PartnersService {
     const slug = value.toLocaleLowerCase("sr-Latn").normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
     if (!slug) throw new BadRequestException("PARTNER_SLUG_REQUIRED");
     return slug;
+  }
+
+  private containsSensitiveConfiguration(value: Record<string, unknown> | undefined): boolean {
+    if (!value) return false;
+    const blockedKey = /(?:api[_-]?key|secret|token|password|credential)/i;
+    return Object.entries(value).some(([key, item]) => blockedKey.test(key) || (typeof item === "object" && item !== null && !Array.isArray(item) && this.containsSensitiveConfiguration(item as Record<string, unknown>)));
   }
 }
