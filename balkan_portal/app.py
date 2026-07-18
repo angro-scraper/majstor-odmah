@@ -236,6 +236,16 @@ async def market_messages(request: Request) -> JSONResponse:
     return await core_module(request, "/api/marketplace/messages", require_auth=True)
 
 
+@app.post("/api/market/listings/{listing_id}/favorite", response_class=JSONResponse, include_in_schema=False)
+async def market_favorite(listing_id: str, request: Request) -> JSONResponse:
+    return await core_module(request, f"/api/marketplace/listings/{listing_id}/favorite", "POST", require_auth=True)
+
+
+@app.post("/api/market/messages", response_class=JSONResponse, include_in_schema=False)
+async def market_send_message(request: Request, payload: dict) -> JSONResponse:
+    return await core_module(request, "/api/marketplace/messages", "POST", payload, require_auth=True)
+
+
 @app.get("/api/notifications", response_class=JSONResponse, include_in_schema=False)
 async def notifications(request: Request) -> JSONResponse:
     return await core_module(request, "/api/notifications", require_auth=True)

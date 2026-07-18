@@ -7,6 +7,7 @@ from app.core.database import get_db
 from app.core.dependencies import get_current_user
 from app.modules.identity.models import User
 from app.modules.marketplace.models import Favorite, Listing, ListingType, Message, Review
+from app.modules.notifications.models import Notification, NotificationChannel
 
 router = APIRouter(prefix="/marketplace", tags=["Marketplace"])
 
@@ -72,7 +73,16 @@ def favorites(current_user: User = Depends(get_current_user), db: Session = Depe
 @router.post("/messages", status_code=status.HTTP_201_CREATED)
 def send_message(payload: MessageCreate, current_user: User = Depends(get_current_user), db: Session = Depends(get_db)):
     if payload.recipient_user_id == str(current_user.id): raise HTTPException(400, "Ne možeš poslati poruku sebi.")
-    message = Message(sender_user_id=current_user.id, **payload.model_dump()); db.add(message); db.commit(); db.refresh(message); return message
+    message = Message(sender_user_id=current_user.id, **payload.model_dump())
+    db.add(message)
+    db.add(Notification(
+        user_id=payload.recipient_user_id,
+        channel=NotificationChannel.IN_APP,
+        title="Nova poruka na Balkan.works",
+        body="Stigla ti je nova poruka u Market modulu.",
+        payload_json={"listing_id": payload.listing_id, "sender_user_id": str(current_user.id)},
+    ))
+    db.commit(); db.refresh(message); return message
 
 
 @router.get("/messages")
