@@ -295,6 +295,10 @@ The central reading order, source-of-truth hierarchy and live document map are i
 
 The evidence-first 20-slide structure for investors, partners and institutions is in [BALKAN_WORKS_INVESTOR_DECK_STRUCTURE.md](docs/BALKAN_WORKS_INVESTOR_DECK_STRUCTURE.md).
 
+## Master implementation order
+
+The exact phased build order and release gates for the platform are in [MASTER_IMPLEMENTATION_ORDER.md](docs/MASTER_IMPLEMENTATION_ORDER.md).
+
 ## Team roles
 
 Role-level responsibilities and hiring sequence are in [BALKAN_WORKS_TEAM_ROLES.md](docs/BALKAN_WORKS_TEAM_ROLES.md).
