@@ -10,19 +10,19 @@ const ACCENT: Record<string, string> = {
 
 export function Categories() {
   return (
-    <section id="usluge" className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
+    <section id="usluge" className="mx-auto max-w-7xl px-4 py-24 sm:px-6 lg:px-8 lg:py-32">
       <SectionHeading
         eyebrow="Kategorije"
         title="Sve što vam treba, u jednoj aplikaciji"
         description="Od posla i majstora do putovanja i zdravlja — pronađite pravu uslugu u samo nekoliko dodira."
       />
 
-      <div className="mt-12 grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
+      <div className="mt-14 grid grid-cols-2 gap-4 sm:gap-5 md:grid-cols-3 lg:grid-cols-4">
         {CATEGORIES.map((cat) => (
           <button
             key={cat.title}
             type="button"
-            className="group flex flex-col items-start gap-3 rounded-2xl border border-border bg-card p-5 text-left transition-all hover:-translate-y-1 hover:border-primary/40 hover:shadow-card"
+            className="group flex flex-col items-start gap-3.5 rounded-3xl border border-border bg-card p-6 text-left transition-all duration-300 hover:-translate-y-1 hover:border-primary/40 hover:shadow-card"
           >
             <span
               className={cn(

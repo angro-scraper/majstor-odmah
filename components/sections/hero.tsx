@@ -22,14 +22,14 @@ export function Hero() {
         className="pointer-events-none absolute -left-32 top-40 size-80 rounded-full bg-cyan-accent/10 blur-3xl"
       />
 
-      <div className="mx-auto grid max-w-7xl items-center gap-12 px-4 py-16 sm:px-6 lg:grid-cols-2 lg:gap-8 lg:py-24 lg:px-8">
-        <div className="flex flex-col items-start gap-6">
-          <span className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-card px-3 py-1.5 text-xs font-semibold text-primary shadow-soft">
+      <div className="mx-auto grid max-w-7xl items-center gap-14 px-4 py-20 sm:px-6 lg:grid-cols-2 lg:gap-12 lg:py-32 lg:px-8">
+        <div className="flex flex-col items-start gap-7">
+          <span className="inline-flex items-center gap-2 rounded-full border border-primary/15 bg-card px-3.5 py-1.5 text-xs font-semibold text-primary shadow-soft">
             <Sparkles className="size-3.5" />
             Super aplikacija za Balkan
           </span>
 
-          <h1 className="text-balance text-4xl font-bold leading-[1.05] tracking-tight text-navy sm:text-5xl lg:text-6xl">
+          <h1 className="text-balance text-[2.5rem] font-bold leading-[1.04] tracking-tight text-navy sm:text-5xl lg:text-[4rem]">
             Sve usluge na jednom mestu
           </h1>
 
@@ -57,11 +57,11 @@ export function Hero() {
 
           <StoreButtons />
 
-          <dl className="mt-2 flex flex-wrap gap-x-10 gap-y-4 border-t border-border pt-6">
+          <dl className="mt-3 flex flex-wrap gap-x-12 gap-y-5 border-t border-border pt-7">
             {STATS.map((s) => (
               <div key={s.label}>
-                <dt className="text-2xl font-bold text-navy">{s.value}</dt>
-                <dd className="text-sm text-muted-foreground">{s.label}</dd>
+                <dt className="text-2xl font-bold text-navy sm:text-3xl">{s.value}</dt>
+                <dd className="mt-0.5 text-sm text-muted-foreground">{s.label}</dd>
               </div>
             ))}
           </dl>

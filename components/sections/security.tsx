@@ -12,18 +12,18 @@ const ITEMS = [
 export function Security() {
   return (
     <section id="bezbednost" className="bg-surface">
-      <div className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-7xl px-4 py-24 sm:px-6 lg:px-8 lg:py-32">
         <SectionHeading
           eyebrow="Bezbednost i poverenje"
           title="Sigurno i brzo, u svakom trenutku"
           description="Gradimo platformu kojoj možete verovati — sa najvišim standardima bezbednosti za vaše podatke i novac."
         />
 
-        <div className="mt-12 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-14 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
           {ITEMS.map((item, i) => (
             <div
               key={item.title}
-              className={`flex items-start gap-4 rounded-2xl border border-border bg-card p-6 shadow-soft ${
+              className={`flex items-start gap-4 rounded-3xl border border-border bg-card p-7 shadow-soft transition-all duration-300 hover:-translate-y-1 hover:shadow-card ${
                 i === 0 ? 'lg:col-span-1' : ''
               }`}
             >
@@ -36,7 +36,7 @@ export function Security() {
               </div>
             </div>
           ))}
-          <div className="flex flex-col justify-center gap-2 rounded-2xl border border-primary/20 bg-primary p-6 text-primary-foreground shadow-float">
+          <div className="flex flex-col justify-center gap-2 rounded-3xl border border-primary/20 bg-primary p-7 text-primary-foreground shadow-float">
             <p className="font-display text-3xl font-bold">99.9%</p>
             <p className="text-sm opacity-90">dostupnost platforme i podrške svakog dana u godini.</p>
           </div>

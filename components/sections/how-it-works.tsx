@@ -27,7 +27,7 @@ const STEPS = [
 export function HowItWorks() {
   return (
     <section id="kako-funkcionise" className="bg-surface">
-      <div className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-7xl px-4 py-24 sm:px-6 lg:px-8 lg:py-32">
         <SectionHeading
           eyebrow="Kako funkcioniše"
           title="Do rešenja u četiri koraka"
@@ -42,7 +42,7 @@ export function HowItWorks() {
           {STEPS.map((step, i) => (
             <div
               key={step.title}
-              className="relative flex flex-col items-start gap-4 rounded-2xl border border-border bg-card p-6 shadow-soft"
+              className="relative flex flex-col items-start gap-4 rounded-3xl border border-border bg-card p-7 shadow-soft transition-all duration-300 hover:-translate-y-1 hover:shadow-card"
             >
               <div className="flex w-full items-center justify-between">
                 <span className="grid size-14 place-items-center rounded-2xl bg-primary text-primary-foreground shadow-float">

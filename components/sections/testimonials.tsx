@@ -43,25 +43,25 @@ const TESTIMONIALS = [
 export function Testimonials() {
   return (
     <section className="bg-surface">
-      <div className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-7xl px-4 py-24 sm:px-6 lg:px-8 lg:py-32">
         <SectionHeading
           eyebrow="Iskustva korisnika"
           title="Vole nas širom regiona"
           description="Hiljade korisnika, frilensera i kompanija svakodnevno koristi balkan.works."
         />
 
-        <div className="mt-12 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-14 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
           {TESTIMONIALS.map((t) => (
             <figure
               key={t.name}
-              className="flex flex-col gap-4 rounded-2xl border border-border bg-card p-6 shadow-soft"
+              className="flex flex-col gap-4 rounded-3xl border border-border bg-card p-7 shadow-soft transition-all duration-300 hover:-translate-y-1 hover:shadow-card"
             >
               <div className="flex gap-0.5">
                 {Array.from({ length: 5 }).map((_, i) => (
                   <Star key={i} className="size-4 fill-current text-amber-400" />
                 ))}
               </div>
-              <blockquote className="text-sm leading-relaxed text-navy">
+              <blockquote className="text-[15px] leading-relaxed text-navy">
                 “{t.quote}”
               </blockquote>
               <figcaption className="mt-auto flex items-center gap-3 border-t border-border pt-4">

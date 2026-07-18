@@ -98,7 +98,7 @@ export function FeaturedServices() {
   const current = MODULES.find((m) => m.id === active) ?? MODULES[0]
 
   return (
-    <section className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
+    <section className="mx-auto max-w-7xl px-4 py-24 sm:px-6 lg:px-8 lg:py-32">
       <SectionHeading
         eyebrow="Moduli"
         title="Zavirite u aplikaciju"
@@ -127,7 +127,7 @@ export function FeaturedServices() {
         })}
       </div>
 
-      <div className="mt-8 rounded-3xl border border-border bg-gradient-to-br from-surface to-secondary/40 p-4 sm:p-8">
+      <div className="mt-10 rounded-[1.75rem] border border-border bg-gradient-to-br from-surface to-secondary/40 p-5 sm:p-10">
         <div className="flex items-center justify-between">
           <h3 className="text-lg font-semibold text-navy">{current.heading}</h3>
           <span className="inline-flex items-center gap-1 text-sm font-semibold text-primary">

@@ -18,10 +18,10 @@ const FEATURES = [
 
 export function ForBusiness() {
   return (
-    <section id="za-kompanije" className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
-      <div className="grid items-center gap-12 lg:grid-cols-2">
+    <section id="za-kompanije" className="mx-auto max-w-7xl px-4 py-24 sm:px-6 lg:px-8 lg:py-32">
+      <div className="grid items-center gap-14 lg:grid-cols-2 lg:gap-16">
         <div className="order-2 lg:order-1">
-          <div className="rounded-3xl border border-border bg-card p-5 shadow-card">
+          <div className="rounded-[1.75rem] border border-border bg-card p-6 shadow-card sm:p-7">
             <div className="flex items-center justify-between border-b border-border pb-4">
               <span className="flex items-center gap-2 text-sm font-semibold text-navy">
                 <LayoutDashboard className="size-4 text-primary" />
@@ -70,10 +70,10 @@ export function ForBusiness() {
         </div>
 
         <div className="order-1 flex flex-col items-start gap-6 lg:order-2">
-          <span className="inline-flex items-center rounded-full border border-primary/20 bg-secondary px-3 py-1 text-xs font-semibold uppercase tracking-wide text-primary">
+          <span className="inline-flex items-center rounded-full border border-primary/15 bg-secondary px-3.5 py-1.5 text-[11px] font-semibold uppercase tracking-[0.12em] text-primary">
             Za kompanije
           </span>
-          <h2 className="text-balance text-3xl font-bold tracking-tight text-navy sm:text-4xl">
+          <h2 className="text-balance text-3xl font-bold leading-[1.1] tracking-tight text-navy sm:text-4xl lg:text-[2.75rem]">
             Vodite ceo biznis sa jednog mesta
           </h2>
           <p className="text-pretty text-lg leading-relaxed text-muted-foreground">

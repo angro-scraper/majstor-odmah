@@ -5,8 +5,8 @@ import { ServicesScreen } from '@/components/app-screens'
 
 export function DownloadCta() {
   return (
-    <section id="preuzmi" className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
-      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-primary to-[#1e40af] px-6 py-12 shadow-float sm:px-12">
+    <section id="preuzmi" className="mx-auto max-w-7xl px-4 py-24 sm:px-6 lg:px-8 lg:py-32">
+      <div className="relative overflow-hidden rounded-[2rem] bg-gradient-to-br from-primary to-[#1e40af] px-6 py-14 shadow-float sm:px-14 lg:py-20">
         <div
           aria-hidden="true"
           className="pointer-events-none absolute -right-16 -top-16 size-72 rounded-full bg-cyan-accent/20 blur-3xl"
@@ -16,9 +16,9 @@ export function DownloadCta() {
           className="pointer-events-none absolute -bottom-24 left-10 size-72 rounded-full bg-white/10 blur-3xl"
         />
 
-        <div className="relative grid items-center gap-10 lg:grid-cols-2">
-          <div className="flex flex-col items-start gap-6 text-primary-foreground">
-            <h2 className="text-balance text-3xl font-bold tracking-tight sm:text-4xl lg:text-5xl">
+        <div className="relative grid items-center gap-12 lg:grid-cols-2">
+          <div className="flex flex-col items-start gap-7 text-primary-foreground">
+            <h2 className="text-balance text-3xl font-bold leading-[1.08] tracking-tight sm:text-4xl lg:text-5xl">
               Ceo Balkan u jednoj aplikaciji
             </h2>
             <p className="max-w-md text-pretty text-lg leading-relaxed text-primary-foreground/90">

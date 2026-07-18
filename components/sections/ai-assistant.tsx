@@ -10,13 +10,13 @@ const PROVIDERS = [
 export function AiAssistant() {
   return (
     <section id="ai-pomocnik" className="bg-surface">
-      <div className="mx-auto grid max-w-7xl items-center gap-12 px-4 py-20 sm:px-6 lg:grid-cols-2 lg:px-8">
+      <div className="mx-auto grid max-w-7xl items-center gap-12 px-4 py-24 sm:px-6 lg:grid-cols-2 lg:gap-16 lg:px-8 lg:py-32">
         <div className="flex flex-col items-start gap-6">
           <span className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-card px-3 py-1.5 text-xs font-semibold text-primary shadow-soft">
             <Sparkles className="size-3.5" />
             balkan.works AI
           </span>
-          <h2 className="text-balance text-3xl font-bold tracking-tight text-navy sm:text-4xl">
+          <h2 className="text-balance text-3xl font-bold leading-[1.1] tracking-tight text-navy sm:text-4xl lg:text-[2.75rem]">
             Pametni pomoćnik koji radi umesto vas
           </h2>
           <p className="text-pretty text-lg leading-relaxed text-muted-foreground">
@@ -44,7 +44,7 @@ export function AiAssistant() {
           </Link>
         </div>
 
-        <div className="rounded-3xl border border-border bg-card p-5 shadow-card">
+        <div className="rounded-[1.75rem] border border-border bg-card p-6 shadow-card sm:p-7">
           <div className="flex items-center gap-3 border-b border-border pb-4">
             <span className="grid size-10 place-items-center rounded-2xl bg-primary text-primary-foreground">
               <Sparkles className="size-5" />
