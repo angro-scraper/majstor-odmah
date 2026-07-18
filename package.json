@@ -1,12 +1,15 @@
 {
-  "name": "majstor-odmah",
-  "version": "1.0.0",
+  "name": "balkanworks",
   "private": true,
-  "description": "MVP platforma za pronalazak pouzdanih majstora.",
+  "version": "0.1.0",
+  "packageManager": "pnpm@9.15.4",
+  "workspaces": ["apps/*", "services/*", "packages/*"],
   "scripts": {
-    "start": "node server.js"
+    "dev": "turbo dev",
+    "build": "turbo build",
+    "test": "turbo test",
+    "lint": "turbo lint",
+    "format": "prettier --check ."
   },
-  "engines": {
-    "node": ">=18"
-  }
+  "devDependencies": {"@turbo/gen": "^2.3.3", "prettier": "^3.4.2", "turbo": "^2.3.3", "typescript": "^5.7.2"}
 }

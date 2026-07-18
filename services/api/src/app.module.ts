@@ -10,10 +10,11 @@ import { SearchModule } from "./modules/search/search.module";
 import { ReviewsModule } from "./modules/reviews/reviews.module";
 import { AdminModule } from "./modules/admin/admin.module";
 import { FavoritesModule } from "./modules/favorites/favorites.module";
+import { HealthModule } from "./modules/health/health.module";
 import { AdminGuard, JwtAuthGuard } from "./common/security";
 
 @Module({
-  imports: [ConfigModule.forRoot({ isGlobal: true }), DatabaseModule, AuthModule, UsersModule, BusinessesModule, LocationsModule, NotificationsModule, SearchModule, ReviewsModule, AdminModule, FavoritesModule],
+  imports: [ConfigModule.forRoot({ isGlobal: true }), DatabaseModule, AuthModule, UsersModule, BusinessesModule, LocationsModule, NotificationsModule, SearchModule, ReviewsModule, AdminModule, FavoritesModule, HealthModule],
   providers: [JwtAuthGuard, AdminGuard],
 })
 export class AppModule {}
