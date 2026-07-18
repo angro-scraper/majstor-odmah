@@ -3,13 +3,14 @@ import { Prisma } from "@prisma/client";
 import { PrismaService } from "@balkanworks/database";
 import { IsIn, IsObject, IsOptional, IsUUID } from "class-validator";
 
-export const ANALYTICS_EVENT_TYPES = ["USER_REGISTERED", "BUSINESS_CREATED", "OFFER_CREATED", "OFFER_VIEWED", "OFFER_SAVED", "SEARCH_COMPLETED", "FOOD_PACKAGE_RESERVED", "NOTIFICATION_OPENED", "BUSINESS_VIEWED", "BUSINESS_CONTACTED"] as const;
+export const ANALYTICS_EVENT_TYPES = ["USER_REGISTERED", "BUSINESS_CREATED", "OFFER_CREATED", "OFFER_VIEWED", "OFFER_SAVED", "SEARCH_COMPLETED", "FOOD_PACKAGE_RESERVED", "NOTIFICATION_OPENED", "BUSINESS_VIEWED", "BUSINESS_CONTACTED", "BUSINESS_FOLLOWED", "REWARD_GRANTED", "REFERRAL_COMPLETED", "DAILY_CHECK_IN"] as const;
 type AnalyticsEventType = (typeof ANALYTICS_EVENT_TYPES)[number];
 
 const EVENT_METADATA_FIELDS: Record<AnalyticsEventType, readonly string[]> = {
   USER_REGISTERED: ["source"], BUSINESS_CREATED: ["source"], OFFER_CREATED: ["source"], OFFER_VIEWED: ["source"], OFFER_SAVED: ["source"],
   SEARCH_COMPLETED: ["resultsCount", "categoryId", "cityId"], FOOD_PACKAGE_RESERVED: ["quantity"], NOTIFICATION_OPENED: ["notificationType"],
-  BUSINESS_VIEWED: ["source"], BUSINESS_CONTACTED: ["contactType"],
+  BUSINESS_VIEWED: ["source"], BUSINESS_CONTACTED: ["contactType"], BUSINESS_FOLLOWED: ["businessId"],
+  REWARD_GRANTED: ["eventType", "points"], REFERRAL_COMPLETED: ["source"], DAILY_CHECK_IN: ["streakDay"],
 };
 
 export class TrackEventDto {

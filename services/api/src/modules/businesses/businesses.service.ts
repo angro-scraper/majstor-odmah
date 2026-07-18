@@ -1,8 +1,9 @@
 import { ForbiddenException, Injectable, NotFoundException } from "@nestjs/common";
-import { Prisma, ReviewStatus } from "@prisma/client";
+import { Prisma, ReviewStatus, RewardEventType } from "@prisma/client";
 import { PrismaService } from "@balkanworks/database";
 import { IsEmail, IsLatitude, IsLongitude, IsObject, IsOptional, IsPhoneNumber, IsString, IsUUID, Max, MaxLength, Min, MinLength, IsUrl } from "class-validator";
 import { Type } from "class-transformer";
+import { RewardsService } from "../rewards/rewards.service";
 
 export class CreateBusinessDto {
   @IsString() @MinLength(2) @MaxLength(160) name!: string;
@@ -55,7 +56,7 @@ export class BusinessesService {
     _count: { select: { reviews: true, favorites: true, followers: true } },
   } satisfies Prisma.BusinessInclude;
 
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService, private readonly rewards: RewardsService) {}
 
   async create(ownerId: string, input: CreateBusinessDto) {
     const slug = await this.nextSlug(input.name);
@@ -153,11 +154,11 @@ export class BusinessesService {
 
   async follow(id: string, userId: string) {
     await this.findPublic(id);
-    return this.prisma.businessFollower.upsert({
-      where: { userId_businessId: { userId, businessId: id } },
-      update: {},
-      create: { userId, businessId: id },
-    });
+    const existing = await this.prisma.businessFollower.findUnique({ where: { userId_businessId: { userId, businessId: id } } });
+    if (existing) return existing;
+    const follower = await this.prisma.businessFollower.create({ data: { userId, businessId: id } });
+    await this.rewards.award(userId, RewardEventType.BUSINESS_FOLLOWED, id);
+    return follower;
   }
 
   async unfollow(id: string, userId: string): Promise<void> {

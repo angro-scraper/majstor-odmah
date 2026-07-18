@@ -23,9 +23,12 @@ import { FlyersModule } from "./modules/flyers/flyers.module";
 import { SaveFoodModule } from "./modules/save-food/save-food.module";
 import { SupportModule } from "./modules/support/support.module";
 import { DealsModule } from "./modules/deals/deals.module";
+import { RewardsModule } from "./modules/rewards/rewards.module";
+import { ReferralsModule } from "./modules/referrals/referrals.module";
+import { FeedModule } from "./modules/feed/feed.module";
 import { SecurityModule } from "./common/security.module";
 
 @Module({
-  imports: [ConfigModule.forRoot({ isGlobal: true }), DatabaseModule, SecurityModule, AuthModule, UsersModule, BusinessesModule, CategoriesModule, LocationsModule, NotificationsModule, SearchModule, ReviewsModule, AdminModule, FavoritesModule, HealthModule, AiModule, OffersModule, DealsModule, AnalyticsModule, OperationsModule, PartnersModule, ComplianceModule, FeaturesModule, FlyersModule, SaveFoodModule, SupportModule],
+  imports: [ConfigModule.forRoot({ isGlobal: true }), DatabaseModule, SecurityModule, AuthModule, UsersModule, BusinessesModule, CategoriesModule, LocationsModule, NotificationsModule, SearchModule, ReviewsModule, AdminModule, FavoritesModule, HealthModule, AiModule, OffersModule, DealsModule, AnalyticsModule, OperationsModule, PartnersModule, ComplianceModule, FeaturesModule, FlyersModule, SaveFoodModule, RewardsModule, ReferralsModule, FeedModule, SupportModule],
 })
 export class AppModule {}

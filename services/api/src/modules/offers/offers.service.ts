@@ -1,8 +1,9 @@
 import { ForbiddenException, Injectable, NotFoundException } from "@nestjs/common";
-import { OfferStatus, Prisma } from "@prisma/client";
+import { OfferStatus, Prisma, RewardEventType } from "@prisma/client";
 import { PrismaService } from "@balkanworks/database";
 import { Type } from "class-transformer";
 import { IsDateString, IsEnum, IsNumber, IsOptional, IsString, IsUUID, Max, MaxLength, Min } from "class-validator";
+import { RewardsService } from "../rewards/rewards.service";
 
 const editableStatuses = ["DRAFT", "ACTIVE", "ARCHIVED"] as const;
 type EditableOfferStatus = (typeof editableStatuses)[number];
@@ -47,7 +48,7 @@ export class OffersService {
     category: true,
   } satisfies Prisma.OfferInclude;
 
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService, private readonly rewards: RewardsService) {}
 
   async create(ownerId: string, input: CreateOfferDto) {
     await this.requireOwnership(input.businessId, ownerId);
@@ -118,7 +119,9 @@ export class OffersService {
     await this.findPublic(offerId);
     const existing = await this.prisma.favorite.findFirst({ where: { userId, offerId, deletedAt: null } });
     if (existing) return existing;
-    return this.prisma.favorite.create({ data: { userId, offerId } });
+    const favorite = await this.prisma.favorite.create({ data: { userId, offerId } });
+    await this.rewards.award(userId, RewardEventType.DEAL_SAVED, offerId);
+    return favorite;
   }
 
   private async requireOwnership(businessId: string, ownerId: string) {

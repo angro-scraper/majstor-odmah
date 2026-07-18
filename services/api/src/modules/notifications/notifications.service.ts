@@ -1,13 +1,16 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
-import { NotificationType } from "@prisma/client";
+import { NotificationPriority, NotificationType } from "@prisma/client";
 import { PrismaService } from "@balkanworks/database";
-import { IsEnum, IsString, IsUUID, MaxLength } from "class-validator";
+import { IsEnum, IsOptional, IsString, IsUUID, MaxLength } from "class-validator";
 
 export class CreateNotificationDto {
   @IsUUID() userId!: string;
   @IsEnum(NotificationType) type!: NotificationType;
   @IsString() @MaxLength(160) title!: string;
   @IsString() @MaxLength(2000) message!: string;
+  @IsOptional() @IsEnum(NotificationPriority) priority?: NotificationPriority;
+  @IsOptional() @IsString() @MaxLength(512) actionUrl?: string;
+  @IsOptional() @IsString() @MaxLength(80) module?: string;
 }
 
 @Injectable()
@@ -25,6 +28,6 @@ export class NotificationsService {
   }
 
   async create(input: CreateNotificationDto) {
-    return this.prisma.notification.create({ data: { userId: input.userId, type: input.type, title: input.title.trim(), message: input.message.trim() } });
+    return this.prisma.notification.create({ data: { userId: input.userId, type: input.type, title: input.title.trim(), message: input.message.trim(), priority: input.priority, actionUrl: input.actionUrl, module: input.module } });
   }
 }

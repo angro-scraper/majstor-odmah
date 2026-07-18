@@ -55,6 +55,39 @@ enum NotificationType {
   SYSTEM
 }
 
+enum NotificationPriority {
+  LOW
+  NORMAL
+  HIGH
+}
+
+enum RewardEventType {
+  SAVE_FOOD_RESERVED
+  SAVE_FOOD_PICKED_UP
+  SAVE_FOOD_REVIEWED
+  DEAL_SAVED
+  DEAL_SHARED
+  BUSINESS_FOLLOWED
+  REVIEW_CREATED
+  FRIEND_INVITED
+  REFERRAL_COMPLETED
+  DAILY_CHECK_IN
+  CHALLENGE_COMPLETED
+}
+
+enum RewardLevel {
+  EXPLORER
+  LOCAL_HERO
+  BALKAN_INSIDER
+  BALKAN_AMBASSADOR
+}
+
+enum ReferralStatus {
+  PENDING
+  COMPLETED
+  CANCELLED
+}
+
 enum OfferStatus {
   DRAFT
   ACTIVE
@@ -195,6 +228,12 @@ model User {
   foodReservations SaveFoodReservation[]
   foodReviews      SaveFoodReview[]
   businessFollows BusinessFollower[]
+  rewardBalance   RewardBalance?
+  rewardTransactions RewardTransaction[]
+  referralsSent   Referral[] @relation("referrals_sent")
+  referralReceived Referral[] @relation("referrals_received")
+  interests       UserInterest[]
+  challengeProgress ChallengeParticipation[]
   contactInquiries ContactInquiry[]
   locations       UserLocation[]
   createdAt     DateTime       @default(now()) @map("created_at")
@@ -365,6 +404,7 @@ model Business {
   events      Event[]
   flyers      DigitalFlyer[]
   foodPackages SaveFoodPackage[]
+  rewardCatalog RewardsCatalog[]
   createdAt   DateTime           @default(now()) @map("created_at")
   updatedAt   DateTime           @updatedAt @map("updated_at")
   deletedAt   DateTime?          @map("deleted_at")
@@ -381,6 +421,7 @@ model Category {
   type      CategoryType
   businesses Business[]
   offers    Offer[]
+  userInterests UserInterest[]
   createdAt DateTime     @default(now()) @map("created_at")
   updatedAt DateTime     @updatedAt @map("updated_at")
   deletedAt DateTime?    @map("deleted_at")
@@ -631,6 +672,9 @@ model Notification {
   type      NotificationType
   title     String
   message   String
+  priority  NotificationPriority @default(NORMAL)
+  actionUrl String?          @map("action_url")
+  module    String?
   readAt    DateTime?        @map("read_at")
   user      User             @relation(fields: [userId], references: [id])
   createdAt DateTime         @default(now()) @map("created_at")
@@ -638,6 +682,114 @@ model Notification {
   deletedAt DateTime?        @map("deleted_at")
 
   @@map("notifications")
+}
+
+model RewardBalance {
+  userId        String      @id @map("user_id") @db.Uuid
+  totalPoints   Int         @default(0) @map("total_points")
+  level         RewardLevel @default(EXPLORER)
+  referralCode  String      @unique @default(cuid()) @map("referral_code")
+  user          User        @relation(fields: [userId], references: [id])
+  createdAt     DateTime    @default(now()) @map("created_at")
+  updatedAt     DateTime    @updatedAt @map("updated_at")
+
+  @@index([level, totalPoints])
+  @@map("reward_balances")
+}
+
+model RewardTransaction {
+  id          String          @id @default(uuid()) @db.Uuid
+  userId      String          @map("user_id") @db.Uuid
+  eventType   RewardEventType @map("event_type")
+  points      Int
+  referenceId String          @map("reference_id")
+  metadata    Json            @default("{}")
+  user        User            @relation(fields: [userId], references: [id])
+  createdAt   DateTime        @default(now()) @map("created_at")
+
+  @@unique([userId, eventType, referenceId])
+  @@index([userId, createdAt])
+  @@map("reward_transactions")
+}
+
+model RewardsCatalog {
+  id                String   @id @default(uuid()) @db.Uuid
+  businessId        String?  @map("business_id") @db.Uuid
+  title             String
+  description       String?
+  imageUrl          String?  @map("image_url")
+  pointsRequired    Int      @map("points_required")
+  availableQuantity Int?     @map("available_quantity")
+  isActive          Boolean  @default(true) @map("is_active")
+  business          Business? @relation(fields: [businessId], references: [id])
+  createdAt         DateTime @default(now()) @map("created_at")
+  updatedAt         DateTime @updatedAt @map("updated_at")
+  deletedAt         DateTime? @map("deleted_at")
+
+  @@index([isActive, pointsRequired])
+  @@map("rewards_catalog")
+}
+
+model Referral {
+  id            String         @id @default(uuid()) @db.Uuid
+  inviterId     String         @map("inviter_id") @db.Uuid
+  invitedUserId String?        @unique @map("invited_user_id") @db.Uuid
+  invitedEmail  String?        @map("invited_email")
+  status        ReferralStatus @default(PENDING)
+  inviter       User           @relation("referrals_sent", fields: [inviterId], references: [id])
+  invitedUser   User?          @relation("referrals_received", fields: [invitedUserId], references: [id])
+  completedAt   DateTime?      @map("completed_at")
+  createdAt     DateTime       @default(now()) @map("created_at")
+  updatedAt     DateTime       @updatedAt @map("updated_at")
+
+  @@unique([inviterId, invitedEmail])
+  @@index([inviterId, status])
+  @@map("referrals")
+}
+
+model UserInterest {
+  userId     String   @map("user_id") @db.Uuid
+  categoryId String   @map("category_id") @db.Uuid
+  score      Int      @default(1)
+  user       User     @relation(fields: [userId], references: [id])
+  category   Category @relation(fields: [categoryId], references: [id])
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
+
+  @@id([userId, categoryId])
+  @@index([categoryId, score])
+  @@map("user_interests")
+}
+
+model Challenge {
+  id          String   @id @default(uuid()) @db.Uuid
+  title       String
+  description String
+  goal         Int
+  rewardPoints Int     @map("reward_points")
+  startDate   DateTime @map("start_date")
+  endDate     DateTime @map("end_date")
+  isActive    Boolean  @default(true) @map("is_active")
+  participations ChallengeParticipation[]
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  @@index([isActive, endDate])
+  @@map("challenges")
+}
+
+model ChallengeParticipation {
+  userId      String    @map("user_id") @db.Uuid
+  challengeId String    @map("challenge_id") @db.Uuid
+  progress    Int       @default(0)
+  completedAt DateTime? @map("completed_at")
+  user        User      @relation(fields: [userId], references: [id])
+  challenge   Challenge @relation(fields: [challengeId], references: [id])
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+
+  @@id([userId, challengeId])
+  @@map("challenge_participations")
 }
 
 model Partner {

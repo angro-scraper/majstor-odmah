@@ -1,6 +1,8 @@
 import { ForbiddenException, Injectable, NotFoundException } from "@nestjs/common";
 import { PrismaService } from "@balkanworks/database";
+import { RewardEventType } from "@prisma/client";
 import { IsInt, IsOptional, IsString, IsUUID, Max, MaxLength, Min } from "class-validator";
+import { RewardsService } from "../rewards/rewards.service";
 
 export class CreateReviewDto {
   @IsUUID() businessId!: string;
@@ -10,7 +12,7 @@ export class CreateReviewDto {
 
 @Injectable()
 export class ReviewsService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService, private readonly rewards: RewardsService) {}
 
   async create(userId: string, input: CreateReviewDto) {
     const [business, contact] = await Promise.all([
@@ -19,11 +21,13 @@ export class ReviewsService {
     ]);
     if (!business) throw new NotFoundException("BUSINESS_NOT_FOUND");
     if (!contact) throw new ForbiddenException("REVIEW_REQUIRES_BUSINESS_INTERACTION");
-    return this.prisma.review.upsert({
+    const review = await this.prisma.review.upsert({
       where: { userId_businessId: { userId, businessId: input.businessId } },
       create: { userId, businessId: input.businessId, rating: input.rating, comment: input.comment?.trim() },
       update: { rating: input.rating, comment: input.comment?.trim(), status: "PENDING", deletedAt: null },
     });
+    await this.rewards.award(userId, RewardEventType.REVIEW_CREATED, review.id, undefined, { businessId: input.businessId, rating: input.rating });
+    return review;
   }
 
   async listForBusiness(businessId: string) {

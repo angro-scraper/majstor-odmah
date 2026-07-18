@@ -1,9 +1,10 @@
 import { ConflictException, ForbiddenException, Injectable, NotFoundException } from "@nestjs/common";
 import { PrismaService } from "@balkanworks/database";
-import { Prisma, SaveFoodPackageStatus, SaveFoodReservationStatus } from "@prisma/client";
+import { Prisma, RewardEventType, SaveFoodPackageStatus, SaveFoodReservationStatus } from "@prisma/client";
 import { Type } from "class-transformer";
 import { IsDateString, IsEnum, IsInt, IsNumber, IsOptional, IsString, IsUUID, Max, MaxLength, Min } from "class-validator";
 import { FeaturesService } from "../features/features.service";
+import { RewardsService } from "../rewards/rewards.service";
 
 export class CreateSaveFoodPackageDto {
   @IsUUID() businessId!: string;
@@ -41,7 +42,7 @@ export class CreateSaveFoodReviewDto {
 @Injectable()
 export class SaveFoodService {
   private readonly publicInclude = { business: { select: { id: true, name: true, slug: true, logoUrl: true, locations: { where: { deletedAt: null }, include: { city: { select: { name: true } } } } } } } satisfies Prisma.SaveFoodPackageInclude;
-  constructor(private readonly prisma: PrismaService, private readonly features: FeaturesService) {}
+  constructor(private readonly prisma: PrismaService, private readonly features: FeaturesService, private readonly rewards: RewardsService) {}
 
   async list(input: ListSaveFoodPackagesDto) {
     this.requireEnabled();
@@ -78,7 +79,7 @@ export class SaveFoodService {
 
   async reserve(userId: string, id: string, quantity = 1) {
     this.requireEnabled();
-    return this.prisma.$transaction(async (tx) => {
+    const reservation = await this.prisma.$transaction(async (tx) => {
       const updated = await tx.saveFoodPackage.updateMany({ where: { id, deletedAt: null, status: SaveFoodPackageStatus.ACTIVE, quantityAvailable: { gte: quantity }, pickupEndAt: { gt: new Date() }, business: { status: "VERIFIED", deletedAt: null } }, data: { quantityAvailable: { decrement: quantity } } });
       if (updated.count !== 1) throw new ConflictException("SAVE_FOOD_PACKAGE_UNAVAILABLE");
       const reservation = await tx.saveFoodReservation.create({ data: { packageId: id, userId, quantity } });
@@ -86,6 +87,8 @@ export class SaveFoodService {
       await tx.auditLog.create({ data: { actorUserId: userId, action: "SAVE_FOOD_RESERVED", resourceType: "save_food_reservation", resourceId: reservation.id, payload: { packageId: id, quantity } } });
       return reservation;
     });
+    await this.rewards.award(userId, RewardEventType.SAVE_FOOD_RESERVED, reservation.id, undefined, { packageId: id, quantity });
+    return reservation;
   }
 
   async reservations(userId: string) {
@@ -106,7 +109,7 @@ export class SaveFoodService {
 
   async pickup(ownerId: string, pickupCode: string) {
     this.requireEnabled();
-    return this.prisma.$transaction(async (tx) => {
+    const pickedUp = await this.prisma.$transaction(async (tx) => {
       const reservation = await tx.saveFoodReservation.findFirst({ where: { pickupCode, status: SaveFoodReservationStatus.RESERVED }, include: { package: { select: { businessId: true, title: true, pickupStartAt: true, pickupEndAt: true } } } });
       if (!reservation) throw new NotFoundException("SAVE_FOOD_RESERVATION_NOT_FOUND");
       await this.requireOwnership(reservation.package.businessId, ownerId);
@@ -117,6 +120,8 @@ export class SaveFoodService {
       await tx.auditLog.create({ data: { actorUserId: ownerId, action: "SAVE_FOOD_PICKED_UP", resourceType: "save_food_reservation", resourceId: reservation.id, payload: { packageId: reservation.packageId } } });
       return pickedUp;
     });
+    await this.rewards.award(pickedUp.userId, RewardEventType.SAVE_FOOD_PICKED_UP, pickedUp.id);
+    return pickedUp;
   }
 
   async review(userId: string, reservationId: string, input: CreateSaveFoodReviewDto) {
@@ -125,6 +130,7 @@ export class SaveFoodService {
     if (!reservation) throw new ConflictException("SAVE_FOOD_REVIEW_NOT_AVAILABLE");
     const review = await this.prisma.saveFoodReview.upsert({ where: { reservationId }, create: { reservationId, userId, rating: input.rating, comment: input.comment?.trim() }, update: { rating: input.rating, comment: input.comment?.trim() } });
     await this.audit(userId, "SAVE_FOOD_REVIEWED", review.id, { reservationId, rating: input.rating });
+    await this.rewards.award(userId, RewardEventType.SAVE_FOOD_REVIEWED, review.id, undefined, { reservationId, rating: input.rating });
     return review;
   }
 

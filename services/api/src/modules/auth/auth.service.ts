@@ -7,10 +7,11 @@ import * as bcrypt from "bcrypt";
 import { ok } from "../../common/api-response";
 import { LoginDto } from "./dto/login.dto";
 import { RegisterDto } from "./dto/register.dto";
+import { ReferralsService } from "../referrals/referrals.service";
 
 @Injectable()
 export class AuthService {
-  constructor(private readonly prisma: PrismaService, private readonly jwt: JwtService) {}
+  constructor(private readonly prisma: PrismaService, private readonly jwt: JwtService, private readonly referrals: ReferralsService) {}
 
   async register(input: RegisterDto) {
     const email = input.email.trim().toLowerCase();
@@ -18,6 +19,7 @@ export class AuthService {
     if (existing) throw new ConflictException("AUTH_IDENTITY_EXISTS");
     const customerRole = await this.prisma.role.upsert({ where: { name: "CUSTOMER" }, create: { name: "CUSTOMER" }, update: {} });
     const user = await this.prisma.user.create({ data: { email, phone: input.phone, userType: UserType.CONSUMER, passwordHash: await bcrypt.hash(input.password, 12), roles: { create: { roleId: customerRole.id } }, profile: { create: { firstName: input.firstName.trim(), lastName: input.lastName.trim() } } } });
+    await this.referrals.completeRegistration(input.referralCode, user.id, user.email);
     return this.createSession(user.id, user.email);
   }
 

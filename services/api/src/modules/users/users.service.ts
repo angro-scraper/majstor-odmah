@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { Prisma } from "@prisma/client";
 import { PrismaService } from "@balkanworks/database";
-import { IsDateString, IsLatitude, IsLongitude, IsObject, IsOptional, IsString, IsUUID, MaxLength } from "class-validator";
+import { ArrayMaxSize, IsArray, IsDateString, IsLatitude, IsLongitude, IsObject, IsOptional, IsString, IsUUID, MaxLength } from "class-validator";
 
 export class UpdateProfileDto {
   @IsOptional() @IsString() @MaxLength(100) firstName?: string;
@@ -19,6 +19,10 @@ export class UpdateUserLocationDto {
   @IsUUID() cityId!: string;
   @IsOptional() @IsLatitude() latitude?: number;
   @IsOptional() @IsLongitude() longitude?: number;
+}
+
+export class UpdateUserInterestsDto {
+  @IsArray() @ArrayMaxSize(20) @IsUUID("4", { each: true }) categoryIds!: string[];
 }
 
 @Injectable()
@@ -87,6 +91,18 @@ export class UsersService {
         update: { cityId: city.id, countryId: city.countryId },
       });
       return location;
+    });
+  }
+
+  async updateInterests(userId: string, input: UpdateUserInterestsDto) {
+    await this.getProfile(userId);
+    const categoryIds = [...new Set(input.categoryIds)];
+    const validCount = await this.prisma.category.count({ where: { id: { in: categoryIds }, deletedAt: null } });
+    if (validCount !== categoryIds.length) throw new NotFoundException("CATEGORY_NOT_FOUND");
+    return this.prisma.$transaction(async (transaction) => {
+      await transaction.userInterest.deleteMany({ where: { userId } });
+      if (categoryIds.length) await transaction.userInterest.createMany({ data: categoryIds.map((categoryId, index) => ({ userId, categoryId, score: categoryIds.length - index })) });
+      return transaction.userInterest.findMany({ where: { userId }, include: { category: true }, orderBy: { score: "desc" } });
     });
   }
 }
