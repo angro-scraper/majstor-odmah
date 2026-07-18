@@ -1,7 +1,21 @@
 import { Module } from "@nestjs/common";
 import { JwtModule } from "@nestjs/jwt";
+import { DatabaseModule } from "@balkanworks/database";
 import { AuthController } from "./auth.controller";
 import { AuthService } from "./auth.service";
 
-@Module({ imports: [JwtModule.register({})], controllers: [AuthController], providers: [AuthService] })
+@Module({
+  imports: [
+    DatabaseModule,
+    JwtModule.register({
+      // AuthService supplies an explicit short-lived access-token secret at signing time.
+      // This default keeps other injected JwtService uses aligned with the shared env setup.
+      secret: process.env.JWT_ACCESS_SECRET || process.env.JWT_SECRET,
+      signOptions: { expiresIn: "7d" },
+    }),
+  ],
+  controllers: [AuthController],
+  providers: [AuthService],
+  exports: [AuthService],
+})
 export class AuthModule {}
