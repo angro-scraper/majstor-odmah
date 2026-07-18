@@ -4,11 +4,22 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { Menu, X, Download } from 'lucide-react'
 import { Logo } from '@/components/logo'
-import { NAV_LINKS } from '@/lib/site'
+import { LanguageSwitcher } from '@/components/language-switcher'
+import { useI18n } from '@/lib/i18n/context'
 import { cn } from '@/lib/utils'
 
 export function SiteHeader() {
   const [open, setOpen] = useState(false)
+  const { t } = useI18n()
+
+  const navLinks = [
+    { label: t.nav.home, href: '/' },
+    { label: t.nav.services, href: '/usluge' },
+    { label: t.nav.forUsers, href: '/#kako-funkcionise' },
+    { label: t.nav.forCompanies, href: '/za-kompanije' },
+    { label: t.nav.about, href: '/o-nama' },
+    { label: t.nav.contact, href: '/kontakt' },
+  ]
 
   return (
     <header className="sticky top-0 z-50 border-b border-border/70 bg-background/80 backdrop-blur-xl">
@@ -18,9 +29,9 @@ export function SiteHeader() {
         </Link>
 
         <nav className="hidden items-center gap-1 lg:flex" aria-label="Glavna navigacija">
-          {NAV_LINKS.map((link) => (
+          {navLinks.map((link) => (
             <Link
-              key={link.label}
+              key={link.href}
               href={link.href}
               className="rounded-lg px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-secondary hover:text-navy"
             >
@@ -30,30 +41,34 @@ export function SiteHeader() {
         </nav>
 
         <div className="hidden items-center gap-2 lg:flex">
+          <LanguageSwitcher />
           <Link
             href="/preuzmi"
             className="rounded-lg px-3 py-2 text-sm font-semibold text-navy transition-colors hover:text-primary"
           >
-            Prijavi se
+            {t.cta.signIn}
           </Link>
           <Link
             href="/preuzmi"
             className="inline-flex items-center gap-2 rounded-xl bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground shadow-[0_8px_20px_-8px_rgba(37,99,235,0.8)] transition-transform hover:-translate-y-0.5"
           >
             <Download className="size-4" />
-            Preuzmi aplikaciju
+            {t.cta.download}
           </Link>
         </div>
 
-        <button
-          type="button"
-          onClick={() => setOpen((v) => !v)}
-          className="grid size-10 place-items-center rounded-xl border border-border text-navy lg:hidden"
-          aria-label={open ? 'Zatvori meni' : 'Otvori meni'}
-          aria-expanded={open}
-        >
-          {open ? <X className="size-5" /> : <Menu className="size-5" />}
-        </button>
+        <div className="flex items-center gap-2 lg:hidden">
+          <LanguageSwitcher />
+          <button
+            type="button"
+            onClick={() => setOpen((v) => !v)}
+            className="grid size-10 place-items-center rounded-xl border border-border text-navy"
+            aria-label={open ? t.cta.closeMenu : t.cta.openMenu}
+            aria-expanded={open}
+          >
+            {open ? <X className="size-5" /> : <Menu className="size-5" />}
+          </button>
+        </div>
       </div>
 
       <div
@@ -64,9 +79,9 @@ export function SiteHeader() {
         )}
       >
         <nav className="flex flex-col gap-1 px-4 py-4" aria-label="Mobilna navigacija">
-          {NAV_LINKS.map((link) => (
+          {navLinks.map((link) => (
             <Link
-              key={link.label}
+              key={link.href}
               href={link.href}
               onClick={() => setOpen(false)}
               className="rounded-lg px-3 py-2.5 text-sm font-medium text-navy transition-colors hover:bg-secondary"
@@ -80,7 +95,7 @@ export function SiteHeader() {
               onClick={() => setOpen(false)}
               className="rounded-xl border border-border px-4 py-2.5 text-center text-sm font-semibold text-navy"
             >
-              Prijavi se
+              {t.cta.signIn}
             </Link>
             <Link
               href="/preuzmi"
@@ -88,7 +103,7 @@ export function SiteHeader() {
               className="inline-flex items-center justify-center gap-2 rounded-xl bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground"
             >
               <Download className="size-4" />
-              Preuzmi aplikaciju
+              {t.cta.download}
             </Link>
           </div>
         </nav>

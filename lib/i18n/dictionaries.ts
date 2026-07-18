@@ -1,0 +1,1307 @@
+import type { Locale } from './config'
+
+// Serbian is the source of truth for the dictionary shape.
+const sr = {
+  nav: {
+    home: 'Početna',
+    services: 'Usluge',
+    forUsers: 'Za korisnike',
+    forCompanies: 'Za kompanije',
+    about: 'O nama',
+    contact: 'Kontakt',
+  },
+  cta: {
+    signIn: 'Prijava',
+    download: 'Preuzmi aplikaciju',
+    downloadShort: 'Preuzmi',
+    getStarted: 'Započni besplatno',
+    learnMore: 'Saznaj više',
+    showAll: 'Prikaži sve',
+    openMenu: 'Otvori meni',
+    closeMenu: 'Zatvori meni',
+    language: 'Jezik',
+  },
+  hero: {
+    badge: 'Super aplikacija za Balkan',
+    title: 'Sve usluge na jednom mestu',
+    subtitle:
+      'Jedna aplikacija za svakodnevni život i poslovanje širom Balkana. Poslovi, majstori, dostava, putovanja, zdravlje i novčanik — sve na dohvat ruke.',
+    ratingLabel: '4.9 / 5 · 38.000+ ocena',
+    ratingSub: 'Prosečna ocena na App Store i Google Play',
+    floatingJob: 'Novi posao za vas',
+    floatingDelivery: 'Dostava stiže',
+  },
+  trust: {
+    label: 'Poverenje vodećih kompanija i partnera u regionu',
+  },
+  categories: {
+    eyebrow: 'Kategorije',
+    title: 'Sve što vam treba, na jednom mestu',
+    description:
+      'Od svakodnevnih obaveza do velikih životnih odluka — balkan.works povezuje ljude, usluge i kompanije širom regiona.',
+  },
+  how: {
+    eyebrow: 'Kako funkcioniše',
+    title: 'Do rešenja u tri jednostavna koraka',
+    description:
+      'Bez komplikacija i papirologije. Sve obavite iz aplikacije, u par minuta.',
+    steps: [
+      {
+        title: 'Napravite nalog',
+        desc: 'Jedna prijava vam otvara pristup svim uslugama u aplikaciji.',
+      },
+      {
+        title: 'Pronađite uslugu',
+        desc: 'Pretražite ili dozvolite AI pomoćniku da pronađe rešenje za vas.',
+      },
+      {
+        title: 'Rezervišite i platite',
+        desc: 'Zakažite, naručite ili platite bezbedno u nekoliko klikova.',
+      },
+      {
+        title: 'Uživajte i ocenite',
+        desc: 'Pratite status u realnom vremenu i ostavite ocenu.',
+      },
+    ],
+  },
+  stats: {
+    items: [
+      { value: '1.2M+', label: 'aktivnih korisnika' },
+      { value: '45.000+', label: 'pružalaca usluga' },
+      { value: '12M+', label: 'obavljenih transakcija' },
+      { value: '4.9/5', label: 'prosečna ocena' },
+    ],
+  },
+  featured: {
+    eyebrow: 'Izdvojene usluge',
+    title: 'Napravljeno za način na koji živite i radite',
+    description:
+      'Pogledajte kako izgleda balkan.works u praksi — svaka usluga osmišljena je da vam uštedi vreme.',
+  },
+  ai: {
+    eyebrow: 'AI pomoćnik',
+    title: 'Pametni pomoćnik koji radi umesto vas',
+    description:
+      'Postavite pitanje na svom jeziku, a AI pomoćnik pronalazi najbolje opcije, upoređuje cene i završava zadatke umesto vas.',
+    bullets: [
+      'Pronalazi i upoređuje usluge u realnom vremenu',
+      'Rezerviše, zakazuje i naručuje umesto vas',
+      'Razume prirodan govor na jezicima regiona',
+    ],
+  },
+  business: {
+    eyebrow: 'Za kompanije',
+    title: 'Vodite ceo biznis sa jednog mesta',
+    description:
+      'Upravljajte narudžbinama, plaćanjima, timom i klijentima kroz jednu platformu prilagođenu poslovanju u regionu.',
+    cta: 'Postanite partner',
+  },
+  security: {
+    eyebrow: 'Bezbednost',
+    title: 'Vaši podaci i novac su uvek zaštićeni',
+    description:
+      'Primenjujemo najviše standarde bezbednosti kako biste u svakom trenutku bili sigurni.',
+    items: [
+      { title: 'Enkripcija podataka', desc: 'Svi podaci su zaštićeni end-to-end enkripcijom.' },
+      { title: 'Sigurna plaćanja', desc: 'Transakcije po PCI DSS standardima i 3D Secure zaštita.' },
+      { title: 'Kontrola privatnosti', desc: 'Vi odlučujete koje podatke delite i sa kim.' },
+      { title: 'Zaštita naloga', desc: 'Dvofaktorska autentifikacija i biometrijska prijava.' },
+      { title: 'Usklađenost sa GDPR', desc: 'Poslujemo u skladu sa evropskom regulativom o podacima.' },
+    ],
+    uptimeValue: '99.9%',
+    uptimeLabel: 'dostupnost sistema tokom cele godine',
+  },
+  coverage: {
+    eyebrow: 'Pokrivenost',
+    title: 'Prisutni širom Balkana',
+    description:
+      'balkan.works je dostupan u osam zemalja regiona, sa lokalnim partnerima u svakom većem gradu.',
+    note: 'Konstantno se širimo — nove zemlje i gradovi stižu uskoro.',
+  },
+  testimonials: {
+    eyebrow: 'Iskustva korisnika',
+    title: 'Zašto nam korisnici veruju',
+    description:
+      'Preko milion ljudi širom regiona koristi balkan.works svakog dana.',
+  },
+  download: {
+    title: 'Preuzmite balkan.works danas',
+    subtitle:
+      'Dostupno besplatno na iOS i Android uređajima. Skenirajte kod ili preuzmite direktno iz prodavnice.',
+    scan: 'Skenirajte za preuzimanje',
+  },
+  footer: {
+    tagline:
+      'Super aplikacija za svakodnevni život i poslovanje širom Balkana.',
+    productTitle: 'Proizvod',
+    companyTitle: 'Kompanija',
+    legalTitle: 'Pravno',
+    product: {
+      services: 'Usluge',
+      jobs: 'Poslovi',
+      business: 'Za kompanije',
+      download: 'Preuzmi aplikaciju',
+    },
+    company: {
+      about: 'O nama',
+      contact: 'Kontakt',
+      careers: 'Karijera',
+      press: 'Za medije',
+    },
+    legal: {
+      terms: 'Uslovi korišćenja',
+      privacy: 'Politika privatnosti',
+      cookies: 'Kolačići',
+    },
+    rights: 'Sva prava zadržana.',
+    madeIn: 'Napravljeno na Balkanu, za ceo Balkan.',
+  },
+  categoryItems: {
+    poslovi: { title: 'Poslovi', description: 'Oglasi za posao i honorarni angažmani širom regiona.' },
+    majstori: { title: 'Majstori i usluge', description: 'Provereni majstori za popravke, montažu i održavanje.' },
+    kupovina: { title: 'Kupovina', description: 'Proizvodi lokalnih i regionalnih prodavaca na jednom mestu.' },
+    dostava: { title: 'Dostava hrane', description: 'Omiljeni restorani i brza dostava do vaših vrata.' },
+    putovanja: { title: 'Putovanja', description: 'Letovi, hoteli i prevoz — rezervišite u par klikova.' },
+    zdravlje: { title: 'Zdravlje', description: 'Zakazivanje pregleda kod lekara i klinika u blizini.' },
+    edukacija: { title: 'Edukacija', description: 'Kursevi, časovi i obuke za nova znanja i veštine.' },
+    nekretnine: { title: 'Nekretnine', description: 'Stanovi, kuće i poslovni prostori za izdavanje i prodaju.' },
+    finansije: { title: 'Finansije', description: 'Digitalni novčanik, plaćanja i transferi bez naknada.' },
+    prevoz: { title: 'Prevoz', description: 'Vožnje, selidbe i transport robe kad god vam zatreba.' },
+    dogadjaji: { title: 'Događaji', description: 'Ulaznice za koncerte, sport i dešavanja u vašem gradu.' },
+    ai: { title: 'AI pomoćnik', description: 'Pametni asistent koji pronalazi rešenja umesto vas.' },
+  },
+  countries: {
+    RS: 'Srbija',
+    BA: 'Bosna i Hercegovina',
+    HR: 'Hrvatska',
+    ME: 'Crna Gora',
+    MK: 'Severna Makedonija',
+    SI: 'Slovenija',
+    AL: 'Albanija',
+    XK: 'Kosovo',
+  },
+  pages: {
+    services: {
+      title: 'Sve usluge na jednom mestu',
+      subtitle:
+        'Istražite kompletan katalog usluga dostupnih u balkan.works aplikaciji.',
+    },
+    jobs: {
+      title: 'Pronađite posao iz snova',
+      subtitle:
+        'Hiljade oglasa za posao i honorarnih angažmana širom regiona, ažurirano svakog dana.',
+    },
+    business: {
+      title: 'Razvijajte biznis sa balkan.works',
+      subtitle:
+        'Alati, plaćanja i klijenti — sve što vašem poslovanju treba, na jednoj platformi.',
+    },
+    about: {
+      title: 'Naša priča',
+      subtitle:
+        'Gradimo super aplikaciju koja povezuje ceo Balkan — ljude, usluge i kompanije.',
+    },
+    contact: {
+      title: 'Javite nam se',
+      subtitle:
+        'Tu smo za sva vaša pitanja. Odgovaramo u najkraćem mogućem roku.',
+    },
+    download: {
+      title: 'Preuzmite aplikaciju',
+      subtitle:
+        'Započnite za manje od minuta — besplatno na iOS i Android uređajima.',
+    },
+  },
+  contact: {
+    nameLabel: 'Ime i prezime',
+    namePlaceholder: 'Petar Petrović',
+    emailLabel: 'Email adresa',
+    emailPlaceholder: 'petar@primer.com',
+    subjectLabel: 'Tema',
+    subjects: ['Opšte pitanje', 'Podrška', 'Saradnja', 'Za medije'],
+    messageLabel: 'Poruka',
+    messagePlaceholder: 'Kako možemo da vam pomognemo?',
+    submit: 'Pošalji poruku',
+    submitting: 'Slanje...',
+    successTitle: 'Poruka je poslata!',
+    successBody: 'Hvala na poruci. Javićemo vam se uskoro.',
+    reset: 'Pošalji novu poruku',
+  },
+} as const
+
+export type Dictionary = typeof sr
+
+// Helper: assert each translation has the same shape as the source.
+const asDict = (d: Dictionary): Dictionary => d
+
+const hr = asDict({
+  nav: {
+    home: 'Početna',
+    services: 'Usluge',
+    forUsers: 'Za korisnike',
+    forCompanies: 'Za tvrtke',
+    about: 'O nama',
+    contact: 'Kontakt',
+  },
+  cta: {
+    signIn: 'Prijava',
+    download: 'Preuzmi aplikaciju',
+    downloadShort: 'Preuzmi',
+    getStarted: 'Započni besplatno',
+    learnMore: 'Saznaj više',
+    showAll: 'Prikaži sve',
+    openMenu: 'Otvori izbornik',
+    closeMenu: 'Zatvori izbornik',
+    language: 'Jezik',
+  },
+  hero: {
+    badge: 'Super aplikacija za Balkan',
+    title: 'Sve usluge na jednom mjestu',
+    subtitle:
+      'Jedna aplikacija za svakodnevni život i poslovanje diljem Balkana. Poslovi, majstori, dostava, putovanja, zdravlje i novčanik — sve na dohvat ruke.',
+    ratingLabel: '4.9 / 5 · 38.000+ ocjena',
+    ratingSub: 'Prosječna ocjena na App Store i Google Play',
+    floatingJob: 'Novi posao za vas',
+    floatingDelivery: 'Dostava stiže',
+  },
+  trust: {
+    label: 'Povjerenje vodećih tvrtki i partnera u regiji',
+  },
+  categories: {
+    eyebrow: 'Kategorije',
+    title: 'Sve što vam treba, na jednom mjestu',
+    description:
+      'Od svakodnevnih obveza do velikih životnih odluka — balkan.works povezuje ljude, usluge i tvrtke diljem regije.',
+  },
+  how: {
+    eyebrow: 'Kako funkcionira',
+    title: 'Do rješenja u tri jednostavna koraka',
+    description:
+      'Bez kompliciranja i papirologije. Sve obavite iz aplikacije, u nekoliko minuta.',
+    steps: [
+      { title: 'Napravite račun', desc: 'Jedna prijava otvara vam pristup svim uslugama u aplikaciji.' },
+      { title: 'Pronađite uslugu', desc: 'Pretražite ili dopustite AI pomoćniku da pronađe rješenje za vas.' },
+      { title: 'Rezervirajte i platite', desc: 'Zakažite, naručite ili platite sigurno u nekoliko klikova.' },
+      { title: 'Uživajte i ocijenite', desc: 'Pratite status u stvarnom vremenu i ostavite ocjenu.' },
+    ],
+  },
+  stats: {
+    items: [
+      { value: '1.2M+', label: 'aktivnih korisnika' },
+      { value: '45.000+', label: 'pružatelja usluga' },
+      { value: '12M+', label: 'obavljenih transakcija' },
+      { value: '4.9/5', label: 'prosječna ocjena' },
+    ],
+  },
+  featured: {
+    eyebrow: 'Izdvojene usluge',
+    title: 'Napravljeno za način na koji živite i radite',
+    description:
+      'Pogledajte kako balkan.works izgleda u praksi — svaka usluga osmišljena je da vam uštedi vrijeme.',
+  },
+  ai: {
+    eyebrow: 'AI pomoćnik',
+    title: 'Pametni pomoćnik koji radi umjesto vas',
+    description:
+      'Postavite pitanje na svom jeziku, a AI pomoćnik pronalazi najbolje opcije, uspoređuje cijene i završava zadatke umjesto vas.',
+    bullets: [
+      'Pronalazi i uspoređuje usluge u stvarnom vremenu',
+      'Rezervira, zakazuje i naručuje umjesto vas',
+      'Razumije prirodan govor na jezicima regije',
+    ],
+  },
+  business: {
+    eyebrow: 'Za tvrtke',
+    title: 'Vodite cijeli posao s jednog mjesta',
+    description:
+      'Upravljajte narudžbama, plaćanjima, timom i klijentima kroz jednu platformu prilagođenu poslovanju u regiji.',
+    cta: 'Postanite partner',
+  },
+  security: {
+    eyebrow: 'Sigurnost',
+    title: 'Vaši podaci i novac uvijek su zaštićeni',
+    description:
+      'Primjenjujemo najviše sigurnosne standarde kako biste u svakom trenutku bili sigurni.',
+    items: [
+      { title: 'Enkripcija podataka', desc: 'Svi podaci zaštićeni su end-to-end enkripcijom.' },
+      { title: 'Sigurna plaćanja', desc: 'Transakcije po PCI DSS standardima i 3D Secure zaštita.' },
+      { title: 'Kontrola privatnosti', desc: 'Vi odlučujete koje podatke dijelite i s kim.' },
+      { title: 'Zaštita računa', desc: 'Dvofaktorska autentifikacija i biometrijska prijava.' },
+      { title: 'Usklađenost s GDPR-om', desc: 'Poslujemo u skladu s europskom regulativom o podacima.' },
+    ],
+    uptimeValue: '99.9%',
+    uptimeLabel: 'dostupnost sustava tijekom cijele godine',
+  },
+  coverage: {
+    eyebrow: 'Pokrivenost',
+    title: 'Prisutni diljem Balkana',
+    description:
+      'balkan.works dostupan je u osam zemalja regije, s lokalnim partnerima u svakom većem gradu.',
+    note: 'Neprestano se širimo — nove zemlje i gradovi stižu uskoro.',
+  },
+  testimonials: {
+    eyebrow: 'Iskustva korisnika',
+    title: 'Zašto nam korisnici vjeruju',
+    description:
+      'Više od milijun ljudi diljem regije koristi balkan.works svaki dan.',
+  },
+  download: {
+    title: 'Preuzmite balkan.works danas',
+    subtitle:
+      'Dostupno besplatno na iOS i Android uređajima. Skenirajte kod ili preuzmite izravno iz trgovine.',
+    scan: 'Skenirajte za preuzimanje',
+  },
+  footer: {
+    tagline: 'Super aplikacija za svakodnevni život i poslovanje diljem Balkana.',
+    productTitle: 'Proizvod',
+    companyTitle: 'Tvrtka',
+    legalTitle: 'Pravno',
+    product: { services: 'Usluge', jobs: 'Poslovi', business: 'Za tvrtke', download: 'Preuzmi aplikaciju' },
+    company: { about: 'O nama', contact: 'Kontakt', careers: 'Karijere', press: 'Za medije' },
+    legal: { terms: 'Uvjeti korištenja', privacy: 'Politika privatnosti', cookies: 'Kolačići' },
+    rights: 'Sva prava pridržana.',
+    madeIn: 'Napravljeno na Balkanu, za cijeli Balkan.',
+  },
+  categoryItems: {
+    poslovi: { title: 'Poslovi', description: 'Oglasi za posao i honorarni angažmani diljem regije.' },
+    majstori: { title: 'Majstori i usluge', description: 'Provjereni majstori za popravke, montažu i održavanje.' },
+    kupovina: { title: 'Kupnja', description: 'Proizvodi lokalnih i regionalnih prodavača na jednom mjestu.' },
+    dostava: { title: 'Dostava hrane', description: 'Omiljeni restorani i brza dostava do vaših vrata.' },
+    putovanja: { title: 'Putovanja', description: 'Letovi, hoteli i prijevoz — rezervirajte u nekoliko klikova.' },
+    zdravlje: { title: 'Zdravlje', description: 'Naručivanje pregleda kod liječnika i klinika u blizini.' },
+    edukacija: { title: 'Edukacija', description: 'Tečajevi, poduke i obuke za nova znanja i vještine.' },
+    nekretnine: { title: 'Nekretnine', description: 'Stanovi, kuće i poslovni prostori za najam i prodaju.' },
+    finansije: { title: 'Financije', description: 'Digitalni novčanik, plaćanja i transferi bez naknada.' },
+    prevoz: { title: 'Prijevoz', description: 'Vožnje, selidbe i transport robe kad god vam zatreba.' },
+    dogadjaji: { title: 'Događaji', description: 'Ulaznice za koncerte, sport i događanja u vašem gradu.' },
+    ai: { title: 'AI pomoćnik', description: 'Pametni asistent koji pronalazi rješenja umjesto vas.' },
+  },
+  countries: {
+    RS: 'Srbija',
+    BA: 'Bosna i Hercegovina',
+    HR: 'Hrvatska',
+    ME: 'Crna Gora',
+    MK: 'Sjeverna Makedonija',
+    SI: 'Slovenija',
+    AL: 'Albanija',
+    XK: 'Kosovo',
+  },
+  pages: {
+    services: { title: 'Sve usluge na jednom mjestu', subtitle: 'Istražite cjelovit katalog usluga dostupnih u balkan.works aplikaciji.' },
+    jobs: { title: 'Pronađite posao iz snova', subtitle: 'Tisuće oglasa za posao i honorarnih angažmana diljem regije, ažurirano svaki dan.' },
+    business: { title: 'Razvijajte posao s balkan.works', subtitle: 'Alati, plaćanja i klijenti — sve što vašem poslovanju treba, na jednoj platformi.' },
+    about: { title: 'Naša priča', subtitle: 'Gradimo super aplikaciju koja povezuje cijeli Balkan — ljude, usluge i tvrtke.' },
+    contact: { title: 'Javite nam se', subtitle: 'Tu smo za sva vaša pitanja. Odgovaramo u najkraćem mogućem roku.' },
+    download: { title: 'Preuzmite aplikaciju', subtitle: 'Započnite za manje od minute — besplatno na iOS i Android uređajima.' },
+  },
+  contact: {
+    nameLabel: 'Ime i prezime',
+    namePlaceholder: 'Ivan Horvat',
+    emailLabel: 'Email adresa',
+    emailPlaceholder: 'ivan@primjer.com',
+    subjectLabel: 'Tema',
+    subjects: ['Opće pitanje', 'Podrška', 'Suradnja', 'Za medije'],
+    messageLabel: 'Poruka',
+    messagePlaceholder: 'Kako vam možemo pomoći?',
+    submit: 'Pošalji poruku',
+    submitting: 'Slanje...',
+    successTitle: 'Poruka je poslana!',
+    successBody: 'Hvala na poruci. Javit ćemo vam se uskoro.',
+    reset: 'Pošalji novu poruku',
+  },
+})
+
+const bs = asDict({
+  nav: {
+    home: 'Početna',
+    services: 'Usluge',
+    forUsers: 'Za korisnike',
+    forCompanies: 'Za kompanije',
+    about: 'O nama',
+    contact: 'Kontakt',
+  },
+  cta: {
+    signIn: 'Prijava',
+    download: 'Preuzmi aplikaciju',
+    downloadShort: 'Preuzmi',
+    getStarted: 'Započni besplatno',
+    learnMore: 'Saznaj više',
+    showAll: 'Prikaži sve',
+    openMenu: 'Otvori meni',
+    closeMenu: 'Zatvori meni',
+    language: 'Jezik',
+  },
+  hero: {
+    badge: 'Super aplikacija za Balkan',
+    title: 'Sve usluge na jednom mjestu',
+    subtitle:
+      'Jedna aplikacija za svakodnevni život i poslovanje širom Balkana. Poslovi, majstori, dostava, putovanja, zdravlje i novčanik — sve na dohvat ruke.',
+    ratingLabel: '4.9 / 5 · 38.000+ ocjena',
+    ratingSub: 'Prosječna ocjena na App Store i Google Play',
+    floatingJob: 'Novi posao za vas',
+    floatingDelivery: 'Dostava stiže',
+  },
+  trust: {
+    label: 'Povjerenje vodećih kompanija i partnera u regiji',
+  },
+  categories: {
+    eyebrow: 'Kategorije',
+    title: 'Sve što vam treba, na jednom mjestu',
+    description:
+      'Od svakodnevnih obaveza do velikih životnih odluka — balkan.works povezuje ljude, usluge i kompanije širom regije.',
+  },
+  how: {
+    eyebrow: 'Kako funkcioniše',
+    title: 'Do rješenja u tri jednostavna koraka',
+    description:
+      'Bez kompliciranja i papirologije. Sve obavite iz aplikacije, za nekoliko minuta.',
+    steps: [
+      { title: 'Napravite nalog', desc: 'Jedna prijava otvara vam pristup svim uslugama u aplikaciji.' },
+      { title: 'Pronađite uslugu', desc: 'Pretražite ili dopustite AI pomoćniku da pronađe rješenje za vas.' },
+      { title: 'Rezervišite i platite', desc: 'Zakažite, naručite ili platite sigurno u nekoliko klikova.' },
+      { title: 'Uživajte i ocijenite', desc: 'Pratite status u realnom vremenu i ostavite ocjenu.' },
+    ],
+  },
+  stats: {
+    items: [
+      { value: '1.2M+', label: 'aktivnih korisnika' },
+      { value: '45.000+', label: 'pružalaca usluga' },
+      { value: '12M+', label: 'obavljenih transakcija' },
+      { value: '4.9/5', label: 'prosječna ocjena' },
+    ],
+  },
+  featured: {
+    eyebrow: 'Izdvojene usluge',
+    title: 'Napravljeno za način na koji živite i radite',
+    description:
+      'Pogledajte kako balkan.works izgleda u praksi — svaka usluga osmišljena je da vam uštedi vrijeme.',
+  },
+  ai: {
+    eyebrow: 'AI pomoćnik',
+    title: 'Pametni pomoćnik koji radi umjesto vas',
+    description:
+      'Postavite pitanje na svom jeziku, a AI pomoćnik pronalazi najbolje opcije, upoređuje cijene i završava zadatke umjesto vas.',
+    bullets: [
+      'Pronalazi i upoređuje usluge u realnom vremenu',
+      'Rezerviše, zakazuje i naručuje umjesto vas',
+      'Razumije prirodan govor na jezicima regije',
+    ],
+  },
+  business: {
+    eyebrow: 'Za kompanije',
+    title: 'Vodite cijeli biznis s jednog mjesta',
+    description:
+      'Upravljajte narudžbama, plaćanjima, timom i klijentima kroz jednu platformu prilagođenu poslovanju u regiji.',
+    cta: 'Postanite partner',
+  },
+  security: {
+    eyebrow: 'Sigurnost',
+    title: 'Vaši podaci i novac uvijek su zaštićeni',
+    description:
+      'Primjenjujemo najviše sigurnosne standarde kako biste u svakom trenutku bili sigurni.',
+    items: [
+      { title: 'Enkripcija podataka', desc: 'Svi podaci zaštićeni su end-to-end enkripcijom.' },
+      { title: 'Sigurna plaćanja', desc: 'Transakcije po PCI DSS standardima i 3D Secure zaštita.' },
+      { title: 'Kontrola privatnosti', desc: 'Vi odlučujete koje podatke dijelite i s kim.' },
+      { title: 'Zaštita naloga', desc: 'Dvofaktorska autentifikacija i biometrijska prijava.' },
+      { title: 'Usklađenost s GDPR-om', desc: 'Poslujemo u skladu s evropskom regulativom o podacima.' },
+    ],
+    uptimeValue: '99.9%',
+    uptimeLabel: 'dostupnost sistema tokom cijele godine',
+  },
+  coverage: {
+    eyebrow: 'Pokrivenost',
+    title: 'Prisutni širom Balkana',
+    description:
+      'balkan.works dostupan je u osam zemalja regije, s lokalnim partnerima u svakom većem gradu.',
+    note: 'Stalno se širimo — nove zemlje i gradovi stižu uskoro.',
+  },
+  testimonials: {
+    eyebrow: 'Iskustva korisnika',
+    title: 'Zašto nam korisnici vjeruju',
+    description:
+      'Više od milion ljudi širom regije koristi balkan.works svaki dan.',
+  },
+  download: {
+    title: 'Preuzmite balkan.works danas',
+    subtitle:
+      'Dostupno besplatno na iOS i Android uređajima. Skenirajte kod ili preuzmite direktno iz prodavnice.',
+    scan: 'Skenirajte za preuzimanje',
+  },
+  footer: {
+    tagline: 'Super aplikacija za svakodnevni život i poslovanje širom Balkana.',
+    productTitle: 'Proizvod',
+    companyTitle: 'Kompanija',
+    legalTitle: 'Pravno',
+    product: { services: 'Usluge', jobs: 'Poslovi', business: 'Za kompanije', download: 'Preuzmi aplikaciju' },
+    company: { about: 'O nama', contact: 'Kontakt', careers: 'Karijera', press: 'Za medije' },
+    legal: { terms: 'Uslovi korištenja', privacy: 'Politika privatnosti', cookies: 'Kolačići' },
+    rights: 'Sva prava zadržana.',
+    madeIn: 'Napravljeno na Balkanu, za cijeli Balkan.',
+  },
+  categoryItems: {
+    poslovi: { title: 'Poslovi', description: 'Oglasi za posao i honorarni angažmani širom regije.' },
+    majstori: { title: 'Majstori i usluge', description: 'Provjereni majstori za popravke, montažu i održavanje.' },
+    kupovina: { title: 'Kupovina', description: 'Proizvodi lokalnih i regionalnih prodavača na jednom mjestu.' },
+    dostava: { title: 'Dostava hrane', description: 'Omiljeni restorani i brza dostava do vaših vrata.' },
+    putovanja: { title: 'Putovanja', description: 'Letovi, hoteli i prijevoz — rezervišite u nekoliko klikova.' },
+    zdravlje: { title: 'Zdravlje', description: 'Zakazivanje pregleda kod ljekara i klinika u blizini.' },
+    edukacija: { title: 'Edukacija', description: 'Kursevi, časovi i obuke za nova znanja i vještine.' },
+    nekretnine: { title: 'Nekretnine', description: 'Stanovi, kuće i poslovni prostori za iznajmljivanje i prodaju.' },
+    finansije: { title: 'Finansije', description: 'Digitalni novčanik, plaćanja i transferi bez naknada.' },
+    prevoz: { title: 'Prevoz', description: 'Vožnje, selidbe i transport robe kad god vam zatreba.' },
+    dogadjaji: { title: 'Događaji', description: 'Ulaznice za koncerte, sport i dešavanja u vašem gradu.' },
+    ai: { title: 'AI pomoćnik', description: 'Pametni asistent koji pronalazi rješenja umjesto vas.' },
+  },
+  countries: {
+    RS: 'Srbija',
+    BA: 'Bosna i Hercegovina',
+    HR: 'Hrvatska',
+    ME: 'Crna Gora',
+    MK: 'Sjeverna Makedonija',
+    SI: 'Slovenija',
+    AL: 'Albanija',
+    XK: 'Kosovo',
+  },
+  pages: {
+    services: { title: 'Sve usluge na jednom mjestu', subtitle: 'Istražite kompletan katalog usluga dostupnih u balkan.works aplikaciji.' },
+    jobs: { title: 'Pronađite posao iz snova', subtitle: 'Hiljade oglasa za posao i honorarnih angažmana širom regije, ažurirano svaki dan.' },
+    business: { title: 'Razvijajte biznis s balkan.works', subtitle: 'Alati, plaćanja i klijenti — sve što vašem poslovanju treba, na jednoj platformi.' },
+    about: { title: 'Naša priča', subtitle: 'Gradimo super aplikaciju koja povezuje cijeli Balkan — ljude, usluge i kompanije.' },
+    contact: { title: 'Javite nam se', subtitle: 'Tu smo za sva vaša pitanja. Odgovaramo u najkraćem mogućem roku.' },
+    download: { title: 'Preuzmite aplikaciju', subtitle: 'Započnite za manje od minute — besplatno na iOS i Android uređajima.' },
+  },
+  contact: {
+    nameLabel: 'Ime i prezime',
+    namePlaceholder: 'Amar Hodžić',
+    emailLabel: 'Email adresa',
+    emailPlaceholder: 'amar@primjer.com',
+    subjectLabel: 'Tema',
+    subjects: ['Opće pitanje', 'Podrška', 'Saradnja', 'Za medije'],
+    messageLabel: 'Poruka',
+    messagePlaceholder: 'Kako vam možemo pomoći?',
+    submit: 'Pošalji poruku',
+    submitting: 'Slanje...',
+    successTitle: 'Poruka je poslana!',
+    successBody: 'Hvala na poruci. Javit ćemo vam se uskoro.',
+    reset: 'Pošalji novu poruku',
+  },
+})
+
+const cnr = asDict({
+  nav: {
+    home: 'Početna',
+    services: 'Usluge',
+    forUsers: 'Za korisnike',
+    forCompanies: 'Za kompanije',
+    about: 'O nama',
+    contact: 'Kontakt',
+  },
+  cta: {
+    signIn: 'Prijava',
+    download: 'Preuzmi aplikaciju',
+    downloadShort: 'Preuzmi',
+    getStarted: 'Započni besplatno',
+    learnMore: 'Saznaj više',
+    showAll: 'Prikaži sve',
+    openMenu: 'Otvori meni',
+    closeMenu: 'Zatvori meni',
+    language: 'Jezik',
+  },
+  hero: {
+    badge: 'Super aplikacija za Balkan',
+    title: 'Sve usluge na jednom mjestu',
+    subtitle:
+      'Jedna aplikacija za svakodnevni život i poslovanje širom Balkana. Poslovi, majstori, dostava, putovanja, zdravlje i novčanik — sve na dohvat ruke.',
+    ratingLabel: '4.9 / 5 · 38.000+ ocjena',
+    ratingSub: 'Prosječna ocjena na App Store i Google Play',
+    floatingJob: 'Novi posao za vas',
+    floatingDelivery: 'Dostava stiže',
+  },
+  trust: {
+    label: 'Povjerenje vodećih kompanija i partnera u regionu',
+  },
+  categories: {
+    eyebrow: 'Kategorije',
+    title: 'Sve što vam treba, na jednom mjestu',
+    description:
+      'Od svakodnevnih obaveza do velikih životnih odluka — balkan.works povezuje ljude, usluge i kompanije širom regiona.',
+  },
+  how: {
+    eyebrow: 'Kako funkcioniše',
+    title: 'Do rješenja u tri jednostavna koraka',
+    description:
+      'Bez komplikovanja i papirologije. Sve obavite iz aplikacije, za nekoliko minuta.',
+    steps: [
+      { title: 'Napravite nalog', desc: 'Jedna prijava otvara vam pristup svim uslugama u aplikaciji.' },
+      { title: 'Pronađite uslugu', desc: 'Pretražite ili dozvolite AI pomoćniku da pronađe rješenje za vas.' },
+      { title: 'Rezervišite i platite', desc: 'Zakažite, naručite ili platite bezbjedno u nekoliko klikova.' },
+      { title: 'Uživajte i ocijenite', desc: 'Pratite status u realnom vremenu i ostavite ocjenu.' },
+    ],
+  },
+  stats: {
+    items: [
+      { value: '1.2M+', label: 'aktivnih korisnika' },
+      { value: '45.000+', label: 'pružalaca usluga' },
+      { value: '12M+', label: 'obavljenih transakcija' },
+      { value: '4.9/5', label: 'prosječna ocjena' },
+    ],
+  },
+  featured: {
+    eyebrow: 'Izdvojene usluge',
+    title: 'Napravljeno za način na koji živite i radite',
+    description:
+      'Pogledajte kako balkan.works izgleda u praksi — svaka usluga osmišljena je da vam uštedi vrijeme.',
+  },
+  ai: {
+    eyebrow: 'AI pomoćnik',
+    title: 'Pametni pomoćnik koji radi umjesto vas',
+    description:
+      'Postavite pitanje na svom jeziku, a AI pomoćnik pronalazi najbolje opcije, upoređuje cijene i završava zadatke umjesto vas.',
+    bullets: [
+      'Pronalazi i upoređuje usluge u realnom vremenu',
+      'Rezerviše, zakazuje i naručuje umjesto vas',
+      'Razumije prirodan govor na jezicima regiona',
+    ],
+  },
+  business: {
+    eyebrow: 'Za kompanije',
+    title: 'Vodite cijeli biznis s jednog mjesta',
+    description:
+      'Upravljajte narudžbama, plaćanjima, timom i klijentima kroz jednu platformu prilagođenu poslovanju u regionu.',
+    cta: 'Postanite partner',
+  },
+  security: {
+    eyebrow: 'Bezbjednost',
+    title: 'Vaši podaci i novac uvijek su zaštićeni',
+    description:
+      'Primjenjujemo najviše bezbjednosne standarde kako biste u svakom trenutku bili sigurni.',
+    items: [
+      { title: 'Enkripcija podataka', desc: 'Svi podaci zaštićeni su end-to-end enkripcijom.' },
+      { title: 'Sigurna plaćanja', desc: 'Transakcije po PCI DSS standardima i 3D Secure zaštita.' },
+      { title: 'Kontrola privatnosti', desc: 'Vi odlučujete koje podatke dijelite i s kim.' },
+      { title: 'Zaštita naloga', desc: 'Dvofaktorska autentifikacija i biometrijska prijava.' },
+      { title: 'Usklađenost s GDPR-om', desc: 'Poslujemo u skladu s evropskom regulativom o podacima.' },
+    ],
+    uptimeValue: '99.9%',
+    uptimeLabel: 'dostupnost sistema tokom cijele godine',
+  },
+  coverage: {
+    eyebrow: 'Pokrivenost',
+    title: 'Prisutni širom Balkana',
+    description:
+      'balkan.works dostupan je u osam zemalja regiona, s lokalnim partnerima u svakom većem gradu.',
+    note: 'Stalno se širimo — nove zemlje i gradovi stižu uskoro.',
+  },
+  testimonials: {
+    eyebrow: 'Iskustva korisnika',
+    title: 'Zašto nam korisnici vjeruju',
+    description:
+      'Više od milion ljudi širom regiona koristi balkan.works svaki dan.',
+  },
+  download: {
+    title: 'Preuzmite balkan.works danas',
+    subtitle:
+      'Dostupno besplatno na iOS i Android uređajima. Skenirajte kod ili preuzmite direktno iz prodavnice.',
+    scan: 'Skenirajte za preuzimanje',
+  },
+  footer: {
+    tagline: 'Super aplikacija za svakodnevni život i poslovanje širom Balkana.',
+    productTitle: 'Proizvod',
+    companyTitle: 'Kompanija',
+    legalTitle: 'Pravno',
+    product: { services: 'Usluge', jobs: 'Poslovi', business: 'Za kompanije', download: 'Preuzmi aplikaciju' },
+    company: { about: 'O nama', contact: 'Kontakt', careers: 'Karijera', press: 'Za medije' },
+    legal: { terms: 'Uslovi korišćenja', privacy: 'Politika privatnosti', cookies: 'Kolačići' },
+    rights: 'Sva prava zadržana.',
+    madeIn: 'Napravljeno na Balkanu, za cijeli Balkan.',
+  },
+  categoryItems: {
+    poslovi: { title: 'Poslovi', description: 'Oglasi za posao i honorarni angažmani širom regiona.' },
+    majstori: { title: 'Majstori i usluge', description: 'Provjereni majstori za popravke, montažu i održavanje.' },
+    kupovina: { title: 'Kupovina', description: 'Proizvodi lokalnih i regionalnih prodavaca na jednom mjestu.' },
+    dostava: { title: 'Dostava hrane', description: 'Omiljeni restorani i brza dostava do vaših vrata.' },
+    putovanja: { title: 'Putovanja', description: 'Letovi, hoteli i prevoz — rezervišite u nekoliko klikova.' },
+    zdravlje: { title: 'Zdravlje', description: 'Zakazivanje pregleda kod ljekara i klinika u blizini.' },
+    edukacija: { title: 'Edukacija', description: 'Kursevi, časovi i obuke za nova znanja i vještine.' },
+    nekretnine: { title: 'Nekretnine', description: 'Stanovi, kuće i poslovni prostori za izdavanje i prodaju.' },
+    finansije: { title: 'Finansije', description: 'Digitalni novčanik, plaćanja i transferi bez naknada.' },
+    prevoz: { title: 'Prevoz', description: 'Vožnje, selidbe i transport robe kad god vam zatreba.' },
+    dogadjaji: { title: 'Događaji', description: 'Ulaznice za koncerte, sport i dešavanja u vašem gradu.' },
+    ai: { title: 'AI pomoćnik', description: 'Pametni asistent koji pronalazi rješenja umjesto vas.' },
+  },
+  countries: {
+    RS: 'Srbija',
+    BA: 'Bosna i Hercegovina',
+    HR: 'Hrvatska',
+    ME: 'Crna Gora',
+    MK: 'Sjeverna Makedonija',
+    SI: 'Slovenija',
+    AL: 'Albanija',
+    XK: 'Kosovo',
+  },
+  pages: {
+    services: { title: 'Sve usluge na jednom mjestu', subtitle: 'Istražite kompletan katalog usluga dostupnih u balkan.works aplikaciji.' },
+    jobs: { title: 'Pronađite posao iz snova', subtitle: 'Hiljade oglasa za posao i honorarnih angažmana širom regiona, ažurirano svaki dan.' },
+    business: { title: 'Razvijajte biznis s balkan.works', subtitle: 'Alati, plaćanja i klijenti — sve što vašem poslovanju treba, na jednoj platformi.' },
+    about: { title: 'Naša priča', subtitle: 'Gradimo super aplikaciju koja povezuje cijeli Balkan — ljude, usluge i kompanije.' },
+    contact: { title: 'Javite nam se', subtitle: 'Tu smo za sva vaša pitanja. Odgovaramo u najkraćem mogućem roku.' },
+    download: { title: 'Preuzmite aplikaciju', subtitle: 'Započnite za manje od minute — besplatno na iOS i Android uređajima.' },
+  },
+  contact: {
+    nameLabel: 'Ime i prezime',
+    namePlaceholder: 'Marko Vuković',
+    emailLabel: 'Email adresa',
+    emailPlaceholder: 'marko@primjer.com',
+    subjectLabel: 'Tema',
+    subjects: ['Opšte pitanje', 'Podrška', 'Saradnja', 'Za medije'],
+    messageLabel: 'Poruka',
+    messagePlaceholder: 'Kako vam možemo pomoći?',
+    submit: 'Pošalji poruku',
+    submitting: 'Slanje...',
+    successTitle: 'Poruka je poslana!',
+    successBody: 'Hvala na poruci. Javićemo vam se uskoro.',
+    reset: 'Pošalji novu poruku',
+  },
+})
+
+const mk = asDict({
+  nav: {
+    home: 'Почетна',
+    services: 'Услуги',
+    forUsers: 'За корисници',
+    forCompanies: 'За компании',
+    about: 'За нас',
+    contact: 'Контакт',
+  },
+  cta: {
+    signIn: 'Најава',
+    download: 'Преземи ја апликацијата',
+    downloadShort: 'Преземи',
+    getStarted: 'Започни бесплатно',
+    learnMore: 'Дознај повеќе',
+    showAll: 'Прикажи ги сите',
+    openMenu: 'Отвори мени',
+    closeMenu: 'Затвори мени',
+    language: 'Јазик',
+  },
+  hero: {
+    badge: 'Супер апликација за Балканот',
+    title: 'Сите услуги на едно место',
+    subtitle:
+      'Една апликација за секојдневниот живот и работењето низ Балканот. Работни места, мајстори, достава, патувања, здравје и паричник — сè на дофат на раката.',
+    ratingLabel: '4.9 / 5 · 38.000+ оцени',
+    ratingSub: 'Просечна оцена на App Store и Google Play',
+    floatingJob: 'Нова работа за вас',
+    floatingDelivery: 'Доставата пристигнува',
+  },
+  trust: {
+    label: 'Доверба на водечките компании и партнери во регионот',
+  },
+  categories: {
+    eyebrow: 'Категории',
+    title: 'Сè што ви треба, на едно место',
+    description:
+      'Од секојдневните обврски до големите животни одлуки — balkan.works ги поврзува луѓето, услугите и компаниите низ регионот.',
+  },
+  how: {
+    eyebrow: 'Како функционира',
+    title: 'До решение во три едноставни чекори',
+    description:
+      'Без комплицирање и хартии. Сè завршувате од апликацијата, за неколку минути.',
+    steps: [
+      { title: 'Направете профил', desc: 'Една најава ви отвора пристап до сите услуги во апликацијата.' },
+      { title: 'Пронајдете услуга', desc: 'Пребарувајте или дозволете AI помошникот да најде решение за вас.' },
+      { title: 'Резервирајте и платете', desc: 'Закажете, порачајте или платете безбедно во неколку клика.' },
+      { title: 'Уживајте и оценете', desc: 'Следете го статусот во реално време и оставете оцена.' },
+    ],
+  },
+  stats: {
+    items: [
+      { value: '1.2M+', label: 'активни корисници' },
+      { value: '45.000+', label: 'даватели на услуги' },
+      { value: '12M+', label: 'завршени трансакции' },
+      { value: '4.9/5', label: 'просечна оцена' },
+    ],
+  },
+  featured: {
+    eyebrow: 'Издвоени услуги',
+    title: 'Направено за начинот на кој живеете и работите',
+    description:
+      'Погледнете како изгледа balkan.works во пракса — секоја услуга е осмислена да ви заштеди време.',
+  },
+  ai: {
+    eyebrow: 'AI помошник',
+    title: 'Паметен помошник што работи наместо вас',
+    description:
+      'Поставете прашање на вашиот јазик, а AI помошникот ги наоѓа најдобрите опции, ги споредува цените и ги завршува задачите наместо вас.',
+    bullets: [
+      'Наоѓа и споредува услуги во реално време',
+      'Резервира, закажува и порачува наместо вас',
+      'Разбира природен говор на јазиците од регионот',
+    ],
+  },
+  business: {
+    eyebrow: 'За компании',
+    title: 'Водете го целиот бизнис од едно место',
+    description:
+      'Управувајте со нарачки, плаќања, тим и клиенти преку една платформа прилагодена за работење во регионот.',
+    cta: 'Станете партнер',
+  },
+  security: {
+    eyebrow: 'Безбедност',
+    title: 'Вашите податоци и пари се секогаш заштитени',
+    description:
+      'Ги применуваме највисоките безбедносни стандарди за да бидете сигурни во секој момент.',
+    items: [
+      { title: 'Енкрипција на податоци', desc: 'Сите податоци се заштитени со end-to-end енкрипција.' },
+      { title: 'Безбедни плаќања', desc: 'Трансакции по PCI DSS стандарди и 3D Secure заштита.' },
+      { title: 'Контрола на приватност', desc: 'Вие одлучувате кои податоци ги споделувате и со кого.' },
+      { title: 'Заштита на профил', desc: 'Двофакторска автентикација и биометриска најава.' },
+      { title: 'Усогласеност со GDPR', desc: 'Работиме во согласност со европската регулатива за податоци.' },
+    ],
+    uptimeValue: '99.9%',
+    uptimeLabel: 'достапност на системот во текот на цела година',
+  },
+  coverage: {
+    eyebrow: 'Покриеност',
+    title: 'Присутни низ целиот Балкан',
+    description:
+      'balkan.works е достапен во осум земји од регионот, со локални партнери во секој поголем град.',
+    note: 'Постојано се шириме — нови земји и градови стигнуваат наскоро.',
+  },
+  testimonials: {
+    eyebrow: 'Искуства на корисници',
+    title: 'Зошто корисниците ни веруваат',
+    description:
+      'Повеќе од милион луѓе низ регионот користат balkan.works секој ден.',
+  },
+  download: {
+    title: 'Преземете го balkan.works денес',
+    subtitle:
+      'Достапно бесплатно на iOS и Android уреди. Скенирајте го кодот или преземете директно од продавницата.',
+    scan: 'Скенирајте за преземање',
+  },
+  footer: {
+    tagline: 'Супер апликација за секојдневниот живот и работењето низ Балканот.',
+    productTitle: 'Производ',
+    companyTitle: 'Компанија',
+    legalTitle: 'Правно',
+    product: { services: 'Услуги', jobs: 'Работни места', business: 'За компании', download: 'Преземи ја апликацијата' },
+    company: { about: 'За нас', contact: 'Контакт', careers: 'Кариера', press: 'За медиуми' },
+    legal: { terms: 'Услови за користење', privacy: 'Политика на приватност', cookies: 'Колачиња' },
+    rights: 'Сите права задржани.',
+    madeIn: 'Направено на Балканот, за целиот Балкан.',
+  },
+  categoryItems: {
+    poslovi: { title: 'Работни места', description: 'Огласи за работа и хонорарни ангажмани низ регионот.' },
+    majstori: { title: 'Мајстори и услуги', description: 'Проверени мајстори за поправки, монтажа и одржување.' },
+    kupovina: { title: 'Купување', description: 'Производи од локални и регионални продавачи на едно место.' },
+    dostava: { title: 'Достава на храна', description: 'Омилени ресторани и брза достава до вашата врата.' },
+    putovanja: { title: 'Патувања', description: 'Летови, хотели и превоз — резервирајте во неколку клика.' },
+    zdravlje: { title: 'Здравје', description: 'Закажување прегледи кај лекари и клиники во близина.' },
+    edukacija: { title: 'Едукација', description: 'Курсеви, часови и обуки за нови знаења и вештини.' },
+    nekretnine: { title: 'Недвижнини', description: 'Станови, куќи и деловни простори за издавање и продажба.' },
+    finansije: { title: 'Финансии', description: 'Дигитален паричник, плаќања и трансфери без такси.' },
+    prevoz: { title: 'Превоз', description: 'Возења, преселби и транспорт на стоки кога ќе ви затреба.' },
+    dogadjaji: { title: 'Настани', description: 'Билети за концерти, спорт и настани во вашиот град.' },
+    ai: { title: 'AI помошник', description: 'Паметен асистент што наоѓа решенија наместо вас.' },
+  },
+  countries: {
+    RS: 'Србија',
+    BA: 'Босна и Херцеговина',
+    HR: 'Хрватска',
+    ME: 'Црна Гора',
+    MK: 'Северна Македонија',
+    SI: 'Словенија',
+    AL: 'Албанија',
+    XK: 'Косово',
+  },
+  pages: {
+    services: { title: 'Сите услуги на едно место', subtitle: 'Истражете го целосниот каталог на услуги достапни во balkan.works апликацијата.' },
+    jobs: { title: 'Пронајдете ја работата од соништата', subtitle: 'Илјадници огласи за работа и хонорарни ангажмани низ регионот, ажурирани секој ден.' },
+    business: { title: 'Развивајте бизнис со balkan.works', subtitle: 'Алатки, плаќања и клиенти — сè што ѝ треба на вашата дејност, на една платформа.' },
+    about: { title: 'Нашата приказна', subtitle: 'Градиме супер апликација што го поврзува целиот Балкан — луѓето, услугите и компаниите.' },
+    contact: { title: 'Јавете ни се', subtitle: 'Тука сме за сите ваши прашања. Одговараме во најкус можен рок.' },
+    download: { title: 'Преземете ја апликацијата', subtitle: 'Започнете за помалку од минута — бесплатно на iOS и Android уреди.' },
+  },
+  contact: {
+    nameLabel: 'Име и презиме',
+    namePlaceholder: 'Марко Петровски',
+    emailLabel: 'Е-пошта',
+    emailPlaceholder: 'marko@primer.com',
+    subjectLabel: 'Тема',
+    subjects: ['Општо прашање', 'Поддршка', 'Соработка', 'За медиуми'],
+    messageLabel: 'Порака',
+    messagePlaceholder: 'Како можеме да ви помогнеме?',
+    submit: 'Испрати порака',
+    submitting: 'Се испраќа...',
+    successTitle: 'Пораката е испратена!',
+    successBody: 'Ви благодариме за пораката. Ќе ви се јавиме наскоро.',
+    reset: 'Испрати нова порака',
+  },
+})
+
+const sl = asDict({
+  nav: {
+    home: 'Domov',
+    services: 'Storitve',
+    forUsers: 'Za uporabnike',
+    forCompanies: 'Za podjetja',
+    about: 'O nas',
+    contact: 'Kontakt',
+  },
+  cta: {
+    signIn: 'Prijava',
+    download: 'Prenesi aplikacijo',
+    downloadShort: 'Prenesi',
+    getStarted: 'Začni brezplačno',
+    learnMore: 'Več informacij',
+    showAll: 'Prikaži vse',
+    openMenu: 'Odpri meni',
+    closeMenu: 'Zapri meni',
+    language: 'Jezik',
+  },
+  hero: {
+    badge: 'Super aplikacija za Balkan',
+    title: 'Vse storitve na enem mestu',
+    subtitle:
+      'Ena aplikacija za vsakdanje življenje in poslovanje po vsem Balkanu. Zaposlitve, mojstri, dostava, potovanja, zdravje in denarnica — vse na dosegu roke.',
+    ratingLabel: '4.9 / 5 · 38.000+ ocen',
+    ratingSub: 'Povprečna ocena na App Store in Google Play',
+    floatingJob: 'Nova zaposlitev za vas',
+    floatingDelivery: 'Dostava prihaja',
+  },
+  trust: {
+    label: 'Zaupanje vodilnih podjetij in partnerjev v regiji',
+  },
+  categories: {
+    eyebrow: 'Kategorije',
+    title: 'Vse, kar potrebujete, na enem mestu',
+    description:
+      'Od vsakdanjih opravkov do velikih življenjskih odločitev — balkan.works povezuje ljudi, storitve in podjetja po vsej regiji.',
+  },
+  how: {
+    eyebrow: 'Kako deluje',
+    title: 'Do rešitve v treh preprostih korakih',
+    description:
+      'Brez zapletov in papirologije. Vse uredite v aplikaciji, v nekaj minutah.',
+    steps: [
+      { title: 'Ustvarite račun', desc: 'Ena prijava vam odpre dostop do vseh storitev v aplikaciji.' },
+      { title: 'Poiščite storitev', desc: 'Iščite ali pustite, da AI pomočnik najde rešitev za vas.' },
+      { title: 'Rezervirajte in plačajte', desc: 'Naročite ali plačajte varno v nekaj klikih.' },
+      { title: 'Uživajte in ocenite', desc: 'Spremljajte status v realnem času in pustite oceno.' },
+    ],
+  },
+  stats: {
+    items: [
+      { value: '1.2M+', label: 'aktivnih uporabnikov' },
+      { value: '45.000+', label: 'ponudnikov storitev' },
+      { value: '12M+', label: 'opravljenih transakcij' },
+      { value: '4.9/5', label: 'povprečna ocena' },
+    ],
+  },
+  featured: {
+    eyebrow: 'Izpostavljene storitve',
+    title: 'Ustvarjeno za način, kako živite in delate',
+    description:
+      'Poglejte, kako balkan.works izgleda v praksi — vsaka storitev je zasnovana, da vam prihrani čas.',
+  },
+  ai: {
+    eyebrow: 'AI pomočnik',
+    title: 'Pametni pomočnik, ki dela namesto vas',
+    description:
+      'Postavite vprašanje v svojem jeziku, AI pomočnik pa najde najboljše možnosti, primerja cene in opravi naloge namesto vas.',
+    bullets: [
+      'Najde in primerja storitve v realnem času',
+      'Rezervira, naroča in oddaja namesto vas',
+      'Razume naravni govor v jezikih regije',
+    ],
+  },
+  business: {
+    eyebrow: 'Za podjetja',
+    title: 'Vodite celotno poslovanje z enega mesta',
+    description:
+      'Upravljajte naročila, plačila, ekipo in stranke prek ene platforme, prilagojene poslovanju v regiji.',
+    cta: 'Postanite partner',
+  },
+  security: {
+    eyebrow: 'Varnost',
+    title: 'Vaši podatki in denar so vedno zaščiteni',
+    description:
+      'Uporabljamo najvišje varnostne standarde, da ste vsak trenutek varni.',
+    items: [
+      { title: 'Šifriranje podatkov', desc: 'Vsi podatki so zaščiteni s šifriranjem end-to-end.' },
+      { title: 'Varna plačila', desc: 'Transakcije po standardih PCI DSS in zaščita 3D Secure.' },
+      { title: 'Nadzor zasebnosti', desc: 'Vi odločate, katere podatke delite in s kom.' },
+      { title: 'Zaščita računa', desc: 'Dvostopenjska avtentikacija in biometrična prijava.' },
+      { title: 'Skladnost z GDPR', desc: 'Poslujemo v skladu z evropsko uredbo o podatkih.' },
+    ],
+    uptimeValue: '99.9%',
+    uptimeLabel: 'razpoložljivost sistema skozi vse leto',
+  },
+  coverage: {
+    eyebrow: 'Pokritost',
+    title: 'Prisotni po vsem Balkanu',
+    description:
+      'balkan.works je na voljo v osmih državah regije, z lokalnimi partnerji v vsakem večjem mestu.',
+    note: 'Nenehno se širimo — nove države in mesta prihajajo kmalu.',
+  },
+  testimonials: {
+    eyebrow: 'Izkušnje uporabnikov',
+    title: 'Zakaj nam uporabniki zaupajo',
+    description:
+      'Več kot milijon ljudi po vsej regiji vsak dan uporablja balkan.works.',
+  },
+  download: {
+    title: 'Prenesite balkan.works še danes',
+    subtitle:
+      'Na voljo brezplačno na napravah iOS in Android. Skenirajte kodo ali prenesite neposredno iz trgovine.',
+    scan: 'Skenirajte za prenos',
+  },
+  footer: {
+    tagline: 'Super aplikacija za vsakdanje življenje in poslovanje po vsem Balkanu.',
+    productTitle: 'Izdelek',
+    companyTitle: 'Podjetje',
+    legalTitle: 'Pravno',
+    product: { services: 'Storitve', jobs: 'Zaposlitve', business: 'Za podjetja', download: 'Prenesi aplikacijo' },
+    company: { about: 'O nas', contact: 'Kontakt', careers: 'Kariera', press: 'Za medije' },
+    legal: { terms: 'Pogoji uporabe', privacy: 'Politika zasebnosti', cookies: 'Piškotki' },
+    rights: 'Vse pravice pridržane.',
+    madeIn: 'Ustvarjeno na Balkanu, za ves Balkan.',
+  },
+  categoryItems: {
+    poslovi: { title: 'Zaposlitve', description: 'Oglasi za delo in honorarni angažmaji po vsej regiji.' },
+    majstori: { title: 'Mojstri in storitve', description: 'Preverjeni mojstri za popravila, montažo in vzdrževanje.' },
+    kupovina: { title: 'Nakupovanje', description: 'Izdelki lokalnih in regionalnih prodajalcev na enem mestu.' },
+    dostava: { title: 'Dostava hrane', description: 'Priljubljene restavracije in hitra dostava do vaših vrat.' },
+    putovanja: { title: 'Potovanja', description: 'Leti, hoteli in prevoz — rezervirajte v nekaj klikih.' },
+    zdravlje: { title: 'Zdravje', description: 'Naročanje pregledov pri zdravnikih in klinikah v bližini.' },
+    edukacija: { title: 'Izobraževanje', description: 'Tečaji, učne ure in usposabljanja za nova znanja in veščine.' },
+    nekretnine: { title: 'Nepremičnine', description: 'Stanovanja, hiše in poslovni prostori za najem in prodajo.' },
+    finansije: { title: 'Finance', description: 'Digitalna denarnica, plačila in prenosi brez provizij.' },
+    prevoz: { title: 'Prevoz', description: 'Vožnje, selitve in prevoz blaga, kadar koli ga potrebujete.' },
+    dogadjaji: { title: 'Dogodki', description: 'Vstopnice za koncerte, šport in dogodke v vašem mestu.' },
+    ai: { title: 'AI pomočnik', description: 'Pametni asistent, ki najde rešitve namesto vas.' },
+  },
+  countries: {
+    RS: 'Srbija',
+    BA: 'Bosna in Hercegovina',
+    HR: 'Hrvaška',
+    ME: 'Črna gora',
+    MK: 'Severna Makedonija',
+    SI: 'Slovenija',
+    AL: 'Albanija',
+    XK: 'Kosovo',
+  },
+  pages: {
+    services: { title: 'Vse storitve na enem mestu', subtitle: 'Raziščite celoten katalog storitev, ki so na voljo v aplikaciji balkan.works.' },
+    jobs: { title: 'Poiščite delo svojih sanj', subtitle: 'Tisoče oglasov za delo in honorarnih angažmajev po vsej regiji, posodobljeno vsak dan.' },
+    business: { title: 'Razvijajte posel z balkan.works', subtitle: 'Orodja, plačila in stranke — vse, kar vaše poslovanje potrebuje, na eni platformi.' },
+    about: { title: 'Naša zgodba', subtitle: 'Gradimo super aplikacijo, ki povezuje ves Balkan — ljudi, storitve in podjetja.' },
+    contact: { title: 'Pišite nam', subtitle: 'Tu smo za vsa vaša vprašanja. Odgovarjamo v najkrajšem možnem času.' },
+    download: { title: 'Prenesite aplikacijo', subtitle: 'Začnite v manj kot minuti — brezplačno na napravah iOS in Android.' },
+  },
+  contact: {
+    nameLabel: 'Ime in priimek',
+    namePlaceholder: 'Luka Novak',
+    emailLabel: 'E-poštni naslov',
+    emailPlaceholder: 'luka@primer.com',
+    subjectLabel: 'Zadeva',
+    subjects: ['Splošno vprašanje', 'Podpora', 'Sodelovanje', 'Za medije'],
+    messageLabel: 'Sporočilo',
+    messagePlaceholder: 'Kako vam lahko pomagamo?',
+    submit: 'Pošlji sporočilo',
+    submitting: 'Pošiljanje...',
+    successTitle: 'Sporočilo je poslano!',
+    successBody: 'Hvala za sporočilo. Kmalu se vam bomo oglasili.',
+    reset: 'Pošlji novo sporočilo',
+  },
+})
+
+const bg = asDict({
+  nav: {
+    home: 'Начало',
+    services: 'Услуги',
+    forUsers: 'За потребители',
+    forCompanies: 'За компании',
+    about: 'За нас',
+    contact: 'Контакти',
+  },
+  cta: {
+    signIn: 'Вход',
+    download: 'Изтегли приложението',
+    downloadShort: 'Изтегли',
+    getStarted: 'Започни безплатно',
+    learnMore: 'Научи повече',
+    showAll: 'Покажи всички',
+    openMenu: 'Отвори меню',
+    closeMenu: 'Затвори меню',
+    language: 'Език',
+  },
+  hero: {
+    badge: 'Супер приложение за Балканите',
+    title: 'Всички услуги на едно място',
+    subtitle:
+      'Едно приложение за ежедневието и бизнеса в целите Балкани. Работа, майстори, доставка, пътувания, здраве и портфейл — всичко на една ръка разстояние.',
+    ratingLabel: '4.9 / 5 · 38 000+ оценки',
+    ratingSub: 'Средна оценка в App Store и Google Play',
+    floatingJob: 'Нова работа за вас',
+    floatingDelivery: 'Доставката пристига',
+  },
+  trust: {
+    label: 'Доверие на водещи компании и партньори в региона',
+  },
+  categories: {
+    eyebrow: 'Категории',
+    title: 'Всичко, от което се нуждаете, на едно място',
+    description:
+      'От ежедневните задачи до големите житейски решения — balkan.works свързва хората, услугите и компаниите в целия регион.',
+  },
+  how: {
+    eyebrow: 'Как работи',
+    title: 'До решение в три лесни стъпки',
+    description:
+      'Без усложнения и документи. Всичко правите от приложението, за няколко минути.',
+    steps: [
+      { title: 'Създайте профил', desc: 'Един вход ви дава достъп до всички услуги в приложението.' },
+      { title: 'Намерете услуга', desc: 'Търсете или оставете AI асистента да намери решение за вас.' },
+      { title: 'Резервирайте и платете', desc: 'Запишете час, поръчайте или платете сигурно с няколко клика.' },
+      { title: 'Насладете се и оценете', desc: 'Следете статуса в реално време и оставете оценка.' },
+    ],
+  },
+  stats: {
+    items: [
+      { value: '1.2M+', label: 'активни потребители' },
+      { value: '45 000+', label: 'доставчици на услуги' },
+      { value: '12M+', label: 'извършени транзакции' },
+      { value: '4.9/5', label: 'средна оценка' },
+    ],
+  },
+  featured: {
+    eyebrow: 'Избрани услуги',
+    title: 'Създадено за начина, по който живеете и работите',
+    description:
+      'Вижте как изглежда balkan.works на практика — всяка услуга е създадена да ви спести време.',
+  },
+  ai: {
+    eyebrow: 'AI асистент',
+    title: 'Умен асистент, който работи вместо вас',
+    description:
+      'Задайте въпрос на своя език, а AI асистентът намира най-добрите опции, сравнява цени и изпълнява задачи вместо вас.',
+    bullets: [
+      'Намира и сравнява услуги в реално време',
+      'Резервира, записва часове и поръчва вместо вас',
+      'Разбира естествена реч на езиците от региона',
+    ],
+  },
+  business: {
+    eyebrow: 'За компании',
+    title: 'Управлявайте целия бизнес от едно място',
+    description:
+      'Управлявайте поръчки, плащания, екип и клиенти чрез една платформа, пригодена за бизнеса в региона.',
+    cta: 'Станете партньор',
+  },
+  security: {
+    eyebrow: 'Сигурност',
+    title: 'Вашите данни и пари са винаги защитени',
+    description:
+      'Прилагаме най-високите стандарти за сигурност, за да сте спокойни във всеки момент.',
+    items: [
+      { title: 'Криптиране на данни', desc: 'Всички данни са защитени с end-to-end криптиране.' },
+      { title: 'Сигурни плащания', desc: 'Транзакции по стандартите PCI DSS и защита 3D Secure.' },
+      { title: 'Контрол на поверителността', desc: 'Вие решавате кои данни споделяте и с кого.' },
+      { title: 'Защита на профила', desc: 'Двуфакторна автентикация и биометричен вход.' },
+      { title: 'Съответствие с GDPR', desc: 'Работим в съответствие с европейската регулация за данни.' },
+    ],
+    uptimeValue: '99.9%',
+    uptimeLabel: 'наличност на системата през цялата година',
+  },
+  coverage: {
+    eyebrow: 'Покритие',
+    title: 'Присъстваме в целите Балкани',
+    description:
+      'balkan.works е достъпен в осем държави от региона, с местни партньори във всеки по-голям град.',
+    note: 'Постоянно се разширяваме — нови държави и градове идват скоро.',
+  },
+  testimonials: {
+    eyebrow: 'Мнения на потребители',
+    title: 'Защо потребителите ни се доверяват',
+    description:
+      'Над милион души в целия регион използват balkan.works всеки ден.',
+  },
+  download: {
+    title: 'Изтеглете balkan.works днес',
+    subtitle:
+      'Достъпно безплатно за iOS и Android устройства. Сканирайте кода или изтеглете директно от магазина.',
+    scan: 'Сканирайте за изтегляне',
+  },
+  footer: {
+    tagline: 'Супер приложение за ежедневието и бизнеса в целите Балкани.',
+    productTitle: 'Продукт',
+    companyTitle: 'Компания',
+    legalTitle: 'Правно',
+    product: { services: 'Услуги', jobs: 'Работа', business: 'За компании', download: 'Изтегли приложението' },
+    company: { about: 'За нас', contact: 'Контакти', careers: 'Кариери', press: 'За медиите' },
+    legal: { terms: 'Условия за ползване', privacy: 'Политика за поверителност', cookies: 'Бисквитки' },
+    rights: 'Всички права запазени.',
+    madeIn: 'Създадено на Балканите, за целите Балкани.',
+  },
+  categoryItems: {
+    poslovi: { title: 'Работа', description: 'Обяви за работа и хонорарни ангажименти в целия регион.' },
+    majstori: { title: 'Майстори и услуги', description: 'Проверени майстори за ремонти, монтаж и поддръжка.' },
+    kupovina: { title: 'Пазаруване', description: 'Продукти от местни и регионални продавачи на едно място.' },
+    dostava: { title: 'Доставка на храна', description: 'Любими ресторанти и бърза доставка до вашата врата.' },
+    putovanja: { title: 'Пътувания', description: 'Полети, хотели и транспорт — резервирайте с няколко клика.' },
+    zdravlje: { title: 'Здраве', description: 'Записване на прегледи при лекари и клиники наблизо.' },
+    edukacija: { title: 'Образование', description: 'Курсове, уроци и обучения за нови знания и умения.' },
+    nekretnine: { title: 'Имоти', description: 'Апартаменти, къщи и офиси под наем и за продажба.' },
+    finansije: { title: 'Финанси', description: 'Дигитален портфейл, плащания и преводи без такси.' },
+    prevoz: { title: 'Транспорт', description: 'Пътувания, премествания и транспорт на стоки, когато ви трябва.' },
+    dogadjaji: { title: 'Събития', description: 'Билети за концерти, спорт и събития във вашия град.' },
+    ai: { title: 'AI асистент', description: 'Умен асистент, който намира решения вместо вас.' },
+  },
+  countries: {
+    RS: 'Сърбия',
+    BA: 'Босна и Херцеговина',
+    HR: 'Хърватия',
+    ME: 'Черна гора',
+    MK: 'Северна Македония',
+    SI: 'Словения',
+    AL: 'Албания',
+    XK: 'Косово',
+  },
+  pages: {
+    services: { title: 'Всички услуги на едно място', subtitle: 'Разгледайте пълния каталог с услуги, достъпни в приложението balkan.works.' },
+    jobs: { title: 'Намерете работата на мечтите си', subtitle: 'Хиляди обяви за работа и хонорарни ангажименти в целия регион, обновявани всеки ден.' },
+    business: { title: 'Развивайте бизнес с balkan.works', subtitle: 'Инструменти, плащания и клиенти — всичко, от което бизнесът ви се нуждае, на една платформа.' },
+    about: { title: 'Нашата история', subtitle: 'Изграждаме супер приложение, което свързва целите Балкани — хора, услуги и компании.' },
+    contact: { title: 'Свържете се с нас', subtitle: 'Тук сме за всички ваши въпроси. Отговаряме във възможно най-кратък срок.' },
+    download: { title: 'Изтеглете приложението', subtitle: 'Започнете за по-малко от минута — безплатно за iOS и Android устройства.' },
+  },
+  contact: {
+    nameLabel: 'Име и фамилия',
+    namePlaceholder: 'Георги Иванов',
+    emailLabel: 'Имейл адрес',
+    emailPlaceholder: 'georgi@primer.com',
+    subjectLabel: 'Тема',
+    subjects: ['Общ въпрос', 'Поддръжка', 'Сътрудничество', 'За медиите'],
+    messageLabel: 'Съобщение',
+    messagePlaceholder: 'Как можем да ви помогнем?',
+    submit: 'Изпрати съобщение',
+    submitting: 'Изпращане...',
+    successTitle: 'Съобщението е изпратено!',
+    successBody: 'Благодарим за съобщението. Ще се свържем с вас скоро.',
+    reset: 'Изпрати ново съобщение',
+  },
+})
+
+export const dictionaries: Record<Locale, Dictionary> = {
+  sr,
+  hr,
+  bs,
+  cnr,
+  mk,
+  sl,
+  bg,
+}

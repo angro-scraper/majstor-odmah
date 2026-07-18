@@ -1,10 +1,15 @@
+'use client'
+
 import Link from 'next/link'
 import { Sparkles, ArrowRight, Star, Briefcase, UtensilsCrossed } from 'lucide-react'
 import { PhoneFrame } from '@/components/phone-frame'
 import { StoreButtons } from '@/components/store-buttons'
 import { HomeScreen, WalletScreen } from '@/components/app-screens'
+import { useI18n } from '@/lib/i18n/context'
 
 export function Hero() {
+  const { t } = useI18n()
+
   return (
     <section className="relative overflow-hidden bg-gradient-to-b from-secondary/60 to-background">
       <div
@@ -24,17 +29,15 @@ export function Hero() {
         <div className="flex flex-col items-start gap-7">
           <span className="inline-flex items-center gap-2 rounded-full border border-primary/15 bg-card px-3.5 py-1.5 text-xs font-semibold text-primary shadow-soft">
             <Sparkles className="size-3.5" />
-            Super aplikacija za Balkan
+            {t.hero.badge}
           </span>
 
           <h1 className="text-balance text-[2.5rem] font-bold leading-[1.04] tracking-tight text-navy sm:text-5xl lg:text-[4rem]">
-            Sve usluge na jednom mestu
+            {t.hero.title}
           </h1>
 
           <p className="max-w-xl text-pretty text-lg leading-relaxed text-muted-foreground">
-            Jedna aplikacija za svakodnevni život i poslovanje širom Balkana.
-            Poslovi, majstori, dostava, putovanja, zdravlje i novčanik — sve na
-            dohvat ruke.
+            {t.hero.subtitle}
           </p>
 
           <div className="flex flex-wrap items-center gap-3">
@@ -42,14 +45,14 @@ export function Hero() {
               href="/preuzmi"
               className="inline-flex items-center gap-2 rounded-2xl bg-primary px-6 py-3.5 text-sm font-semibold text-primary-foreground shadow-float transition-transform hover:-translate-y-0.5"
             >
-              Preuzmi aplikaciju
+              {t.cta.download}
               <ArrowRight className="size-4" />
             </Link>
             <Link
               href="/usluge"
               className="inline-flex items-center gap-2 rounded-2xl border border-border bg-card px-6 py-3.5 text-sm font-semibold text-navy transition-colors hover:border-primary"
             >
-              Istraži usluge
+              {t.nav.services}
             </Link>
           </div>
 
