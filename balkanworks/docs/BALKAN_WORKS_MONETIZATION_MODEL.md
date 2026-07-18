@@ -18,10 +18,10 @@ Do not charge for basic presence or bury consumers in advertising. Charge busine
 
 ## Plans
 
-- **Free:** business profile, location and limited core offer capability.
-- **Starter:** additional offers and basic analytics.
-- **Growth:** campaigns, advanced reporting and customer/business tools.
-- **Pro / Enterprise:** Opsnestone, governed AI, integrations, service levels and negotiated controls.
+- **Free:** business profile, location, basic information and limited core offers; designed to make network entry easy.
+- **Basic / Starter:** additional offers, improved visibility and basic analytics for small businesses.
+- **Pro / Growth:** campaigns, promotions, advanced reporting, customer/business tools and eligible AI recommendations.
+- **Business Plus / Enterprise:** multiple locations, advanced reports, support, integrations, Opsnestone and governed AI/service-level controls.
 
 Plans must stay understandable, country-aware and easy to cancel. Sponsored results are visibly labeled and cannot masquerade as organic relevance.
 
@@ -32,6 +32,16 @@ Plans must stay understandable, country-aware and easy to cancel. Sponsored resu
 3. Save Food/Marketplace transaction fees only with compliant payment, fulfilment and support flows.
 4. Premium AI and enterprise integrations after demonstrated model quality and human control.
 
+## Customer acquisition model
+
+Business acquisition combines direct sales, local partners, referrals and city ambassadors. Consumer acquisition combines useful local content, partner businesses, referrals and focused city campaigns. Supply comes first: user growth campaigns follow only once businesses have active, credible offers.
+
+## Business phases
+
+1. **First revenue:** premium profiles and transparent promotions.
+2. **Stable revenue:** subscriptions and marketing tools with retained business value.
+3. **Platform revenue:** qualified transaction modules, Opsnestone SaaS, premium AI and strategic partnerships.
+
 ## Data and partner boundaries
 
 Personal data is never sold. Business insight products use aggregated, privacy-reviewed trends. Enterprise integration pricing never grants a customer access to other tenants' data or platform-wide personal behavior.
@@ -39,6 +49,8 @@ Personal data is never sold. Business insight products use aggregated, privacy-r
 ## Unit economics and guardrails
 
 Track customer acquisition cost, business/customer lifetime value, ARPU, contribution margin, churn, conversion and retained usage. Avoid dark patterns, forced subscriptions, hidden fees, excessive notifications and paywalls around core safety or account controls.
+
+Report MRR, ARR, ARPU, paid/active business ratio, business churn, consumer retention, CAC and LTV assumptions separately. `LTV > CAC` is a long-term validation target, not an assumed result. All formulas and forecasts must state their cohort, period and data source.
 
 ## Decision rule
 
