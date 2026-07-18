@@ -143,6 +143,14 @@ The React Native product and release specification is in [BALKAN_WORKS_MOBILE_AP
 
 The control, moderation and administrative RBAC requirements are in [BALKAN_WORKS_ADMIN_PANEL_SPEC.md](docs/BALKAN_WORKS_ADMIN_PANEL_SPEC.md).
 
+## Brand guidelines
+
+The voice, positioning and visual communication rules are in [BALKAN_WORKS_BRAND_GUIDELINES.md](docs/BALKAN_WORKS_BRAND_GUIDELINES.md).
+
+## Legal framework
+
+The product/legal readiness checklist is in [BALKAN_WORKS_LEGAL_FRAMEWORK.md](docs/BALKAN_WORKS_LEGAL_FRAMEWORK.md); qualified legal review is required before launch.
+
 ## Team roles
 
 Role-level responsibilities and hiring sequence are in [BALKAN_WORKS_TEAM_ROLES.md](docs/BALKAN_WORKS_TEAM_ROLES.md).
