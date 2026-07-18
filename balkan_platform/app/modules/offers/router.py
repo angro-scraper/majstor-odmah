@@ -1,4 +1,4 @@
-from datetime import UTC, datetime
+from datetime import datetime
 
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy import select
@@ -35,7 +35,10 @@ def list_offers(
     source: OfferSource | None = None,
     db: Session = Depends(get_db),
 ) -> list[Offer]:
-    now = datetime.now(UTC)
+    # Existing PostgreSQL deployment stores offer periods as UTC timestamps
+    # without an offset.  A naive UTC value keeps the comparison portable
+    # across PostgreSQL and the local SQLite development database.
+    now = datetime.utcnow()
     statement = select(Offer).where(Offer.is_active.is_(True), Offer.valid_from <= now, Offer.valid_until >= now)
     if country_code:
         statement = statement.where(Offer.country_code == country_code.upper())

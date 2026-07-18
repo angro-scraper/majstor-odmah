@@ -1,4 +1,4 @@
-from datetime import UTC, datetime
+from datetime import datetime
 
 from fastapi import APIRouter, Query
 from sqlalchemy import or_, select
@@ -36,7 +36,7 @@ def search(
 
     business_statement = select(Business).where(Business.is_active.is_(True))
     listing_statement = select(Listing).where(Listing.is_active.is_(True))
-    offer_statement = select(Offer).where(Offer.is_active.is_(True), Offer.valid_from <= datetime.now(UTC), Offer.valid_until >= datetime.now(UTC))
+    offer_statement = select(Offer).where(Offer.is_active.is_(True), Offer.valid_from <= datetime.utcnow(), Offer.valid_until >= datetime.utcnow())
     food_statement = select(FoodPackage, Business).join(Business, FoodPackage.business_id == Business.id).where(FoodPackage.quantity_available > 0, Business.is_active.is_(True))
     if term:
         business_statement = business_statement.where(or_(Business.name.ilike(text_filter), Business.description.ilike(text_filter)))
