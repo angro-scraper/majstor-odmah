@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: balkan-works-portal
+    runtime: python
+    plan: free
+    rootDir: balkan_portal
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.13.5
+      - key: CORE_API_URL
+        value: https://balkan-works-core.onrender.com

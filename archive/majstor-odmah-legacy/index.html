@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="sr-Latn">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Majstor odmah — pronađi pouzdanog majstora</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="dashboard.css" />
+    <link rel="stylesheet" href="workflow.css" />
+    <link rel="stylesheet" href="pro-panel.css" />
+    <link rel="stylesheet" href="customer-panel.css" />
+    <link rel="stylesheet" href="rankings.css" />
+    <link rel="stylesheet" href="finder-menu.css" />
+    <link rel="stylesheet" href="materials.css" />
+    <link rel="stylesheet" href="polish.css" />
+    <link rel="stylesheet" href="auth.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <a class="brand" href="#"><span class="brand-mark">M</span> majstor<span>odmah</span></a>
+      <nav>
+        <a href="#kako-radi">Kako radi</a>
+        <a href="balkan.html">balkan.works</a>
+        <a href="partneri.html">Partneri i materijali</a>
+        <button class="text-button" id="supportButton">Podrška</button>
+        <button class="text-button notification-button" id="notificationsButton">Obaveštenja <span class="notification-count hidden" id="notificationCount">0</span></button>
+        <button class="text-button" id="loginButton">Moj nalog</button>
+        <button class="button small" id="registerButton">Postani majstor</button>
+      </nav>
+    </header>
+    <button class="finder-menu-button" id="finderToggle" aria-expanded="false" aria-controls="finderDrawer"><span>⌕</span> Pronađi majstora</button>
+    <aside class="finder-drawer hidden" id="finderDrawer" aria-label="Kategorije majstora">
+      <div class="finder-drawer-head"><div><b>Pronađi majstora</b><small>45+ zanata i provereni profili.</small></div><button class="finder-close" id="closeFinder" aria-label="Zatvori kategorije">×</button></div>
+      <label class="finder-search"><span>⌕</span><input id="finderSearch" type="search" autocomplete="off" placeholder="Pretraži zanat ili majstora" /></label>
+      <div class="finder-provider-results" id="finderProviderResults"></div>
+      <div class="finder-category-list category-grid" id="categoryGrid"></div>
+    </aside>
+
+    <main>
+      <section class="hero">
+        <div class="hero-copy">
+          <p class="eyebrow"><span></span> Provereni majstori u tvojoj blizini</p>
+          <h1>Posao u kući?<br /><em>Majstor je bliže</em> nego što misliš.</h1>
+          <p class="hero-text">Pošalji zahtev za manje od minuta i dobićeš ponude slobodnih, ocenjenih majstora iz svog kraja.</p>
+          <div class="hero-actions">
+            <button class="button" id="openJobModal">Objavi posao <span>→</span></button>
+            <a class="watch-link" href="#kako-radi"><span class="play">▶</span> Kako funkcioniše?</a>
+          </div>
+          <div class="mini-stats">
+            <div><strong>1.280+</strong><span>verifikovanih majstora</span></div>
+            <div><strong>4,9/5</strong><span>prosečna ocena</span></div>
+            <div><strong>&lt; 18 min</strong><span>do prve ponude</span></div>
+          </div>
+        </div>
+        <div class="hero-visual" aria-label="Prikaz aplikacije">
+          <div class="orange-blob"></div>
+          <div class="hero-card profile-card">
+            <div class="avatar big avatar-milan">M</div>
+            <div><small>Dostupan danas</small><strong>Milan Jovanović</strong><span class="rating">★ 4,9 <i>(86 ocena)</i></span></div>
+            <span class="verified">✓</span>
+          </div>
+          <div class="hero-card request-card">
+            <div class="request-icon">⚡</div>
+            <div><small>Novi zahtev u blizini</small><strong>Električar · Detelinara</strong><p>Hitna intervencija</p></div>
+            <button class="round-arrow">→</button>
+          </div>
+          <div class="photo-placeholder">
+            <div class="wall-lines"></div><div class="worker"><span></span><i></i></div>
+          </div>
+          <div class="availability-pill"><b></b> 12 majstora dostupno sada</div>
+        </div>
+      </section>
+
+      <section class="process" id="kako-radi">
+        <div class="process-intro"><p class="eyebrow light"><span></span> Jednostavno i bezbedno</p><h2>Od problema do rešenja<br />u tri koraka.</h2><p>Bez pozivanja deset brojeva, nejasnih cena i čekanja bez odgovora.</p><button class="button inverse" id="openJobModal2">Pošalji svoj zahtev <span>→</span></button></div>
+        <ol class="steps">
+          <li><span>01</span><div><h3>Opiši šta ti treba</h3><p>Dodaj fotografiju, lokaciju i termin koji ti odgovara.</p></div></li>
+          <li><span>02</span><div><h3>Izaberi ponudu</h3><p>Uporedi ocenjene majstore, cene i vreme dolaska.</p></div></li>
+          <li><span>03</span><div><h3>Mirno završi posao</h3><p>Prati radove, plati bezbedno i ostavi ocenu.</p></div></li>
+        </ol>
+      </section>
+
+      <section class="material-spotlight" aria-labelledby="materialTitle">
+        <div class="material-copy">
+          <p class="eyebrow"><span></span> Materijal i oprema</p>
+          <h2 id="materialTitle">Sve za radove, na jednom mestu.</h2>
+          <p>Ovde će biti pažljivo označene ponude prodavnica materijala, alata, dostave i opreme za dom.</p>
+          <a class="button" href="partneri.html">Pogledaj partnere <span>→</span></a>
+        </div>
+        <div class="material-cards" aria-label="Kategorije partnerskih ponuda">
+          <article data-partner-search="građevinski materijal cement pločice boje izolacija"><span>▦</span><b>Građevinski materijal</b><small>Cement, pločice, boje i izolacija</small></article>
+          <article data-partner-search="alat mašine električni ručni profesionalni"><span>⚒</span><b>Alat i oprema</b><small>Za kućne radove i profesionalce</small></article>
+          <article data-partner-search="dostava materijala isporuka transport"><span>▣</span><b>Dostava do vrata</b><small>Dogovor sa partnerima iz kraja</small></article>
+        </div>
+      </section>
+
+      <section class="pros-section">
+        <div class="section-heading"><div><p class="eyebrow"><span></span> Preporučeni u Novom Sadu</p><h2>Majstori kojima komšije veruju.</h2></div><button class="text-button see-all" id="showPros">Vidi sve majstore →</button></div>
+        <div class="pros-grid" id="prosGrid"></div>
+      </section>
+
+      <section class="rankings-section" id="rang-lista">
+        <div class="section-heading"><div><p class="eyebrow"><span></span> Rang lista majstora</p><h2>Najbolji, jasno poređani.</h2></div><p class="ranking-method">Rang: ocene, završeni radovi i brzina odgovora.</p></div>
+        <div class="ranking-layout">
+          <article class="ranking-card category-ranking"><div class="ranking-card-head"><div><h3>Po kategoriji</h3><p>Uporedi majstore istog zanata.</p></div><span class="ranking-label">TOP 3</span></div><div class="ranking-tabs" id="rankingTabs"></div><ol class="ranking-list" id="categoryRankingList"></ol></article>
+          <article class="ranking-card overall-ranking"><div class="ranking-card-head"><div><h3>Ukupna rang lista</h3><p>Najbolji majstori preko svih profesija.</p></div><span class="ranking-label gold">SVE PROFESIJE</span></div><ol class="ranking-list" id="overallRankingList"></ol></article>
+        </div>
+      </section>
+
+      <section class="trust-strip">
+        <div><strong>✓</strong><span><b>Provereni identiteti</b>Svaki majstor prolazi proveru</span></div>
+        <div><strong>★</strong><span><b>Stvarne ocene</b>Samo nakon završenog posla</span></div>
+        <div><strong>⌁</strong><span><b>Brz odgovor</b>Slobodni majstori odmah dobijaju zahtev</span></div>
+      </section>
+    </main>
+
+    <footer><a class="brand" href="#"><span class="brand-mark">M</span> majstor<span>odmah</span></a><p>Pronađi dobrog majstora. Sačuvaj vreme i živce.</p><span>Demo MVP · Novi Sad</span></footer>
+
+    <div class="modal-backdrop hidden" id="modalBackdrop">
+      <section class="modal" aria-modal="true" role="dialog" aria-labelledby="modalTitle">
+        <button class="close" id="closeModal" aria-label="Zatvori">×</button>
+        <p class="eyebrow"><span></span> Brz zahtev</p>
+        <h2 id="modalTitle">Nađimo ti majstora.</h2>
+        <p class="modal-lead">Opiši posao, a dostupni majstori iz okoline će dobiti obaveštenje.</p>
+        <form id="jobForm">
+          <label>Vrsta posla<select required id="jobCategory"><option value="">Izaberi kategoriju</option></select></label>
+          <label>Gde ti je potreban majstor?<input required id="jobLocation" placeholder="npr. Detelinara, Novi Sad" /></label>
+          <label>Opiši problem<textarea required id="jobDescription" rows="3" placeholder="npr. Curi voda ispod sudopere, potreban dolazak danas."></textarea></label>
+          <label class="image-upload">Dodaj do 3 fotografije problema<input id="jobImages" type="file" accept="image/*" multiple /><small>JPG, PNG ili HEIC; po mogućnosti manje od 400 KB po slici.</small></label>
+          <div class="form-row"><label>Poželjni termin<select id="jobDate"><option>Danas</option><option>Sutra</option><option>Ove nedelje</option></select></label><label>Budžet (opciono)<input id="jobBudget" inputmode="numeric" placeholder="npr. 8.000 RSD" /></label></div>
+          <button class="button full" type="submit">Pošalji zahtev <span>→</span></button>
+        </form>
+      </section>
+    </div>
+    <div class="toast hidden" id="toast"><span>✓</span><div><b>Zahtev je poslat!</b><p>Obavestili smo 8 dostupnih majstora u blizini.</p></div></div>
+    <div class="modal-backdrop hidden" id="supportBackdrop">
+      <section class="modal support-modal" aria-modal="true" role="dialog" aria-labelledby="supportTitle">
+        <button class="close" id="closeSupport" aria-label="Zatvori">×</button>
+        <p class="eyebrow"><span></span> Podrška</p><h2 id="supportTitle">Kako možemo da pomognemo?</h2>
+        <p class="modal-lead">Prijavi problem, postavi pitanje ili pošalji predlog. Tim podrške dobija tvoj zahtev odmah.</p>
+        <form id="supportForm"><label>Tema<input required id="supportSubject" maxlength="120" placeholder="npr. Problem sa dogovorenim terminom" /></label><label>Poruka<textarea required id="supportMessage" rows="4" maxlength="1500" placeholder="Opiši šta se dogodilo."></textarea></label><button class="button full" type="submit">Pošalji podršci <span>→</span></button></form>
+      </section>
+    </div>
+    <div class="modal-backdrop hidden" id="accountBackdrop">
+      <section class="account-modal" aria-modal="true" role="dialog" aria-labelledby="accountTitle">
+        <button class="close" id="closeAccount" aria-label="Zatvori">×</button>
+        <div class="account-welcome" id="accountWelcome">
+          <p class="eyebrow"><span></span> Demo pristup bez lozinke</p>
+          <h2 id="accountTitle">Izaberi nalog koji želiš da probaš.</h2>
+          <p>Možeš se prebacivati između kupca Ane i majstora Milana u svakom trenutku.</p>
+          <div class="role-grid">
+            <button class="role-card" data-role="customer"><span>⌂</span><b>Ana Petrović · demo klijent</b><small>Objavi posao, uporedi ponude, izaberi Milana i prati radove.</small></button>
+            <button class="role-card" data-role="pro"><span>🛠</span><b>Milan Jovanović · demo majstor</b><small>Pošalji ponudu, dopisuj se sa Anom i vodi posao do ocene.</small></button>
+          </div>
+          <p class="demo-account-note">Oba naloga su demonstraciona. Ne traže registraciju niti lozinku.</p>
+          <button class="secondary-button real-account-button" id="realAccountButton">Registracija ili prijava</button>
+        </div>
+        <div class="auth-view hidden" id="authView">
+          <button class="back-auth" id="backToDemo">← Nazad na demo naloge</button>
+          <p class="eyebrow"><span></span> Stvarni nalog</p><h2 id="authTitle">Prijavi se</h2><p class="modal-lead" id="authLead">Pristupi svojim poslovima i obaveštenjima.</p>
+          <form id="authLoginForm" class="auth-form"><label>E-mail<input required id="authLoginEmail" type="email" autocomplete="email" /></label><label>Lozinka<input required id="authLoginPassword" type="password" minlength="8" autocomplete="current-password" /></label><button class="button full" type="submit">Prijavi se →</button><button class="text-button auth-switch" type="button" data-auth-mode="signup">Nemaš nalog? Registruj se</button></form>
+          <form id="authSignupForm" class="auth-form hidden"><label>Ime i prezime<input required id="authName" minlength="2" autocomplete="name" /></label><label>Grad<input required id="authCity" minlength="2" placeholder="npr. Novi Sad" /></label><label>E-mail<input required id="authSignupEmail" type="email" autocomplete="email" /></label><label>Lozinka<input required id="authSignupPassword" type="password" minlength="8" autocomplete="new-password" placeholder="najmanje 8 znakova" /></label><label>Tip naloga<select id="authRole"><option value="customer">Klijent</option><option value="provider">Majstor</option></select></label><label class="auth-trade hidden" id="authTradeWrap">Zanat<input id="authTrade" placeholder="npr. Električar" /></label><button class="button full" type="submit">Napravi nalog →</button><button class="text-button auth-switch" type="button" data-auth-mode="login">Već imaš nalog? Prijavi se</button></form>
+          <p class="auth-error hidden" id="authError"></p>
+        </div>
+        <div class="dashboard hidden" id="dashboard"></div>
+      </section>
+    </div>
+    <div class="notifications-panel hidden" id="notificationsPanel" aria-live="polite"><div><b>Obaveštenja</b><button id="closeNotifications" aria-label="Zatvori obaveštenja">×</button></div><section id="notificationsList"></section></div>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+    <script src="gps-map.js"></script>
+    <script src="app.js"></script>
+    <script src="workflow.js"></script>
+    <script src="account-auth.js"></script>
+  </body>
+</html>

@@ -1,0 +1,18 @@
+import { ButtonHTMLAttributes, HTMLAttributes, InputHTMLAttributes, ReactNode } from "react";
+import { Icon, IconName } from "./icons";
+
+export function Button({ className = "", children, variant = "primary", size = "medium", icon, ...props }: ButtonHTMLAttributes<HTMLButtonElement> & { variant?: "primary" | "secondary" | "ghost"; size?: "small" | "medium" | "large"; icon?: IconName }) {
+  return <button className={`button ${variant === "primary" ? "" : variant} size-${size} ${className}`} {...props}>{icon && <Icon name={icon} size={17} />}{children}</button>;
+}
+export function Input({ className = "", ...props }: InputHTMLAttributes<HTMLInputElement>) { return <input className={`input ${className}`} {...props} />; }
+export function SearchField({ placeholder = "Pretraži usluge, firme i ponude...", action = true }: { placeholder?: string; action?: boolean }) { return <label className="search-field"><Icon name="search" size={19}/><Input placeholder={placeholder} aria-label={placeholder}/>{action && <button type="button" aria-label="Otvori filtere"><Icon name="sliders" size={17}/></button>}</label>; }
+export function Badge({ children, tone = "neutral", icon }: { children: ReactNode; tone?: "neutral" | "success" | "accent" | "premium" | "new" | "ai"; icon?: IconName }) { return <span className={`badge ${tone}`}>{icon && <Icon name={icon} size={12}/>} {children}</span>; }
+export function Card({ className = "", children, ...props }: HTMLAttributes<HTMLElement>) { return <article className={`ui-card ${className}`} {...props}>{children}</article>; }
+export function Avatar({ initials, label, imageTone = "blue" }: { initials: string; label: string; imageTone?: string }) { return <span className={`avatar avatar-${imageTone}`} aria-label={label} title={label}>{initials}</span>; }
+export function IconButton({ icon, label, className = "", ...props }: ButtonHTMLAttributes<HTMLButtonElement> & { icon: IconName; label: string }) { return <button className={`icon-button ${className}`} aria-label={label} title={label} {...props}><Icon name={icon} size={19}/></button>; }
+export function Modal({ open, title, children }: { open: boolean; title: string; children: ReactNode }) { return open ? <div className="modal-backdrop" role="dialog" aria-modal="true" aria-label={title}><section className="modal"><h2>{title}</h2>{children}</section></div> : null; }
+export function Tabs({ items, active }: { items: string[]; active: string }) { return <div className="tabs" role="tablist">{items.map((item) => <button className={item === active ? "active" : ""} role="tab" aria-selected={item === active} key={item}>{item}</button>)}</div>; }
+export function Skeleton({ height = 18, width = "100%" }: { height?: number; width?: string }) { return <span className="skeleton" style={{ height, width }} aria-label="Učitavanje" />; }
+export function EmptyState({ title, description, action }: { title: string; description: string; action?: ReactNode }) { return <section className="empty-state"><Icon name="sparkle" size={26}/><strong>{title}</strong><span>{description}</span>{action}</section>; }
+export function ErrorState({ message, action }: { message: string; action?: ReactNode }) { return <section className="error-state" role="alert"><strong>Nešto nije u redu</strong><span>{message}</span>{action}</section>; }
+export function StatCard({ icon, label, value, detail }: { icon: IconName; label: string; value: string; detail?: string }) { return <article className="stat-card"><span className="stat-icon"><Icon name={icon} size={19}/></span><p>{label}</p><strong>{value}</strong>{detail && <small>{detail}</small>}</article>; }

@@ -1,0 +1,50 @@
+name: balkan-works
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: balkan_works
+      POSTGRES_USER: balkan
+      POSTGRES_PASSWORD: balkan
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U balkan -d balkan_works"]
+      interval: 5s
+      timeout: 5s
+      retries: 12
+    volumes:
+      - balkan_postgres:/var/lib/postgresql/data
+
+  redis:
+    image: redis:7-alpine
+
+  core:
+    build: ./balkan_platform
+    command: sh -c "alembic upgrade head && uvicorn app.main:app --host 0.0.0.0 --port 8080"
+    environment:
+      APP_ENV: development
+      DATABASE_URL: postgresql+psycopg://balkan:balkan@postgres:5432/balkan_works
+      REDIS_URL: redis://redis:6379/0
+      JWT_SECRET: local-development-only-change-before-production
+      CORS_ORIGINS: http://localhost:8090,http://localhost:3000
+      AUTO_CREATE_SCHEMA: "false"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    ports:
+      - "8080:8080"
+
+  portal:
+    build: ./balkan_portal
+    environment:
+      CORE_API_URL: http://core:8080
+    depends_on:
+      core:
+        condition: service_started
+    ports:
+      - "8090:8090"
+
+volumes:
+  balkan_postgres:

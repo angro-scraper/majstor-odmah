@@ -1,0 +1,44 @@
+services:
+  - type: web
+    name: balkanworks-web
+    runtime: node
+    plan: starter
+    buildCommand: pnpm install --frozen-lockfile --prod=false && pnpm --filter @balkanworks/web build
+    startCommand: pnpm --filter @balkanworks/web exec next start --hostname 0.0.0.0 --port $PORT
+    healthCheckPath: /
+    autoDeploy: true
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: NEXT_PUBLIC_API_URL
+        sync: false
+
+  - type: web
+    name: balkanworks-api
+    runtime: node
+    plan: starter
+    buildCommand: pnpm install --frozen-lockfile --prod=false && pnpm --filter @balkanworks/database prisma:generate && pnpm --filter @balkanworks/database build && pnpm --filter @balkanworks/api build
+    # Free-tier services do not support Render pre-deploy commands.  Run the
+    # idempotent Prisma migration immediately before the API starts instead.
+    startCommand: pnpm --filter @balkanworks/database prisma:deploy && pnpm --filter @balkanworks/api start
+    healthCheckPath: /api/v1/health
+    autoDeploy: true
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_URL
+        fromDatabase:
+          name: balkanworks-db
+          property: connectionString
+      - key: JWT_ACCESS_SECRET
+        generateValue: true
+      - key: JWT_REFRESH_SECRET
+        generateValue: true
+
+databases:
+  - name: balkanworks-db
+    # The workspace already has an active free database.  Use Render's
+    # smallest paid PostgreSQL tier without disturbing that existing database.
+    plan: basic-256mb
+    databaseName: balkanworks
+    user: balkanworks

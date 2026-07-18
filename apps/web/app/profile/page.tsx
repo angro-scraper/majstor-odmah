@@ -1,0 +1,10 @@
+import { AppShell } from "../../src/components/app-shell";
+import { Avatar, IconButton, StatCard } from "../../src/components/ui";
+import { Icon, IconName } from "../../src/components/icons";
+
+const account: [IconName, string, string][] = [["user", "Lični podaci", "Ime, telefon i email"], ["shield", "Bezbednost", "Lozinka i prijava"], ["settings", "Podešavanja", "Jezik, region i tema"], ["pin", "Moje adrese", "Sačuvane lokacije"], ["card", "Moje kartice", "Načini plaćanja"]];
+const support: [IconName, string, string][] = [["message", "Pomoć i podrška", "Tu smo za tebe"], ["shield", "Uslovi korišćenja", "Privatnost i podaci"], ["receipt", "O aplikaciji", "Balkan.works v1.0"]];
+
+export default function ProfilePage() { return <AppShell active="profile"><section className="profile-page"><div className="profile-summary"><Avatar initials="MP" label="Marko Petrović" imageTone="blue"/><div><p>MOJ PROFIL</p><h1>Marko Petrović</h1><span>+381 60 123 4567 · marko.petrovic@gmail.com</span></div><IconButton icon="settings" label="Podešavanja profila"/></div><div className="profile-stats"><StatCard icon="star" label="Recenzije" value="4"/><StatCard icon="heart" label="Sačuvano" value="12"/><StatCard icon="clock" label="Aktivnosti" value="18"/></div><a className="profile-rewards-link" href="/rewards"><span><Icon name="sparkle" size={20}/></span><div><b>Balkan Rewards · Explorer</b><small>365 poena · pozovi prijatelja i osvoji više</small></div><Icon name="chevron" size={18}/></a><ProfileSection title="Moj nalog" items={account}/><ProfileSection title="Podrška" items={support}/><button className="logout-button"><Icon name="send" size={17}/> Odjavi se</button></section></AppShell>; }
+
+function ProfileSection({ title, items }: { title: string; items: [IconName, string, string][] }) { return <section className="profile-section"><h2>{title}</h2><div className="settings-list">{items.map(([icon,itemTitle,detail]) => <a href="#" key={itemTitle}><span className="settings-icon"><Icon name={icon} size={18}/></span><span><strong>{itemTitle}</strong><small>{detail}</small></span><Icon name="chevron" size={17}/></a>)}</div></section>; }

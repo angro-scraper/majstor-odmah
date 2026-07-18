@@ -1,0 +1,12 @@
+{
+  "name": "majstor-odmah",
+  "version": "1.0.0",
+  "private": true,
+  "description": "MVP platforma za pronalazak pouzdanih majstora.",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

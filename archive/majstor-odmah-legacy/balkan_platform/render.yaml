@@ -1,0 +1,20 @@
+services:
+  - type: web
+    name: balkan-works-core
+    runtime: docker
+    rootDir: balkan_platform
+    healthCheckPath: /health
+    autoDeploy: true
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: AUTO_CREATE_SCHEMA
+        value: "false"
+      - key: DATABASE_URL
+        sync: false
+      - key: REDIS_URL
+        sync: false
+      - key: JWT_SECRET
+        generateValue: true
+      - key: CORS_ORIGINS
+        value: https://balkan.works,https://www.balkan.works

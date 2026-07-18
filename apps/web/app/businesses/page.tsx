@@ -1,0 +1,87 @@
+import { AppShell } from "../../src/components/app-shell";
+import { Badge, Button } from "../../src/components/ui";
+import { ReviewCard, ServiceCard } from "../../src/components/business-details";
+import { businesses } from "../../src/lib/demo-data";
+
+const business = businesses[0];
+export default function BusinessProfilePage() {
+  return (
+    <AppShell active="Discover">
+      <section className="profile-cover">
+        <div className="cover-pattern" />
+        <div className="profile-identity">
+          <div className="profile-logo">{business.initials}</div>
+          <div>
+            <Badge tone="success">✓ Verifikovano</Badge>
+            <h1>{business.name}</h1>
+            <p>
+              ★ {business.rating} · {business.reviews} recenzije ·{" "}
+              {business.category}
+            </p>
+          </div>
+        </div>
+        <div className="profile-actions">
+          <a href={`tel:${business.phone}`}>
+            <Button>Pozovi</Button>
+          </a>
+          <Button variant="secondary">Poruka</Button>
+          <Button variant="secondary">Navigacija</Button>
+          <Button variant="secondary">Rezervacija</Button>
+        </div>
+      </section>
+      <section className="profile-content">
+        <article className="trust-section">
+          <p className="label">POVERENJE ZAJEDNICE</p>
+          <div className="trust-grid">
+            <div>
+              <strong>340+</strong>
+              <span>korisnika</span>
+            </div>
+            <div>
+              <strong>12 god.</strong>
+              <span>iskustva</span>
+            </div>
+            <div>
+              <strong>96/100</strong>
+              <span>quality score</span>
+            </div>
+          </div>
+        </article>
+        <article>
+          <p className="label">O FIRMI</p>
+          <h2>Pouzdan servis bez komplikacija.</h2>
+          <p>{business.description} Radimo radnim danima od 08:00 do 18:00.</p>
+        </article>
+        <article>
+          <p className="label">USLUGE</p>
+          <div className="service-grid">
+            {["Redovni servis", "Dijagnostika", "Brze popravke"].map(
+              (service) => (
+                <ServiceCard
+                  title={service}
+                  description="Jasan dogovor i lokalna podrška."
+                  key={service}
+                />
+              ),
+            )}
+          </div>
+        </article>
+        <article className="ai-summary">
+          <span>✦ AI sažetak</span>
+          <p>
+            Na osnovu {business.reviews} recenzija korisnici najviše hvale
+            brzinu, kvalitet i jasnu komunikaciju.
+          </p>
+        </article>
+        <article>
+          <p className="label">RECENZIJE</p>
+          <ReviewCard
+            rating={5}
+            quote="Brzo su pronašli problem i objasnili šta treba uraditi."
+            author="Marko P. · pre 2 dana"
+          />
+        </article>
+      </section>
+    </AppShell>
+  );
+}
