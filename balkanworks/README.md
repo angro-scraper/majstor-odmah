@@ -58,3 +58,7 @@ The implementation order and non-negotiable coding rules are in [BALKAN_WORKS_CO
 ## Security and privacy
 
 Platform security, tenant isolation and privacy controls are governed by [BALKAN_WORKS_SECURITY_AND_PRIVACY.md](docs/BALKAN_WORKS_SECURITY_AND_PRIVACY.md).
+
+## Monetization
+
+The phased revenue model and consumer/business guardrails are in [BALKAN_WORKS_MONETIZATION_MODEL.md](docs/BALKAN_WORKS_MONETIZATION_MODEL.md).
