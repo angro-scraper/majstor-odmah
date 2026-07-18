@@ -23,10 +23,61 @@ export function LogoMark({ className }: { className?: string }) {
       {/* Subtle top highlight */}
       <rect x="2" y="2" width="36" height="18" rx="10" fill="#ffffff" fillOpacity="0.08" />
       
-      {/* Letter b */}
-      <text x="20" y="25" fontSize="30" fontWeight="800" fontFamily="system-ui, -apple-system, sans-serif" fill="#ffffff" textAnchor="middle" dominantBaseline="middle">
-        b
-      </text>
+      {/* Chain links - connecting dots */}
+      {/* First link circle */}
+      <circle cx="10" cy="20" r="3.5" fill="none" stroke="#ffffff" strokeWidth="1.8" opacity="0.9" />
+      
+      {/* Chain link connector - top left to center */}
+      <path
+        d="M 13 18 Q 15 16 17 16"
+        stroke="#ffffff"
+        strokeWidth="1.6"
+        fill="none"
+        strokeLinecap="round"
+        opacity="0.85"
+      />
+      
+      {/* Middle link circle */}
+      <circle cx="20" cy="16" r="3.5" fill="none" stroke="#ffffff" strokeWidth="1.8" opacity="0.9" />
+      
+      {/* Chain link connector - center to right */}
+      <path
+        d="M 23 18 Q 25 20 27 20"
+        stroke="#ffffff"
+        strokeWidth="1.6"
+        fill="none"
+        strokeLinecap="round"
+        opacity="0.85"
+      />
+      
+      {/* Third link circle */}
+      <circle cx="30" cy="20" r="3.5" fill="none" stroke="#ffffff" strokeWidth="1.8" opacity="0.9" />
+      
+      {/* Chain link connector - right to bottom */}
+      <path
+        d="M 28 23 Q 26 26 23 27"
+        stroke="#ffffff"
+        strokeWidth="1.6"
+        fill="none"
+        strokeLinecap="round"
+        opacity="0.85"
+      />
+      
+      {/* Bottom link circle */}
+      <circle cx="20" cy="30" r="3.5" fill="none" stroke="#ffffff" strokeWidth="1.8" opacity="0.9" />
+      
+      {/* Chain link connector - bottom to left */}
+      <path
+        d="M 17 27 Q 12 26 10 23"
+        stroke="#ffffff"
+        strokeWidth="1.6"
+        fill="none"
+        strokeLinecap="round"
+        opacity="0.85"
+      />
+      
+      {/* Center accent dot - "b" indicator */}
+      <circle cx="20" cy="20" r="2" fill="#10b981" opacity="0.95" />
     </svg>
   )
 }
