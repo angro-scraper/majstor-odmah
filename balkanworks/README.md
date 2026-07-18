@@ -279,6 +279,10 @@ The documentation taxonomy, workflow, project-management system and release chec
 
 The prioritized P0–P3 feature register and honest implementation status model are in [BALKAN_WORKS_FEATURE_BACKLOG.md](docs/BALKAN_WORKS_FEATURE_BACKLOG.md).
 
+## MVP specification
+
+The canonical V1 scope, flows, data/API direction, launch gate and non-goals are in [BALKAN_WORKS_MVP_SPECIFICATION.md](docs/BALKAN_WORKS_MVP_SPECIFICATION.md).
+
 ## Team roles
 
 Role-level responsibilities and hiring sequence are in [BALKAN_WORKS_TEAM_ROLES.md](docs/BALKAN_WORKS_TEAM_ROLES.md).
