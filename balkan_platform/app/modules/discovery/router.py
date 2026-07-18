@@ -2,7 +2,6 @@ from datetime import datetime
 
 from fastapi import APIRouter, Query
 from sqlalchemy import or_, select
-from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Session
 from fastapi import Depends
 
@@ -62,7 +61,7 @@ def search(
                         "url": "/market"})
     try:
         offers = list(db.scalars(offer_statement.order_by(Offer.valid_until, Offer.created_at.desc()).limit(limit)))
-    except SQLAlchemyError:
+    except Exception:
         db.rollback()
         offers = []
     for item in offers:
