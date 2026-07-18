@@ -203,6 +203,10 @@ The controlled due-diligence structure, evidence pack and sharing protocol are i
 
 The outcome-led MVP, pilot, validation and scale-readiness plan is in [BALKAN_WORKS_FIRST_180_DAYS_PLAN.md](docs/BALKAN_WORKS_FIRST_180_DAYS_PLAN.md).
 
+## Monetization and pricing
+
+The phased package, pricing, revenue and commercial-safeguard strategy is in [BALKAN_WORKS_MONETIZATION_PRICING.md](docs/BALKAN_WORKS_MONETIZATION_PRICING.md).
+
 ## Team roles
 
 Role-level responsibilities and hiring sequence are in [BALKAN_WORKS_TEAM_ROLES.md](docs/BALKAN_WORKS_TEAM_ROLES.md).
