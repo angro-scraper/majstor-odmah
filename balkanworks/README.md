@@ -30,3 +30,7 @@ The phased operating and hiring model is in [BALKAN_WORKS_TEAM_STRUCTURE.md](doc
 ## Technology standard
 
 The stack, security baseline and scaling decisions are in [BALKAN_WORKS_TECH_STACK.md](docs/BALKAN_WORKS_TECH_STACK.md).
+
+## Product module map
+
+The Core-to-module model and feature-flag lifecycle are in [BALKAN_WORKS_PRODUCT_MODULE_MAP.md](docs/BALKAN_WORKS_PRODUCT_MODULE_MAP.md).
