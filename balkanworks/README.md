@@ -90,3 +90,7 @@ The MVP data model and migration rules are in [BALKAN_WORKS_MVP_DATABASE_SCHEMA.
 ## Master prompt
 
 The preserved architect/developer directive is in [BALKAN_WORKS_CODEX_MASTER_PROMPT.md](docs/BALKAN_WORKS_CODEX_MASTER_PROMPT.md).
+
+## Analytics
+
+Event taxonomy, dashboards and experimentation rules are in [BALKAN_WORKS_ANALYTICS_DATA_STRATEGY.md](docs/BALKAN_WORKS_ANALYTICS_DATA_STRATEGY.md).
