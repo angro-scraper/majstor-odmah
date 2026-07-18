@@ -210,6 +210,8 @@ The implemented Super App route map and reusable component inventory are in [BAL
 
 The CI/CD and operational reliability model is in [BALKAN_WORKS_DEVOPS_INFRASTRUCTURE.md](docs/BALKAN_WORKS_DEVOPS_INFRASTRUCTURE.md).
 
+Local Docker development uses `infrastructure/docker/docker-compose.yml`. It starts PostgreSQL, Redis, MinIO, the NestJS API and the Next.js web app. The API applies committed Prisma migrations before starting; provide non-default secrets through the environment before any shared or production deployment.
+
 ## Backend implementation
 
 The ordered NestJS Core implementation plan is in [BALKAN_WORKS_BACKEND_IMPLEMENTATION_PLAN.md](docs/BALKAN_WORKS_BACKEND_IMPLEMENTATION_PLAN.md).
