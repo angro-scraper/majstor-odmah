@@ -187,6 +187,10 @@ The operational security, incident, recovery and production-verification framewo
 
 The cost, revenue, unit-economics, scenario and financial-control framework is in [BALKAN_WORKS_FINANCIAL_MODEL.md](docs/BALKAN_WORKS_FINANCIAL_MODEL.md).
 
+## AI technical architecture
+
+The gateway, retrieval, model lifecycle, recommendation and future agent architecture is in [BALKAN_WORKS_AI_TECHNICAL_ARCHITECTURE.md](docs/BALKAN_WORKS_AI_TECHNICAL_ARCHITECTURE.md).
+
 ## Team roles
 
 Role-level responsibilities and hiring sequence are in [BALKAN_WORKS_TEAM_ROLES.md](docs/BALKAN_WORKS_TEAM_ROLES.md).
