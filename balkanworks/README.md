@@ -54,3 +54,7 @@ The canonical consumer and business journey is in [BALKAN_WORKS_USER_EXPERIENCE_
 ## Build instructions
 
 The implementation order and non-negotiable coding rules are in [BALKAN_WORKS_CODEX_BUILD_INSTRUCTIONS.md](docs/BALKAN_WORKS_CODEX_BUILD_INSTRUCTIONS.md).
+
+## Security and privacy
+
+Platform security, tenant isolation and privacy controls are governed by [BALKAN_WORKS_SECURITY_AND_PRIVACY.md](docs/BALKAN_WORKS_SECURITY_AND_PRIVACY.md).
