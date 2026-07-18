@@ -111,6 +111,10 @@ The one-city supply-first market-entry playbook is in [BALKAN_WORKS_GO_TO_MARKET
 
 The MVP scope and acceptance criteria are in [BALKAN_WORKS_PRODUCT_REQUIREMENTS_DOCUMENT.md](docs/BALKAN_WORKS_PRODUCT_REQUIREMENTS_DOCUMENT.md).
 
+## UI/UX system
+
+The interaction, navigation and component-state standard is in [BALKAN_WORKS_UI_UX_SYSTEM.md](docs/BALKAN_WORKS_UI_UX_SYSTEM.md).
+
 ## Analytics
 
 Event taxonomy, dashboards and experimentation rules are in [BALKAN_WORKS_ANALYTICS_DATA_STRATEGY.md](docs/BALKAN_WORKS_ANALYTICS_DATA_STRATEGY.md).
