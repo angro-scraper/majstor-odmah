@@ -4,6 +4,8 @@ import "./wireframes.css";
 import "./deals-save-food.css";
 import "./rewards-engagement.css";
 import "./engagement-extras.css";
+import "./marketplace-services.css";
+import "./marketplace-details.css";
 
 export const metadata = { title: "Balkan.works", description: "Sve usluge na jednom mestu — za svakodnevni život i poslovanje širom Balkana." };
 

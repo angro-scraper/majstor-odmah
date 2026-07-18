@@ -40,6 +40,14 @@ async function main() {
     ["Healthcare", "healthcare", CategoryType.HEALTH],
   ].map(([name, slug, type]) => prisma.category.upsert({ where: { slug }, create: { name, slug, type }, update: { name, type } })));
 
+  await Promise.all([
+    ["Dom i majstori", "dom-i-majstori"],
+    ["Elektro instalacije", "elektro-instalacije"],
+    ["Čišćenje doma", "ciscenje-doma"],
+    ["Auto usluge", "auto-usluge"],
+    ["Digitalne usluge", "digitalne-usluge"],
+  ].map(([name, slug]) => prisma.serviceCategory.upsert({ where: { slug }, create: { name, slug }, update: { name } })));
+
   const passwordHash = await bcrypt.hash(developmentPassword, 12);
   const admin = await prisma.user.upsert({
     where: { email: "admin@balkanworks.local" },
