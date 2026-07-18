@@ -57,6 +57,8 @@ The canonical consumer and business journey is in [BALKAN_WORKS_USER_EXPERIENCE_
 
 The detailed consumer and business value, trust and referral journeys are in [BALKAN_WORKS_CUSTOMER_JOURNEY_MAP.md](docs/BALKAN_WORKS_CUSTOMER_JOURNEY_MAP.md).
 
+The implementation-level MVP flows for customers, business owners and admins are in [BALKAN_WORKS_USER_FLOWS.md](docs/BALKAN_WORKS_USER_FLOWS.md).
+
 ## Build instructions
 
 The implementation order and non-negotiable coding rules are in [BALKAN_WORKS_CODEX_BUILD_INSTRUCTIONS.md](docs/BALKAN_WORKS_CODEX_BUILD_INSTRUCTIONS.md).
