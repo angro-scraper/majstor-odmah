@@ -135,6 +135,10 @@ The ordered NestJS Core implementation plan is in [BALKAN_WORKS_BACKEND_IMPLEMEN
 
 The mobile/web/business/admin delivery plan is in [BALKAN_WORKS_FRONTEND_IMPLEMENTATION_PLAN.md](docs/BALKAN_WORKS_FRONTEND_IMPLEMENTATION_PLAN.md).
 
+## Mobile application
+
+The React Native product and release specification is in [BALKAN_WORKS_MOBILE_APP_SPEC.md](docs/BALKAN_WORKS_MOBILE_APP_SPEC.md).
+
 ## Team roles
 
 Role-level responsibilities and hiring sequence are in [BALKAN_WORKS_TEAM_ROLES.md](docs/BALKAN_WORKS_TEAM_ROLES.md).
