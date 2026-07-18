@@ -91,6 +91,10 @@ The MVP data model and migration rules are in [BALKAN_WORKS_MVP_DATABASE_SCHEMA.
 
 The preserved architect/developer directive is in [BALKAN_WORKS_CODEX_MASTER_PROMPT.md](docs/BALKAN_WORKS_CODEX_MASTER_PROMPT.md).
 
+## API contract
+
+The versioned REST response, security and compatibility contract is in [BALKAN_WORKS_API_CONTRACT.md](docs/BALKAN_WORKS_API_CONTRACT.md).
+
 ## Analytics
 
 Event taxonomy, dashboards and experimentation rules are in [BALKAN_WORKS_ANALYTICS_DATA_STRATEGY.md](docs/BALKAN_WORKS_ANALYTICS_DATA_STRATEGY.md).
