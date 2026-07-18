@@ -67,6 +67,8 @@ The implementation-level MVP flows for customers, business owners and admins are
 
 ## Build instructions
 
+The compact product identity, implementation priorities, MVP boundaries and decision rules are in [BALKAN_WORKS_CODEX_PROJECT_CONTEXT.md](docs/BALKAN_WORKS_CODEX_PROJECT_CONTEXT.md).
+
 The implementation order and non-negotiable coding rules are in [BALKAN_WORKS_CODEX_BUILD_INSTRUCTIONS.md](docs/BALKAN_WORKS_CODEX_BUILD_INSTRUCTIONS.md).
 
 The consolidated implementation brief and current delivery boundary are in [BALKAN_WORKS_CODEX_MASTER.md](docs/BALKAN_WORKS_CODEX_MASTER.md).
