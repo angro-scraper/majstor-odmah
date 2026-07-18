@@ -259,6 +259,10 @@ The North Star, funnel, business-health, revenue and decision-metric definitions
 
 The data foundation, AI phases, quality evaluation and governance strategy is in [BALKAN_WORKS_AI_DATA_STRATEGY.md](docs/BALKAN_WORKS_AI_DATA_STRATEGY.md).
 
+## Growth engine
+
+The city-by-city operating system for local supply, content, partners, community and referrals is in [BALKAN_WORKS_GROWTH_ENGINE.md](docs/BALKAN_WORKS_GROWTH_ENGINE.md).
+
 ## Team roles
 
 Role-level responsibilities and hiring sequence are in [BALKAN_WORKS_TEAM_ROLES.md](docs/BALKAN_WORKS_TEAM_ROLES.md).
