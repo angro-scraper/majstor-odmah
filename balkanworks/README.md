@@ -119,6 +119,10 @@ The interaction, navigation and component-state standard is in [BALKAN_WORKS_UI_
 
 The CI/CD and operational reliability model is in [BALKAN_WORKS_DEVOPS_INFRASTRUCTURE.md](docs/BALKAN_WORKS_DEVOPS_INFRASTRUCTURE.md).
 
+## Backend implementation
+
+The ordered NestJS Core implementation plan is in [BALKAN_WORKS_BACKEND_IMPLEMENTATION_PLAN.md](docs/BALKAN_WORKS_BACKEND_IMPLEMENTATION_PLAN.md).
+
 ## Team roles
 
 Role-level responsibilities and hiring sequence are in [BALKAN_WORKS_TEAM_ROLES.md](docs/BALKAN_WORKS_TEAM_ROLES.md).
