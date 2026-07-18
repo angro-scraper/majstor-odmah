@@ -46,3 +46,7 @@ The city-by-city network and launch gates are in [BALKAN_WORKS_LOCAL_CITY_EXPANS
 ## Design language
 
 The platform-wide visual and component rules are in [BALKAN_WORKS_DESIGN_LANGUAGE.md](docs/BALKAN_WORKS_DESIGN_LANGUAGE.md).
+
+## User experience
+
+The canonical consumer and business journey is in [BALKAN_WORKS_USER_EXPERIENCE_FLOW.md](docs/BALKAN_WORKS_USER_EXPERIENCE_FLOW.md).
