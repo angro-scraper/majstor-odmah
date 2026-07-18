@@ -23,3 +23,14 @@ izvršavaju kroz zaštićeni Core API; portal ne sadrži administratorsku lozink
 Pristup imaju samo nalozi sa Core ulogom `ADMIN` ili `MODERATOR`. Prvi takav
 nalog se dodeljuje kontrolisano u bazi tokom administrator-onboardinga — javna
 registracija nikada ne može sama sebi dodeliti administrativnu ulogu.
+
+## Aktivni moduli
+
+- `/market` — pretraga i objavljivanje marketplace oglasa
+- `/deals` — pregled i objavljivanje digitalnih akcija za sopstvenu firmu
+- `/save-food` — paketi viška hrane, rezervacija i kod za preuzimanje
+- `/business` — poslovni profil firme
+- `/admin` — moderacija i operativni pregled
+
+Portal je samo bezbedan web-sloj: sadržaj, pravila pristupa i transakcioni podaci
+ostaju u Balkan.works Core API-ju.
