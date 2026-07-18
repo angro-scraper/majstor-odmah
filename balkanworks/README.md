@@ -103,6 +103,10 @@ Environment, release, monitoring and scale rules are in [BALKAN_WORKS_DEPLOYMENT
 
 The quality and release testing standard is in [BALKAN_WORKS_TESTING_STRATEGY.md](docs/BALKAN_WORKS_TESTING_STRATEGY.md).
 
+## Go-to-market
+
+The one-city supply-first market-entry playbook is in [BALKAN_WORKS_GO_TO_MARKET_STRATEGY.md](docs/BALKAN_WORKS_GO_TO_MARKET_STRATEGY.md).
+
 ## Analytics
 
 Event taxonomy, dashboards and experimentation rules are in [BALKAN_WORKS_ANALYTICS_DATA_STRATEGY.md](docs/BALKAN_WORKS_ANALYTICS_DATA_STRATEGY.md).
