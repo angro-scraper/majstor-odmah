@@ -291,6 +291,10 @@ The concise evidence-first investment narrative is in [BALKAN_WORKS_INVESTMENT_P
 
 The central reading order, source-of-truth hierarchy and live document map are in [BALKAN_WORKS_MASTER_DOCUMENT_INDEX.md](docs/BALKAN_WORKS_MASTER_DOCUMENT_INDEX.md).
 
+## Investor deck structure
+
+The evidence-first 20-slide structure for investors, partners and institutions is in [BALKAN_WORKS_INVESTOR_DECK_STRUCTURE.md](docs/BALKAN_WORKS_INVESTOR_DECK_STRUCTURE.md).
+
 ## Team roles
 
 Role-level responsibilities and hiring sequence are in [BALKAN_WORKS_TEAM_ROLES.md](docs/BALKAN_WORKS_TEAM_ROLES.md).
