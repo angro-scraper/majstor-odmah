@@ -6,6 +6,7 @@ export class SearchBusinessesDto {
   @IsOptional() @IsString() @MaxLength(160) query?: string;
   @IsOptional() @IsUUID() categoryId?: string;
   @IsOptional() @IsUUID() cityId?: string;
+  @IsOptional() @IsString() @MaxLength(100) city?: string;
 }
 
 @Injectable()
@@ -19,6 +20,7 @@ export class SearchService {
       status: "VERIFIED" as const,
       ...(input.categoryId ? { categoryId: input.categoryId } : {}),
       ...(input.cityId ? { locations: { some: { cityId: input.cityId, deletedAt: null } } } : {}),
+      ...(!input.cityId && input.city ? { locations: { some: { city: { name: { equals: input.city.trim(), mode: "insensitive" as const } }, deletedAt: null } } } : {}),
       ...(query ? { OR: [{ name: { contains: query, mode: "insensitive" as const } }, { description: { contains: query, mode: "insensitive" as const } }, { services: { some: { name: { contains: query, mode: "insensitive" as const }, deletedAt: null } } }] } : {}),
     };
     const results = await this.prisma.business.findMany({
@@ -27,7 +29,7 @@ export class SearchService {
       orderBy: [{ verificationStatus: "desc" }, { name: "asc" }],
       take: 30,
     });
-    await this.prisma.searchQuery.create({ data: { userId, query: query ?? "", location: input.cityId, resultsCount: results.length } });
+    await this.prisma.searchQuery.create({ data: { userId, query: query ?? "", location: input.cityId ?? input.city, resultsCount: results.length } });
     return results;
   }
 }
