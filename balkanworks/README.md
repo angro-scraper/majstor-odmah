@@ -163,6 +163,10 @@ The business activation, verification, first-value and value-led upgrade flow is
 
 The governed progression from AI search to permissioned assistants and future agents is in [BALKAN_WORKS_AI_PRODUCT_ROADMAP.md](docs/BALKAN_WORKS_AI_PRODUCT_ROADMAP.md).
 
+## API documentation
+
+The REST contract, versioning, security requirements, observability and expansion path are in [BALKAN_WORKS_API_DOCUMENTATION.md](docs/BALKAN_WORKS_API_DOCUMENTATION.md).
+
 ## Team roles
 
 Role-level responsibilities and hiring sequence are in [BALKAN_WORKS_TEAM_ROLES.md](docs/BALKAN_WORKS_TEAM_ROLES.md).
