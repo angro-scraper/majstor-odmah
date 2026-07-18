@@ -171,6 +171,10 @@ The REST contract, versioning, security requirements, observability and expansio
 
 The ethical, measurable local-business sales motion is in [BALKAN_WORKS_SALES_PLAYBOOK.md](docs/BALKAN_WORKS_SALES_PLAYBOOK.md).
 
+## Data architecture
+
+The operational, event, analytics and future governed-AI data layers are in [BALKAN_WORKS_DATA_ARCHITECTURE.md](docs/BALKAN_WORKS_DATA_ARCHITECTURE.md).
+
 ## Team roles
 
 Role-level responsibilities and hiring sequence are in [BALKAN_WORKS_TEAM_ROLES.md](docs/BALKAN_WORKS_TEAM_ROLES.md).
