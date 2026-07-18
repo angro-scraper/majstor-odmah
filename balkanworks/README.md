@@ -207,6 +207,10 @@ The outcome-led MVP, pilot, validation and scale-readiness plan is in [BALKAN_WO
 
 The phased package, pricing, revenue and commercial-safeguard strategy is in [BALKAN_WORKS_MONETIZATION_PRICING.md](docs/BALKAN_WORKS_MONETIZATION_PRICING.md).
 
+## Codebase structure
+
+The canonical monorepo, application, module and shared-package organization is in [BALKAN_WORKS_CODEBASE_STRUCTURE.md](docs/BALKAN_WORKS_CODEBASE_STRUCTURE.md).
+
 ## Team roles
 
 Role-level responsibilities and hiring sequence are in [BALKAN_WORKS_TEAM_ROLES.md](docs/BALKAN_WORKS_TEAM_ROLES.md).
