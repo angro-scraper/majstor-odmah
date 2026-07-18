@@ -36,6 +36,7 @@ If a conflict remains, record a decision in the operating/work system before cha
 - [UI/UX System](BALKAN_WORKS_UI_UX_SYSTEM.md)
 - [Design Tokens](BALKAN_WORKS_DESIGN_TOKENS.md)
 - [Super App Wireframes](BALKAN_WORKS_SUPER_APP_WIREFRAMES.md)
+- [Super App Design Direction](BALKAN_WORKS_SUPER_APP_DESIGN_DIRECTION.md)
 - [Design Language](BALKAN_WORKS_DESIGN_LANGUAGE.md)
 - [Brand Guidelines](BALKAN_WORKS_BRAND_GUIDELINES.md)
 - [Mobile App Specification](BALKAN_WORKS_MOBILE_APP_SPEC.md)

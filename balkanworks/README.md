@@ -21,11 +21,11 @@ It also enables a business owner to create and maintain a profile, and gives the
 
 ## Technology stack
 
-| Layer | Technology |
-| --- | --- |
-| Web frontend | Next.js, React and TypeScript |
-| API backend | NestJS, Node.js and TypeScript |
-| Primary database | PostgreSQL and Prisma ORM |
+| Layer                   | Technology                                                     |
+| ----------------------- | -------------------------------------------------------------- |
+| Web frontend            | Next.js, React and TypeScript                                  |
+| API backend             | NestJS, Node.js and TypeScript                                 |
+| Primary database        | PostgreSQL and Prisma ORM                                      |
 | Platform infrastructure | Docker, object-storage adapter, monitoring and CI/CD templates |
 
 ## Project source of truth
@@ -207,6 +207,8 @@ The visual foundation, reusable component rules, responsive behavior and accessi
 The implemented Super App route map and reusable component inventory are in [BALKAN_WORKS_SUPER_APP_WIREFRAMES.md](docs/BALKAN_WORKS_SUPER_APP_WIREFRAMES.md).
 
 The shared visual token contract, dark-mode behavior and component-state baseline are in [BALKAN_WORKS_DESIGN_TOKENS.md](docs/BALKAN_WORKS_DESIGN_TOKENS.md).
+
+The Super App product visual direction is in [BALKAN_WORKS_SUPER_APP_DESIGN_DIRECTION.md](docs/BALKAN_WORKS_SUPER_APP_DESIGN_DIRECTION.md).
 
 ## DevOps operations
 
