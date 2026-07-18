@@ -215,6 +215,10 @@ The canonical monorepo, application, module and shared-package organization is i
 
 The security-by-design, privacy, IAM, AI and release-control standards are in [BALKAN_WORKS_SECURITY_PRIVACY_FRAMEWORK.md](docs/BALKAN_WORKS_SECURITY_PRIVACY_FRAMEWORK.md).
 
+## Competitive analysis
+
+The category-level positioning, moat, risks and research agenda are in [BALKAN_WORKS_COMPETITIVE_ANALYSIS.md](docs/BALKAN_WORKS_COMPETITIVE_ANALYSIS.md).
+
 ## Team roles
 
 Role-level responsibilities and hiring sequence are in [BALKAN_WORKS_TEAM_ROLES.md](docs/BALKAN_WORKS_TEAM_ROLES.md).
