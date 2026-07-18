@@ -1,24 +1,124 @@
-.ui-card { padding: 20px; border: 1px solid var(--line); border-radius: 18px; background: var(--surface); }
-.avatar { display: grid; place-items: center; width: 42px; height: 42px; border-radius: 50%; background: #dedfff; color: var(--accent); font-weight: 800; }
-.tabs { display: flex; gap: 8px; overflow-x: auto; padding: 4px; border-radius: 13px; background: #eef0f6; }
-.tabs button { flex: 0 0 auto; padding: 8px 12px; border: 0; border-radius: 9px; background: transparent; color: var(--muted); font-weight: 700; cursor: pointer; }
-.tabs button.active { color: var(--accent); background: var(--surface); box-shadow: 0 2px 8px rgba(24, 32, 65, .08); }
-.modal-backdrop { position: fixed; z-index: 30; inset: 0; display: grid; place-items: center; padding: 24px; background: rgba(20, 33, 61, .45); }
-.modal { width: min(100%, 440px); padding: 24px; border-radius: 20px; background: var(--surface); box-shadow: var(--shadow); }
-.modal h2 { margin-top: 0; }
-.rating { margin: 5px 0 0; color: #e59b21; font-size: 12px; }
-.rating strong { color: #e59b21; }
-.rating span { color: var(--muted); }
-.ai-search-bar { display: flex; gap: 9px; margin-top: 24px; text-align: left; }
-.ai-search-bar .button { white-space: nowrap; }
-.trend-chart { display: grid; grid-template-columns: 1fr auto; gap: 4px 12px; padding: 14px; border: 1px solid var(--line); border-radius: 14px; background: var(--surface); color: var(--accent); }
-.trend-chart span { color: var(--muted); font-size: 12px; }
-.trend-chart strong { color: var(--ink); }
-.trend-chart svg { grid-column: 1 / -1; width: 100%; height: 45px; }
-.activity-feed { display: grid; gap: 12px; margin: 0; padding: 0; list-style: none; }
-.activity-feed li { display: flex; gap: 9px; align-items: flex-start; color: var(--muted); font-size: 13px; line-height: 1.4; }
-.activity-feed span { color: var(--accent); }
+.ui-card {
+  padding: 20px;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: var(--surface);
+}
+.avatar {
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: #dedfff;
+  color: var(--accent);
+  font-weight: 800;
+}
+.tabs {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding: 4px;
+  border-radius: 13px;
+  background: #eef0f6;
+}
+.tabs button {
+  flex: 0 0 auto;
+  padding: 8px 12px;
+  border: 0;
+  border-radius: 9px;
+  background: transparent;
+  color: var(--muted);
+  font-weight: 700;
+  cursor: pointer;
+}
+.tabs button.active {
+  color: var(--accent);
+  background: var(--surface);
+  box-shadow: 0 2px 8px rgba(24, 32, 65, 0.08);
+}
+.modal-backdrop {
+  position: fixed;
+  z-index: 30;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background: rgba(20, 33, 61, 0.45);
+}
+.modal {
+  width: min(100%, 440px);
+  padding: 24px;
+  border-radius: 20px;
+  background: var(--surface);
+  box-shadow: var(--shadow);
+}
+.modal h2 {
+  margin-top: 0;
+}
+.rating {
+  margin: 5px 0 0;
+  color: #e59b21;
+  font-size: 12px;
+}
+.rating strong {
+  color: #e59b21;
+}
+.rating span {
+  color: var(--muted);
+}
+.ai-search-bar {
+  display: flex;
+  gap: 9px;
+  margin-top: 24px;
+  text-align: left;
+}
+.ai-search-bar .button {
+  white-space: nowrap;
+}
+.trend-chart {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 4px 12px;
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--surface);
+  color: var(--accent);
+}
+.trend-chart span {
+  color: var(--muted);
+  font-size: 12px;
+}
+.trend-chart strong {
+  color: var(--ink);
+}
+.trend-chart svg {
+  grid-column: 1 / -1;
+  width: 100%;
+  height: 45px;
+}
+.activity-feed {
+  display: grid;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.activity-feed li {
+  display: flex;
+  gap: 9px;
+  align-items: flex-start;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.4;
+}
+.activity-feed span {
+  color: var(--accent);
+}
 
 @media (max-width: 520px) {
-  .ai-search-bar { display: grid; }
+  .ai-search-bar {
+    display: grid;
+  }
 }

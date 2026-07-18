@@ -1,0 +1,272 @@
+:root {
+  color-scheme: light;
+  --font-sans:
+    Inter, Geist, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+    "Segoe UI", sans-serif;
+  --color-brand-primary: #5b5ce2;
+  --color-brand-primary-hover: #494ac9;
+  --color-brand-secondary: #19a974;
+  --color-brand-ai: #7b61ff;
+  --color-bg: #f7f8fc;
+  --color-surface: #ffffff;
+  --color-surface-muted: #eef0f6;
+  --color-text: #14213d;
+  --color-text-secondary: #5f687a;
+  --color-text-muted: #7a8496;
+  --color-line: #e3e7ef;
+  --color-success-bg: #eafaf3;
+  --color-success-text: #167653;
+  --color-warning: #e59b21;
+  --color-danger: #c2394b;
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 16px;
+  --space-4: 24px;
+  --space-5: 32px;
+  --space-6: 48px;
+  --space-7: 64px;
+  --radius-sm: 8px;
+  --radius-md: 16px;
+  --radius-lg: 24px;
+  --radius-xl: 32px;
+  --shadow-sm: 0 2px 8px rgba(24, 32, 65, 0.08);
+  --shadow-md: 0 12px 36px rgba(24, 32, 65, 0.1);
+  --shadow-lg: 0 24px 64px rgba(24, 32, 65, 0.18);
+  --duration-fast: 150ms;
+  --duration-normal: 250ms;
+  --duration-slow: 400ms;
+  --ease-standard: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --ink: var(--color-text);
+  --muted: var(--color-text-muted);
+  --line: var(--color-line);
+  --paper: var(--color-bg);
+  --surface: var(--color-surface);
+  --accent: var(--color-brand-primary);
+  --accent-ink: #fff;
+  --mint: var(--color-success-bg);
+  --mint-ink: var(--color-success-text);
+  --navy: #151a38;
+  --shadow: var(--shadow-md);
+}
+
+html[data-theme="dark"] {
+  color-scheme: dark;
+  --color-bg: #0d1020;
+  --color-surface: #171c31;
+  --color-surface-muted: #222941;
+  --color-text: #f4f6ff;
+  --color-text-secondary: #c4cada;
+  --color-text-muted: #99a3ba;
+  --color-line: #303853;
+  --color-brand-primary: #9694ff;
+  --color-brand-primary-hover: #b4b2ff;
+  --color-success-bg: #123b31;
+  --color-success-text: #77dfb5;
+  --color-warning: #f7c45a;
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.22);
+  --shadow-md: 0 12px 36px rgba(0, 0, 0, 0.28);
+  --shadow-lg: 0 24px 64px rgba(0, 0, 0, 0.42);
+  --navy: #222941;
+}
+
+@media (prefers-color-scheme: dark) {
+  html:not([data-theme]) {
+    color-scheme: dark;
+    --color-bg: #0d1020;
+    --color-surface: #171c31;
+    --color-surface-muted: #222941;
+    --color-text: #f4f6ff;
+    --color-text-secondary: #c4cada;
+    --color-text-muted: #99a3ba;
+    --color-line: #303853;
+    --color-brand-primary: #9694ff;
+    --color-brand-primary-hover: #b4b2ff;
+    --color-success-bg: #123b31;
+    --color-success-text: #77dfb5;
+    --color-warning: #f7c45a;
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.22);
+    --shadow-md: 0 12px 36px rgba(0, 0, 0, 0.28);
+    --shadow-lg: 0 24px 64px rgba(0, 0, 0, 0.42);
+    --navy: #222941;
+  }
+}
+
+html,
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-sans);
+}
+a,
+button,
+input,
+.business-card,
+.category-chip,
+.stat-card,
+.ui-card {
+  transition:
+    color var(--duration-fast) var(--ease-standard),
+    background-color var(--duration-normal) var(--ease-standard),
+    border-color var(--duration-normal) var(--ease-standard),
+    box-shadow var(--duration-normal) var(--ease-standard),
+    transform var(--duration-fast) var(--ease-standard);
+}
+button:focus-visible,
+a:focus-visible,
+input:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--accent) 45%, transparent);
+  outline-offset: 3px;
+}
+button:hover:not(:disabled) {
+  transform: translateY(-1px);
+}
+
+.app-topbar,
+.bottom-nav {
+  background: color-mix(in srgb, var(--surface) 92%, transparent);
+}
+.home-hero,
+.page-heading {
+  background: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--accent) 10%, var(--paper)),
+    var(--paper)
+  );
+}
+.ai-hero {
+  background:
+    radial-gradient(
+      circle at 50% 0,
+      color-mix(in srgb, var(--color-brand-ai) 26%, transparent),
+      transparent 40%
+    ),
+    var(--paper);
+}
+.search-cta,
+.category-chip,
+.business-card,
+.profile-cover,
+.profile-content > article,
+.stat-card,
+.settings-list,
+.dashboard-panel.light,
+.creation-form,
+.moderation-panel {
+  background: var(--surface);
+}
+.service-card,
+.review-card,
+.tabs,
+.trend-chart {
+  background: var(--color-surface-muted);
+}
+.button {
+  min-height: 44px;
+  border-radius: var(--radius-md);
+  background: var(--accent);
+}
+.button:hover:not(:disabled) {
+  background: var(--color-brand-primary-hover);
+  box-shadow: var(--shadow-sm);
+}
+.button.secondary {
+  background: var(--color-surface-muted);
+  color: var(--ink);
+}
+.button.ghost {
+  background: transparent;
+  color: var(--accent);
+}
+.button.size-small {
+  min-height: 32px;
+  padding: 6px 12px;
+}
+.button.size-large {
+  min-height: 56px;
+  padding: 14px 22px;
+}
+.badge.premium {
+  color: #7d4c00;
+  background: #fff0c7;
+}
+.badge.new {
+  color: #166446;
+  background: var(--color-success-bg);
+}
+.badge.ai {
+  color: var(--color-brand-ai);
+  background: color-mix(in srgb, var(--color-brand-ai) 12%, var(--surface));
+}
+.input {
+  min-height: 44px;
+  color: var(--ink);
+  background: var(--surface);
+}
+.input::placeholder {
+  color: var(--muted);
+}
+.business-card {
+  border-radius: var(--radius-lg);
+}
+.business-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+.theme-toggle {
+  min-width: 36px;
+  min-height: 36px;
+  padding: 0 9px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  color: var(--ink);
+  cursor: pointer;
+}
+.skeleton {
+  display: block;
+  border-radius: var(--radius-sm);
+  background: linear-gradient(
+    90deg,
+    var(--color-surface-muted) 25%,
+    color-mix(in srgb, var(--surface) 70%, var(--color-surface-muted)) 50%,
+    var(--color-surface-muted) 75%
+  );
+  background-size: 200% 100%;
+  animation: skeleton-shimmer 1.5s infinite;
+}
+.empty-state,
+.error-state {
+  display: grid;
+  justify-items: center;
+  gap: var(--space-2);
+  padding: var(--space-5);
+  border: 1px dashed var(--line);
+  border-radius: var(--radius-lg);
+  color: var(--muted);
+  text-align: center;
+}
+.error-state {
+  border-color: color-mix(in srgb, var(--color-danger) 45%, var(--line));
+  color: var(--color-danger);
+}
+.ai-answer,
+.ai-orb {
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--color-brand-ai) 22%, transparent),
+    0 16px 40px color-mix(in srgb, var(--color-brand-ai) 18%, transparent);
+}
+@keyframes skeleton-shimmer {
+  to {
+    background-position: -200% 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
+}

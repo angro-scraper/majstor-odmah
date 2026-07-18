@@ -206,6 +206,8 @@ The visual foundation, reusable component rules, responsive behavior and accessi
 
 The implemented Super App route map and reusable component inventory are in [BALKAN_WORKS_SUPER_APP_WIREFRAMES.md](docs/BALKAN_WORKS_SUPER_APP_WIREFRAMES.md).
 
+The shared visual token contract, dark-mode behavior and component-state baseline are in [BALKAN_WORKS_DESIGN_TOKENS.md](docs/BALKAN_WORKS_DESIGN_TOKENS.md).
+
 ## DevOps operations
 
 The CI/CD and operational reliability model is in [BALKAN_WORKS_DEVOPS_INFRASTRUCTURE.md](docs/BALKAN_WORKS_DEVOPS_INFRASTRUCTURE.md).
