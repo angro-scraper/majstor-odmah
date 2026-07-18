@@ -67,6 +67,14 @@ Requires `ADMIN` or `SUPER_ADMIN` role.
 - `PATCH /admin/reviews/:id/status`
 - `POST /notifications`
 
+## Operations
+
+Admin-only operational views:
+
+- `GET /operations/daily-brief` — daily platform activity, moderation queues and priorities.
+- `GET /operations/cities/readiness` — supply/verification density and city launch readiness.
+- `GET /operations/businesses/:id/onboarding` — owner-only onboarding steps, completion and next action.
+
 ## Environment
 
 - `DATABASE_URL`
