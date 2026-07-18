@@ -20,33 +20,17 @@ export function LogoMark({ className }: { className?: string }) {
       <rect x="1" y="1" width="38" height="38" rx="11" fill="url(#bw-tile)" />
       {/* Subtle top highlight */}
       <rect x="1" y="1" width="38" height="18" rx="11" fill="#ffffff" fillOpacity="0.12" />
-      {/* Bridge deck (humpback span) */}
-      <path
-        d="M6 23 Q20 10 34 23"
-        stroke="#ffffff"
-        strokeWidth="3"
-        strokeLinecap="round"
-        fill="none"
-      />
-      {/* Bridge arch */}
-      <path
-        d="M13 26 A7 7 0 0 1 27 26"
-        stroke="#ffffff"
-        strokeWidth="3"
-        strokeLinecap="round"
-        fill="none"
-      />
-      {/* Water line (cyan accent) */}
-      <path d="M6 28.5 H34" stroke="#06B6D4" strokeWidth="2.6" strokeLinecap="round" />
-      {/* Reflection in the water */}
-      <path
-        d="M13 31 A7 7 0 0 0 27 31"
-        stroke="#ffffff"
-        strokeOpacity="0.4"
-        strokeWidth="2"
-        strokeLinecap="round"
-        fill="none"
-      />
+      {/* Letter "b" - rounded typographic mark */}
+      <g>
+        {/* Vertical stem */}
+        <rect x="10" y="8" width="4.5" height="24" rx="2" fill="#ffffff" />
+        {/* Top rounded bump */}
+        <path
+          d="M14.5 10 Q22 10 22 15.5 Q22 19 18 20.5 Q22 22 22 25.5 Q22 31 14.5 31 L10 31 L10 8 L14.5 8 Q20 8 20 12 Q20 15 16.5 15.5"
+          fill="#ffffff"
+          fillRule="evenodd"
+        />
+      </g>
     </svg>
   )
 }
