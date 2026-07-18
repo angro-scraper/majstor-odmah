@@ -62,3 +62,7 @@ Platform security, tenant isolation and privacy controls are governed by [BALKAN
 ## Monetization
 
 The phased revenue model and consumer/business guardrails are in [BALKAN_WORKS_MONETIZATION_MODEL.md](docs/BALKAN_WORKS_MONETIZATION_MODEL.md).
+
+## Launch plan
+
+The Foundation-to-pilot-to-public launch operating plan is in [BALKAN_WORKS_LAUNCH_PLAN.md](docs/BALKAN_WORKS_LAUNCH_PLAN.md).
