@@ -18,8 +18,9 @@ services:
     runtime: node
     plan: free
     buildCommand: corepack enable && pnpm install --frozen-lockfile && pnpm --filter @balkanworks/database prisma:generate && pnpm --filter @balkanworks/api build
-    preDeployCommand: pnpm --filter @balkanworks/database prisma:deploy
-    startCommand: pnpm --filter @balkanworks/api start
+    # Free-tier services do not support Render pre-deploy commands.  Run the
+    # idempotent Prisma migration immediately before the API starts instead.
+    startCommand: pnpm --filter @balkanworks/database prisma:deploy && pnpm --filter @balkanworks/api start
     healthCheckPath: /api/v1/health
     autoDeploy: true
     envVars:
