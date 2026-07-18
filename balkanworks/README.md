@@ -26,3 +26,7 @@ Partner acquisition and future integrations follow [BALKAN_WORKS_PARTNERSHIP_STR
 ## Team structure
 
 The phased operating and hiring model is in [BALKAN_WORKS_TEAM_STRUCTURE.md](docs/BALKAN_WORKS_TEAM_STRUCTURE.md).
+
+## Technology standard
+
+The stack, security baseline and scaling decisions are in [BALKAN_WORKS_TECH_STACK.md](docs/BALKAN_WORKS_TECH_STACK.md).
