@@ -1,0 +1,14 @@
+from sqlalchemy import Boolean, ForeignKey, String, UniqueConstraint
+from sqlalchemy.orm import Mapped, mapped_column
+
+from app.core.database import Base, TimestampMixin, UUIDPrimaryKeyMixin
+
+
+class UserModule(UUIDPrimaryKeyMixin, TimestampMixin, Base):
+    """Explicit user opt-in. Home never has to assume every product is relevant."""
+    __tablename__ = "user_modules"
+    __table_args__ = (UniqueConstraint("user_id", "module_key", name="uq_user_module"),)
+
+    user_id: Mapped[str] = mapped_column(ForeignKey("users.id", ondelete="CASCADE"), nullable=False, index=True)
+    module_key: Mapped[str] = mapped_column(String(64), nullable=False, index=True)
+    is_active: Mapped[bool] = mapped_column(Boolean, default=True, nullable=False, index=True)

@@ -14,6 +14,7 @@ from app.modules.offers.models import Offer
 from app.modules.payments.models import Subscription, Transaction, Wallet
 from app.modules.save_food.models import FoodPackage, FoodReservation
 from app.modules.support.models import SupportTicket
+from app.modules.superapp.models import UserModule
 
 __all__ = [
     "AuditLog", "Business", "BusinessMember", "Category", "City", "Country", "Favorite", "FoodPackage",
@@ -21,4 +22,5 @@ __all__ = [
     "LocalEvent", "MediaAsset", "Profile", "Review", "Service", "Subscription", "SupportTicket", "Transaction", "User", "Wallet",
     "Appointment", "BillReminder", "DirectoryEntry", "FamilyGroup", "FamilyMember", "GiftCard", "ParkingSession",
     "PharmacyReservation", "PropertyListing",
+    "UserModule",
 ]

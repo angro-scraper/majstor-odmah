@@ -1,4 +1,5 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
+from pydantic import BaseModel
 from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
@@ -9,8 +10,65 @@ from app.modules.identity.models import Profile, User
 from app.modules.marketplace.models import Favorite, Listing, Message, Review
 from app.modules.payments.models import Wallet
 from app.modules.save_food.models import FoodReservation
+from app.modules.superapp.models import UserModule
 
 router = APIRouter(prefix="/super-app", tags=["Super App Hub"])
+
+MODULE_CATALOG = {
+    "food": {"name": "Save Food", "path": "/save-food"}, "deals": {"name": "Deals", "path": "/deals"},
+    "services": {"name": "Services", "path": "/market"}, "jobs": {"name": "Jobs", "path": "/market"},
+    "business": {"name": "Business", "path": "/business"}, "money": {"name": "Money", "path": "/account"},
+    "auto": {"name": "Auto", "path": "/everyday"}, "health": {"name": "Health", "path": "/everyday"},
+    "tickets": {"name": "Tickets", "path": "/"}, "local": {"name": "Balkan Local", "path": "/local"},
+}
+
+
+class ModuleChange(BaseModel):
+    module_key: str
+    is_active: bool = True
+
+
+def module_payload(rows: list[UserModule]) -> list[dict]:
+    return [{"key": item.module_key, "active": item.is_active, **MODULE_CATALOG[item.module_key]} for item in rows if item.module_key in MODULE_CATALOG]
+
+
+@router.get("/modules")
+def my_modules(current_user: User = Depends(get_current_user), db: Session = Depends(get_db)) -> dict:
+    rows = list(db.scalars(select(UserModule).where(UserModule.user_id == current_user.id, UserModule.is_active.is_(True)).order_by(UserModule.created_at.asc())))
+    return {"active_modules": module_payload(rows), "catalog": [{"key": key, **value} for key, value in MODULE_CATALOG.items()]}
+
+
+@router.put("/modules")
+def set_module(payload: ModuleChange, current_user: User = Depends(get_current_user), db: Session = Depends(get_db)) -> dict:
+    key = payload.module_key.strip().lower()
+    if key not in MODULE_CATALOG:
+        raise HTTPException(status_code=422, detail="Nepoznat Balkan.works modul.")
+    row = db.scalar(select(UserModule).where(UserModule.user_id == current_user.id, UserModule.module_key == key))
+    if row is None:
+        row = UserModule(user_id=current_user.id, module_key=key, is_active=payload.is_active)
+        db.add(row)
+    else:
+        row.is_active = payload.is_active
+    db.commit(); db.refresh(row)
+    return {"key": key, "active": row.is_active, **MODULE_CATALOG[key]}
+
+
+@router.get("/profile")
+def profile_center(current_user: User = Depends(get_current_user), db: Session = Depends(get_db)) -> dict:
+    profile = db.scalar(select(Profile).where(Profile.user_id == current_user.id))
+    wallet = wallet_for(current_user, db)
+    db.commit(); db.refresh(wallet)
+    active = list(db.scalars(select(UserModule).where(UserModule.user_id == current_user.id, UserModule.is_active.is_(True))))
+    favorites = db.scalar(select(func.count()).select_from(Favorite).where(Favorite.user_id == current_user.id)) or 0
+    reservations = db.scalar(select(func.count()).select_from(FoodReservation).where(FoodReservation.user_id == current_user.id)) or 0
+    return {
+        "balkan_id": {"display_name": profile.display_name if profile else "Balkan korisnik", "email": current_user.email, "role": current_user.role.value},
+        "wallet": {"balance": wallet.balance, "currency": wallet.currency, "status": "provider_not_connected"},
+        "rewards": {"points": int(favorites * 2 + reservations * 10), "status": "active"},
+        "verifications": [{"key": "email", "label": "Email", "verified": current_user.email_verified}, {"key": "phone", "label": "Telefon", "verified": current_user.phone_verified}, {"key": "location", "label": "Lokacija", "verified": bool(profile and profile.country_code and profile.city_name)}],
+        "active_modules": module_payload(active),
+        "settings": {"locale": profile.preferred_locale if profile else "sr", "country_code": profile.country_code if profile else None, "city_name": profile.city_name if profile else None},
+    }
 
 
 def wallet_for(user: User, db: Session) -> Wallet:
