@@ -210,6 +210,7 @@ model Business {
   phone       String?
   email       String?
   website     String?
+  openingHours Json              @default("{}") @map("opening_hours")
   status      BusinessStatus     @default(DRAFT)
   verificationStatus VerificationStatus @default(UNVERIFIED) @map("verification_status")
   owner       User               @relation(fields: [ownerId], references: [id])

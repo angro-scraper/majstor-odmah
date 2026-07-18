@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Define the first public version of Balkan.works: a focused local platform that proves people want useful local offers/business discovery and businesses value a digital channel to be found and understood.
+Define the first public version of Balkan.works: a focused local platform that proves people want a simple way to find trusted local businesses and businesses value a new channel through which customers can find them.
 
 ## MVP principle
 
@@ -10,16 +10,28 @@ Do not build a small version of the whole vision. Build the smallest safe, usefu
 
 ## MVP goal
 
-Within the first pilot period, validate that users find value, businesses join and remain active, current offers create useful activity and there is credible evidence for optional paid value. Six-month targets are reviewed by city/team capacity and are not automatic success without activation and retention.
+Within the first pilot period, validate that users find value, businesses join and remain active, and real contacts occur between the two sides. Six-month targets are reviewed by city/team capacity and are not automatic success without activation and retention.
+
+## Directory-first MVP baseline
+
+The release acceptance baseline is deliberately narrow:
+
+| User | Must be able to do |
+| --- | --- |
+| Customer | register/login/reset access, set profile/location/interests, search and filter businesses, view a complete business profile, contact/save a business and submit an eligible review |
+| Business Owner | create and manage an accurate profile, services, images and opening hours; request verification; see basic views, contacts and reviews |
+| Admin | review users/businesses/reports, approve/block businesses, moderate reviews and manage categories |
+
+The primary consumer flow is **open → search service → view business → contact business → leave review**. A first-value event is a useful search, business view, saved business or contact. The release is successful only when these actions can be completed reliably and safely.
 
 ## In scope
 
 - Balkan ID: secure registration/login/session foundation and user profile.
 - Business profiles: ownership, pending/approval lifecycle, accurate local information and media readiness.
 - Categories and country/city location context.
-- Offer engine: current offers, validity/visibility and business ownership controls.
-- Digital flyer foundation: business-managed campaign/flyer content where moderation/storage controls are ready; it may be feature-flagged during initial release.
-- Discovery: business/category/offer search with local filters.
+- Directory foundation: businesses, services, opening hours, categories, locations, media, verification and trust status.
+- Discovery: business/category search with local filters.
+- Reviews: moderated ratings/comments and report-handling rules.
 - Favorites/following where released.
 - Notification foundation: in-app first, controlled future delivery adapters.
 - Admin panel: business/user/content moderation and category/location administration.
@@ -27,7 +39,7 @@ Within the first pilot period, validate that users find value, businesses join a
 
 ## Not in scope
 
-Marketplace transactions, wallet, payments, autonomous/advanced AI agents, complex accounting/Opsnestone operations, full Stock Radar, delivery logistics and broad multi-country expansion are later modules. Their schemas/adapters may be prepared behind feature flags, but they are not marketed as MVP capabilities.
+Marketplace transactions, wallet, payments, autonomous/advanced AI agents, complex accounting/Opsnestone operations, full Stock Radar, delivery logistics and broad multi-country expansion are later modules. Offers and digital flyers are optional, feature-flagged pilot extensions after the directory-first acceptance baseline is stable; they are not required to claim MVP success.
 
 ## MVP users and permissions
 
@@ -48,12 +60,11 @@ All actions use Balkan ID, resource-level permissions and tenant isolation. A ro
 1. Splash/session check
 2. Login/register
 3. Location/interests onboarding
-4. Home: greeting, universal search, nearby/current offers, categories and popular/relevant businesses
-5. Search: businesses/categories/offers with location/category filters
-6. Business page: logo, name, description, location, hours, contact, trust status and offers
-7. Offer page: title, authorized image, description, validity, business and clear action
-8. Saved: favorite businesses/offers
-9. Profile: personal data, interests, notifications and settings
+4. Home: greeting, universal search, categories and popular/relevant businesses
+5. Search: businesses/categories with location/category filters
+6. Business page: logo, name, description, category, location, hours, services, contact, trust status, media and reviews
+7. Saved: favorite businesses
+8. Profile: personal data, interests, notifications and settings
 
 The exact web/mobile navigation may differ, but the capabilities and accessible loading/error states remain consistent.
 
@@ -65,11 +76,11 @@ Show profile completeness, approval/verification status, active/current offers, 
 
 ### Profile management
 
-Required business information: name, category, address/location, phone/contact, opening hours, description and authorized images/links. The owner approves content; verification is a documented review process, not an automatic label.
+Required business information: name, category, address/location, phone/contact, opening hours, description, services and authorized images/links. The owner approves content; verification is a documented review process, not an automatic label.
 
 ### Offer/flyer creation
 
-Offer fields include title, description, image where allowed, category, start/end/expiry and status. Digital flyers use similar business ownership, media and moderation rules. No offer is public unless its business/status/content passes the current eligibility policy.
+Offers and digital flyers are feature-flagged extensions, not directory-first MVP requirements. When enabled, they use business ownership, media, validity and moderation rules. No offer is public unless its business/status/content passes the current eligibility policy.
 
 ## Admin MVP
 
@@ -77,15 +88,15 @@ Admin/Moderator functions include user/business lookup, business approval/reject
 
 ## MVP data model
 
-Core entities are User/Profile, Business/BusinessMember/BusinessLocation, Country/City/Category, Offer, Favorite, Review, Notification, Event/SearchQuery, Role/Permission, AuditLog and File. The Prisma schema is the executable source for fields/relations; documentation does not replace migrations or data validation.
+Core entities are User/Profile, Business/BusinessLocation/Service/BusinessImage, Country/City/Category, Favorite, Review, ContactEvent/BusinessView, Notification, Event/SearchQuery, Role/Permission, AuditLog and File. Offer and Subscription are available for feature-flagged extensions. The Prisma schema is the executable source for fields/relations; documentation does not replace migrations or data validation.
 
 ## MVP API direction
 
-Versioned REST endpoints under `/api/v1` provide authentication, current-user profile, businesses, locations/categories, offers, favorites, search, notifications/events and admin operations. Every released endpoint has DTO validation, authorization, error envelope, documentation and tests. Exact paths/schemas are governed by the API contract/OpenAPI documentation.
+Versioned REST endpoints under `/api/v1` provide authentication, password-reset flow, current-user profile, businesses/services/media, locations/categories, reviews, favorites, search, notifications/events and admin operations. Offer endpoints remain feature-flagged. Every released endpoint has DTO validation, authorization, error envelope, documentation and tests. Exact paths/schemas are governed by the API contract/OpenAPI documentation.
 
 ## Required MVP events
 
-Track purpose-limited, documented events: `USER_REGISTERED`, `BUSINESS_CREATED`, `OFFER_CREATED`, `OFFER_VIEWED`, `OFFER_SAVED`, `SEARCH_PERFORMED` and eligible business/contact actions. Event collection follows privacy, tenant isolation and data-quality rules.
+Track purpose-limited, documented events: `USER_REGISTERED`, `BUSINESS_CREATED`, `SEARCH_PERFORMED`, `BUSINESS_VIEWED`, `CONTACT_CLICKED`, `FAVORITE_CREATED`, `REVIEW_SUBMITTED` and eligible verification/moderation actions. Event collection follows privacy, tenant isolation and data-quality rules.
 
 ## Monetization test
 
@@ -105,16 +116,17 @@ The first paid tests may be optional premium business visibility, additional eli
 
 1. Backend/project environment and database migration path.
 2. Authentication and users.
-3. Business/location/category module.
-4. Offers and discovery/search.
-5. Consumer/business UI flows.
-6. Admin/moderation.
+3. Business/location/category/service/media module.
+4. Discovery/search and contact actions.
+5. Reviews, verification and moderation.
+6. Consumer/business UI flows and basic dashboard.
 7. Event analytics/notifications.
 8. Quality, security, deployment and controlled pilot launch.
+9. Optional offers/flyers only after the directory-first baseline is proven.
 
 ## Launch strategy
 
-Launch one city, not the whole Balkans. A directional pilot target is 1,000 activated users, 100 active businesses and 500 current offers, calibrated to supply quality and operations. The launch gate is a useful, stable and supportable local experience — not just a count.
+Launch one city, not the whole Balkans. A directional pilot target is 1,000 activated users and 100 active quality businesses, calibrated to supply quality and operations. The launch gate is a useful, stable and supportable local experience — not just a count.
 
 ## After MVP
 
@@ -122,4 +134,4 @@ Once the local core is validated, consider Save Food, rewards, grounded AI recom
 
 ## Final MVP definition
 
-Balkan.works MVP succeeds when a person has a recurring reason to open it for local value and a business can see a real, measured reason to remain active.
+Balkan.works MVP succeeds when a person can reliably find and contact a trusted local business, and that business can see a real, measured reason to remain active.
