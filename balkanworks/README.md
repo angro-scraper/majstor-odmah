@@ -78,3 +78,7 @@ The long-horizon strategic direction is in [BALKAN_WORKS_10_YEAR_VISION.md](docs
 ## Master roadmap
 
 The single source of prioritization across phases is [BALKAN_WORKS_MASTER_ROADMAP.md](docs/BALKAN_WORKS_MASTER_ROADMAP.md).
+
+## Final system blueprint
+
+The high-level map of the complete ecosystem is [BALKAN_WORKS_FINAL_SYSTEM_BLUEPRINT.md](docs/BALKAN_WORKS_FINAL_SYSTEM_BLUEPRINT.md).
