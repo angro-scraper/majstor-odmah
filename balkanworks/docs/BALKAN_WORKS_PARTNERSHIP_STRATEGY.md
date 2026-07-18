@@ -14,6 +14,8 @@ Build a regional partner network in which every integration creates clear value 
 | Cities and community organizations | Local economy and events | Local offers, city campaigns and tourism | City-specific content workspace |
 | Education institutions | Student adoption and skills | Student programs and business education | Community campaign tools |
 | Banks and telecoms | Scale and trusted distribution | Co-marketing, business digitalization, rewards | No payment or identity integration before legal/security review |
+| Technology providers | Cloud, maps, AI, payments and security capabilities | Approved provider integration | Security, data-processing and service review |
+| Media and creators | Local reach and education | Useful local content and approved campaigns | Clear disclosure and campaign measurement |
 | Strategic regional partners | Ecosystem expansion | Custom campaigns and negotiated integrations | Versioned Partner API and SLA |
 
 ## Tiers
@@ -26,7 +28,7 @@ Tier is not a shortcut around platform trust, privacy or moderation requirements
 
 ## Acquisition process
 
-`Research → Qualified contact → Discovery → Pilot → Measure → Scale`
+`Identify → Qualified contact → Discovery → Proposal → Agreement → Activation → Measure → Scale`
 
 Every pilot has a named owner, written objective, target geography, duration, consent basis, success metric and exit plan. Production integrations follow security, data-processing and legal review.
 
@@ -57,6 +59,23 @@ Measure sourced users, activated businesses, campaign engagement, reservations/s
 1. Local businesses, restaurants, bakeries and stores.
 2. Business associations, education and city/community partners.
 3. Banks, telecoms and national/regional chains after Core, privacy and security controls are proven.
+
+## City partner activation
+
+1. Map local businesses, associations, institutions, creators and relevant community leaders.
+2. Select credible local allies with a shared outcome, not just promotional reach.
+3. Activate supply, users and local events through jointly approved campaigns.
+4. Grow with referrals, useful content and measured local impact.
+
+## Programs and relationship management
+
+Future programs may include local ambassadors, business partner benefits and community partner initiatives. Every partner relationship has a named owner, scope, objective, activity plan, consent/data boundary and measurable acquisition/engagement/business-impact metrics.
+
+## Risks and controls
+
+- A partner seeking only promotion: define measurable outcomes and a pilot exit rule.
+- Too many low-quality partners: use selection standards, capacity limits and periodic review.
+- Sensitive data/integration risk: use scoped access, contracts, security review and reversible feature flags.
 
 ## Operating principle
 
