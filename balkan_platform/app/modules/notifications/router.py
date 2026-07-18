@@ -20,3 +20,14 @@ def mark_read(notification_id: str, current_user: User = Depends(get_current_use
     notification = db.get(Notification, notification_id)
     if notification is None or notification.user_id != current_user.id: raise HTTPException(404, "Obaveštenje nije pronađeno.")
     notification.is_read = True; db.commit(); return {"read": True}
+
+
+@router.post("/read-all")
+def mark_all_read(current_user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+    notifications = db.scalars(select(Notification).where(Notification.user_id == current_user.id, Notification.is_read.is_(False)))
+    count = 0
+    for notification in notifications:
+        notification.is_read = True
+        count += 1
+    db.commit()
+    return {"read": True, "count": count}

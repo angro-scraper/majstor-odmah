@@ -10,6 +10,7 @@ from pydantic import BaseModel, EmailStr, Field
 from fastapi.responses import HTMLResponse, JSONResponse
 from admin_page import render_admin_page
 from business_page import render_business_page
+from dashboard_page import render_dashboard_page
 from modules_page import render_module_page
 
 APP_NAME = "Balkan.works"
@@ -225,6 +226,31 @@ async def food_reserve(package_id: str, request: Request, payload: dict) -> JSON
     return await core_module(request, f"/api/save-food/packages/{package_id}/reserve", "POST", payload, require_auth=True)
 
 
+@app.get("/api/market/favorites", response_class=JSONResponse, include_in_schema=False)
+async def market_favorites(request: Request) -> JSONResponse:
+    return await core_module(request, "/api/marketplace/favorites", require_auth=True)
+
+
+@app.get("/api/market/messages", response_class=JSONResponse, include_in_schema=False)
+async def market_messages(request: Request) -> JSONResponse:
+    return await core_module(request, "/api/marketplace/messages", require_auth=True)
+
+
+@app.get("/api/notifications", response_class=JSONResponse, include_in_schema=False)
+async def notifications(request: Request) -> JSONResponse:
+    return await core_module(request, "/api/notifications", require_auth=True)
+
+
+@app.post("/api/notifications/read-all", response_class=JSONResponse, include_in_schema=False)
+async def notifications_read_all(request: Request) -> JSONResponse:
+    return await core_module(request, "/api/notifications/read-all", "POST", require_auth=True)
+
+
+@app.get("/api/payments/wallet", response_class=JSONResponse, include_in_schema=False)
+async def payments_wallet(request: Request) -> JSONResponse:
+    return await core_module(request, "/api/payments/wallet", require_auth=True)
+
+
 async def core_admin(request: Request, path: str, method: str = "GET") -> JSONResponse:
     authorization = request.headers.get("authorization")
     if not authorization:
@@ -286,6 +312,11 @@ async def admin_audit_logs(request: Request) -> JSONResponse:
 @app.get("/business", response_class=HTMLResponse, include_in_schema=False)
 async def business() -> HTMLResponse:
     return render_business_page()
+
+
+@app.get("/dashboard", response_class=HTMLResponse, include_in_schema=False)
+async def dashboard() -> HTMLResponse:
+    return HTMLResponse(render_dashboard_page())
 
 
 @app.get("/market", response_class=HTMLResponse, include_in_schema=False)
