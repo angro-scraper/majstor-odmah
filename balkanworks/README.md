@@ -1,25 +1,79 @@
-# Balkan.works Monorepo
+# Balkan.works
 
-Target TypeScript foundation for the Balkan.works platform. It is intentionally staged beside the existing live Core until a reviewed migration plan is approved; no production service or data is replaced by this scaffold.
+Digitalna platforma za povezivanje ljudi i lokalnih biznisa. Balkan.works pomaže korisnicima da pronađu pouzdane firme, usluge i proizvode u svojoj blizini, dok firmama daje kanal za vidljivost, kontakte i buduću poslovnu inteligenciju.
+
+This is the target TypeScript monorepo foundation. It is intentionally staged beside the existing live Core until a reviewed migration plan is approved; no production service or data is replaced by this scaffold.
+
+## Vision
+
+Build the leading digital infrastructure for the local economy of the Balkans: a trusted discovery network that evolves into an AI-assisted local-services platform.
+
+## MVP goal
+
+The first validated release enables a user to:
+
+1. find a relevant business;
+2. inspect its business profile;
+3. contact the business;
+4. leave a review after a valid interaction.
+
+It also enables a business owner to create and maintain a profile, and gives the platform enough event data to measure discovery and successful connections.
+
+## Technology stack
+
+| Layer | Technology |
+| --- | --- |
+| Web frontend | Next.js, React and TypeScript |
+| API backend | NestJS, Node.js and TypeScript |
+| Primary database | PostgreSQL and Prisma ORM |
+| Platform infrastructure | Docker, object-storage adapter, monitoring and CI/CD templates |
 
 ## Project source of truth
 
 [BALKAN_WORKS_MASTER_DOCUMENT.md](docs/BALKAN_WORKS_MASTER_DOCUMENT.md) defines the project direction and document hierarchy. The Master Roadmap controls delivery priority; the MVP PRD controls MVP acceptance.
 
-## Layout
+## Project structure
 
-- `apps/` — mobile, consumer web and admin clients
-- `services/api/` — NestJS modular API
-- `packages/` — UI, database, config, types and utilities
+- `apps/` — mobile, consumer web and admin clients (frontend concerns)
+- `services/api/` — NestJS modular API (backend concern)
+- `packages/database/` — Prisma schema and database package
+- `packages/` — shared UI, config, types and utilities
+- `docs/` — product, technical and operating documentation
 - `infrastructure/` — local Docker and deployment templates
+
+This is the canonical equivalent of a `frontend/`, `backend/`, `database/`, `docs/`, `infrastructure/` layout. Do not create a parallel folder tree with duplicate application code.
 
 ## Setup
 
-Install Node.js 20+ and pnpm 9+, then run `pnpm install`, copy `.env.example` to `.env.local`, start PostgreSQL/Redis/Object Storage, run `pnpm --filter @balkanworks/database prisma:migrate`, then `pnpm dev`.
+Requirements: Node.js 20+, pnpm 9+, PostgreSQL and Git. Docker is optional for the local container stack.
 
-For the local container stack, run `docker compose -f infrastructure/docker/docker-compose.yml up --build`. It starts PostgreSQL, Redis, MinIO, the NestJS API and the Next.js app. The initial Prisma migration must be created and applied before the API can use database-backed flows; development-only Docker secrets must never be used outside local development.
+```bash
+pnpm install
+cp .env.example .env
+# Start PostgreSQL, Redis and object storage, then create/apply the reviewed Prisma migration.
+pnpm --filter @balkanworks/database prisma:migrate
+pnpm dev
+```
+
+On Windows PowerShell, replace the copy command with `Copy-Item .env.example .env`. Do not commit `.env` or development secrets.
+
+For the local container stack, run `docker compose -f infrastructure/docker/docker-compose.yml up --build`. It defines PostgreSQL, Redis, MinIO, the NestJS API and the Next.js app. The initial Prisma migration must be created and applied before the API can use database-backed flows; development-only Docker secrets must never be used outside local development.
 
 No secret belongs in source control. MVP flags keep Wallet, Marketplace and AI disabled by default.
+
+## Development order
+
+1. Foundation: repository, environment, database and authentication.
+2. Business network: businesses, categories, locations and business profiles.
+3. Discovery: search and filters.
+4. Trust: reviews, verification and moderation.
+5. Measurement: events, analytics and operational dashboards.
+
+Every change follows `branch → develop → test → review → merge` and must preserve input validation, authorization, clear errors and documented API/database behavior.
+
+## Future modules
+
+AI Search, AI Assistant, Marketplace, Payments, mobile applications and regional expansion are planned extension points. They remain disabled or unimplemented until the core discovery loop is validated.
 
 ## Task board
 
