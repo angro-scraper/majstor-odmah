@@ -21,11 +21,7 @@ const CATS = ['Sve', 'IT', 'Marketing', 'Ugostiteljstvo', 'Transport', 'Finansij
 
 export default function PosloviPage() {
   return (
-    <PageShell
-      eyebrow="Poslovi"
-      title="Nađite posao širom regiona"
-      description="Hiljade aktivnih oglasa iz celog Balkana — od IT-ja i marketinga do ugostiteljstva i transporta."
-    >
+    <PageShell pageKey="jobs">
       <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
         <div className="flex flex-wrap gap-2">
           {CATS.map((c, i) => (

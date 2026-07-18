@@ -18,11 +18,7 @@ const INFO = [
 
 export default function KontaktPage() {
   return (
-    <PageShell
-      eyebrow="Kontakt"
-      title="Tu smo za vas"
-      description="Imate pitanje, predlog ili želite da sarađujete? Javite nam se — odgovaramo brzo."
-    >
+    <PageShell pageKey="contact">
       <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
         <div className="grid gap-10 lg:grid-cols-[1fr_1.2fr]">
           <div className="flex flex-col gap-4">

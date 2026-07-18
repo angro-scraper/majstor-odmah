@@ -39,11 +39,7 @@ const PLANS = [
 
 export default function ZaKompanijePage() {
   return (
-    <PageShell
-      eyebrow="Za kompanije"
-      title="Rastite svoj biznis na Balkanu"
-      description="Alati za oglašavanje, rezervacije, naplatu i komunikaciju — sve na jednoj platformi za profesionalce i kompanije."
-    >
+    <PageShell pageKey="business">
       <ForBusiness />
 
       <section className="bg-surface">

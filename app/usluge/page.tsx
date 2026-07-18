@@ -12,11 +12,7 @@ export const metadata: Metadata = {
 
 export default function UslugePage() {
   return (
-    <PageShell
-      eyebrow="Usluge"
-      title="Sve kategorije na jednom mestu"
-      description="Pregledajte usluge dostupne širom Balkana i pronađite tačno ono što vam treba."
-    >
+    <PageShell pageKey="services">
       <Categories />
       <FeaturedServices />
       <DownloadCta />

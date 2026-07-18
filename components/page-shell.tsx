@@ -1,17 +1,33 @@
+'use client'
+
 import { SiteHeader } from '@/components/site-header'
 import { SiteFooter } from '@/components/site-footer'
+import { useI18n } from '@/lib/i18n/context'
+
+type PageKey = 'services' | 'jobs' | 'business' | 'about' | 'contact' | 'download'
 
 export function PageShell({
-  eyebrow,
-  title,
-  description,
+  pageKey,
   children,
 }: {
-  eyebrow: string
-  title: string
-  description: string
+  pageKey: PageKey
   children: React.ReactNode
 }) {
+  const { t } = useI18n()
+
+  const eyebrows: Record<PageKey, string> = {
+    services: t.nav.services,
+    jobs: t.footer.product.jobs,
+    business: t.nav.forCompanies,
+    about: t.nav.about,
+    contact: t.nav.contact,
+    download: t.cta.download,
+  }
+
+  const eyebrow = eyebrows[pageKey]
+  const title = t.pages[pageKey].title
+  const description = t.pages[pageKey].subtitle
+
   return (
     <div className="flex min-h-screen flex-col">
       <SiteHeader />

@@ -1,3 +1,5 @@
+'use client'
+
 import Link from 'next/link'
 import {
   Megaphone,
@@ -8,15 +10,13 @@ import {
   TrendingUp,
   ArrowRight,
 } from 'lucide-react'
+import { useI18n } from '@/lib/i18n/context'
 
-const FEATURES = [
-  { icon: Megaphone, title: 'Objavite usluge i oglase', desc: 'Predstavite ponudu i poslove hiljadama korisnika u regionu.' },
-  { icon: CalendarCheck, title: 'Primajte rezervacije', desc: 'Upravljajte terminima i narudžbinama iz jednog kalendara.' },
-  { icon: CreditCard, title: 'Naplaćujte bezbedno', desc: 'Prihvatajte plaćanja karticama i preko novčanika bez brige.' },
-  { icon: MessagesSquare, title: 'Komunicirajte sa klijentima', desc: 'Poruke, ponude i podrška — sve u jednom razgovoru.' },
-]
+const ICONS = [Megaphone, CalendarCheck, CreditCard, MessagesSquare]
 
 export function ForBusiness() {
+  const { t } = useI18n()
+
   return (
     <section id="za-kompanije" className="mx-auto max-w-7xl px-4 py-24 sm:px-6 lg:px-8 lg:py-32">
       <div className="grid items-center gap-14 lg:grid-cols-2 lg:gap-16">
@@ -71,33 +71,35 @@ export function ForBusiness() {
 
         <div className="order-1 flex flex-col items-start gap-6 lg:order-2">
           <span className="inline-flex items-center rounded-full border border-primary/15 bg-secondary px-3.5 py-1.5 text-[11px] font-semibold uppercase tracking-[0.12em] text-primary">
-            Za kompanije
+            {t.business.eyebrow}
           </span>
           <h2 className="text-balance text-3xl font-bold leading-[1.1] tracking-tight text-navy sm:text-4xl lg:text-[2.75rem]">
-            Vodite ceo biznis sa jednog mesta
+            {t.business.title}
           </h2>
           <p className="text-pretty text-lg leading-relaxed text-muted-foreground">
-            Bilo da ste samostalni profesionalac ili kompanija, balkan.works vam
-            daje sve alate za rast — od oglašavanja do naplate i podrške.
+            {t.business.description}
           </p>
 
           <div className="grid gap-4 sm:grid-cols-2">
-            {FEATURES.map((f) => (
-              <div key={f.title} className="flex flex-col gap-2">
-                <span className="grid size-10 place-items-center rounded-xl bg-secondary text-primary">
-                  <f.icon className="size-5" />
-                </span>
-                <h3 className="text-sm font-semibold text-navy">{f.title}</h3>
-                <p className="text-sm leading-relaxed text-muted-foreground">{f.desc}</p>
-              </div>
-            ))}
+            {t.business.features.map((f, i) => {
+              const Icon = ICONS[i]
+              return (
+                <div key={f.title} className="flex flex-col gap-2">
+                  <span className="grid size-10 place-items-center rounded-xl bg-secondary text-primary">
+                    <Icon className="size-5" />
+                  </span>
+                  <h3 className="text-sm font-semibold text-navy">{f.title}</h3>
+                  <p className="text-sm leading-relaxed text-muted-foreground">{f.desc}</p>
+                </div>
+              )
+            })}
           </div>
 
           <Link
             href="/za-kompanije"
             className="inline-flex items-center gap-2 rounded-2xl bg-primary px-6 py-3.5 text-sm font-semibold text-primary-foreground shadow-float transition-transform hover:-translate-y-0.5"
           >
-            Registrujte svoju kompaniju
+            {t.business.cta}
             <ArrowRight className="size-4" />
           </Link>
         </div>

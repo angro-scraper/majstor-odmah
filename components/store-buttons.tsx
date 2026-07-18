@@ -1,4 +1,18 @@
+'use client'
+
 import { cn } from '@/lib/utils'
+import { useI18n } from '@/lib/i18n/context'
+import type { Locale } from '@/lib/i18n/config'
+
+const DOWNLOAD_ON: Record<Locale, string> = {
+  sr: 'Preuzmi na',
+  hr: 'Preuzmi na',
+  bs: 'Preuzmi na',
+  me: 'Preuzmi na',
+  mk: 'Преземи на',
+  sl: 'Prenesi na',
+  bg: 'Изтегли от',
+}
 
 function AppleIcon({ className }: { className?: string }) {
   return (
@@ -20,6 +34,9 @@ function PlayIcon({ className }: { className?: string }) {
 }
 
 export function StoreButtons({ className }: { className?: string }) {
+  const { locale } = useI18n()
+  const downloadOn = DOWNLOAD_ON[locale]
+
   return (
     <div className={cn('flex flex-wrap items-center gap-3', className)}>
       <a
@@ -28,7 +45,7 @@ export function StoreButtons({ className }: { className?: string }) {
       >
         <AppleIcon className="size-6" />
         <span className="flex flex-col leading-none">
-          <span className="text-[10px] font-medium opacity-80">Preuzmi na</span>
+          <span className="text-[10px] font-medium opacity-80">{downloadOn}</span>
           <span className="text-sm font-semibold">App Store</span>
         </span>
       </a>
@@ -38,7 +55,7 @@ export function StoreButtons({ className }: { className?: string }) {
       >
         <PlayIcon className="size-6" />
         <span className="flex flex-col leading-none">
-          <span className="text-[10px] font-medium text-muted-foreground">Preuzmi na</span>
+          <span className="text-[10px] font-medium text-muted-foreground">{downloadOn}</span>
           <span className="text-sm font-semibold">Google Play</span>
         </span>
       </a>

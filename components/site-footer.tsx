@@ -1,6 +1,8 @@
+'use client'
+
 import Link from 'next/link'
-import { Globe } from 'lucide-react'
 import { Logo } from '@/components/logo'
+import { useI18n } from '@/lib/i18n/context'
 
 type IconProps = { className?: string }
 
@@ -38,45 +40,6 @@ function YoutubeIcon({ className }: IconProps) {
   )
 }
 
-const COLUMNS: { title: string; links: { label: string; href: string }[] }[] = [
-  {
-    title: 'Platforma',
-    links: [
-      { label: 'Kako funkcioniše', href: '/#kako-funkcionise' },
-      { label: 'AI pomoćnik', href: '/#ai-pomocnik' },
-      { label: 'Novčanik', href: '/#usluge' },
-      { label: 'Preuzmi aplikaciju', href: '/preuzmi' },
-    ],
-  },
-  {
-    title: 'Kategorije',
-    links: [
-      { label: 'Poslovi', href: '/poslovi' },
-      { label: 'Majstori i usluge', href: '/usluge' },
-      { label: 'Dostava hrane', href: '/usluge' },
-      { label: 'Putovanja', href: '/usluge' },
-    ],
-  },
-  {
-    title: 'Kompanija',
-    links: [
-      { label: 'O nama', href: '/o-nama' },
-      { label: 'Za kompanije', href: '/za-kompanije' },
-      { label: 'Karijera', href: '/o-nama' },
-      { label: 'Kontakt', href: '/kontakt' },
-    ],
-  },
-  {
-    title: 'Pravno',
-    links: [
-      { label: 'Uslovi korišćenja', href: '/kontakt' },
-      { label: 'Politika privatnosti', href: '/kontakt' },
-      { label: 'Bezbednost', href: '/#bezbednost' },
-      { label: 'Kolačići', href: '/kontakt' },
-    ],
-  },
-]
-
 const SOCIALS = [
   { label: 'Facebook', icon: FacebookIcon, href: 'https://facebook.com/balkanworks' },
   { label: 'Instagram', icon: InstagramIcon, href: 'https://instagram.com/balkanworks' },
@@ -85,15 +48,45 @@ const SOCIALS = [
 ]
 
 export function SiteFooter() {
+  const { t } = useI18n()
+
+  const columns = [
+    {
+      title: t.footer.productTitle,
+      links: [
+        { label: t.footer.product.services, href: '/usluge' },
+        { label: t.footer.product.jobs, href: '/poslovi' },
+        { label: t.footer.product.business, href: '/za-kompanije' },
+        { label: t.footer.product.download, href: '/preuzmi' },
+      ],
+    },
+    {
+      title: t.footer.companyTitle,
+      links: [
+        { label: t.footer.company.about, href: '/o-nama' },
+        { label: t.footer.company.contact, href: '/kontakt' },
+        { label: t.footer.company.careers, href: '/o-nama' },
+        { label: t.footer.company.press, href: '/o-nama' },
+      ],
+    },
+    {
+      title: t.footer.legalTitle,
+      links: [
+        { label: t.footer.legal.terms, href: '/kontakt' },
+        { label: t.footer.legal.privacy, href: '/kontakt' },
+        { label: t.footer.legal.cookies, href: '/kontakt' },
+      ],
+    },
+  ]
+
   return (
     <footer className="border-t border-border bg-surface">
       <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8">
-        <div className="grid gap-10 lg:grid-cols-[1.4fr_repeat(4,1fr)]">
+        <div className="grid gap-10 lg:grid-cols-[1.6fr_repeat(3,1fr)]">
           <div className="max-w-xs">
             <Logo />
             <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
-              Super aplikacija za svakodnevni život i poslovanje širom Balkana.
-              Sve usluge koje su vam potrebne — na jednom mestu.
+              {t.footer.tagline}
             </p>
             <div className="mt-5 flex gap-2">
               {SOCIALS.map((s) => (
@@ -111,7 +104,7 @@ export function SiteFooter() {
             </div>
           </div>
 
-          {COLUMNS.map((col) => (
+          {columns.map((col) => (
             <div key={col.title}>
               <h3 className="text-sm font-semibold text-navy">{col.title}</h3>
               <ul className="mt-4 space-y-3">
@@ -132,15 +125,9 @@ export function SiteFooter() {
 
         <div className="mt-12 flex flex-col items-start justify-between gap-4 border-t border-border pt-6 sm:flex-row sm:items-center">
           <p className="text-sm text-muted-foreground">
-            © {new Date().getFullYear()} balkan.works. Sva prava zadržana.
+            © {new Date().getFullYear()} balkan.works. {t.footer.rights}
           </p>
-          <button
-            type="button"
-            className="inline-flex items-center gap-2 rounded-xl border border-border bg-card px-3 py-2 text-sm font-medium text-navy transition-colors hover:border-primary"
-          >
-            <Globe className="size-4 text-primary" />
-            Srpski (latinica)
-          </button>
+          <p className="text-sm text-muted-foreground">{t.footer.madeIn}</p>
         </div>
       </div>
     </footer>

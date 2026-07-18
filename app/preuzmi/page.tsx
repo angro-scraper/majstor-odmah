@@ -19,11 +19,7 @@ const points = [
 
 export default function PreuzmiPage() {
   return (
-    <PageShell
-      eyebrow="Preuzmi"
-      title="Sve usluge u vašem džepu"
-      description="Skenirajte QR kod ili preuzmite aplikaciju direktno iz prodavnice. Za par minuta ste spremni."
-    >
+    <PageShell pageKey="download">
       <div className="grid items-center gap-12 lg:grid-cols-2">
         <div>
           <ul className="mb-8 flex flex-col gap-4">

@@ -20,23 +20,33 @@ export function LogoMark({ className }: { className?: string }) {
       <rect x="1" y="1" width="38" height="38" rx="11" fill="url(#bw-tile)" />
       {/* Subtle top highlight */}
       <rect x="1" y="1" width="38" height="18" rx="11" fill="#ffffff" fillOpacity="0.12" />
-      {/* Compass rose (four-point navigation star) */}
+      {/* Bridge deck (humpback span) */}
       <path
-        d="M20 6 L24 16 L34 20 L24 24 L20 34 L16 24 L6 20 L16 16 Z"
-        fill="#ffffff"
-        fillOpacity="0.92"
+        d="M6 23 Q20 10 34 23"
+        stroke="#ffffff"
+        strokeWidth="3"
+        strokeLinecap="round"
+        fill="none"
       />
-      {/* North needle accent (cyan) */}
-      <path d="M20 6 L24 16 L16 16 Z" fill="#06B6D4" />
-      {/* Connection nodes at the tips (regional reach) */}
-      <circle cx="20" cy="6" r="1.7" fill="#06B6D4" />
-      <circle cx="34" cy="20" r="1.7" fill="#ffffff" />
-      <circle cx="20" cy="34" r="1.7" fill="#ffffff" />
-      <circle cx="6" cy="20" r="1.7" fill="#ffffff" />
-      {/* Compass hub */}
-      <circle cx="20" cy="20" r="3.4" fill="#2563EB" />
-      <circle cx="20" cy="20" r="3.4" fill="url(#bw-tile)" />
-      <circle cx="20" cy="20" r="1.5" fill="#ffffff" />
+      {/* Bridge arch */}
+      <path
+        d="M13 26 A7 7 0 0 1 27 26"
+        stroke="#ffffff"
+        strokeWidth="3"
+        strokeLinecap="round"
+        fill="none"
+      />
+      {/* Water line (cyan accent) */}
+      <path d="M6 28.5 H34" stroke="#06B6D4" strokeWidth="2.6" strokeLinecap="round" />
+      {/* Reflection in the water */}
+      <path
+        d="M13 31 A7 7 0 0 0 27 31"
+        stroke="#ffffff"
+        strokeOpacity="0.4"
+        strokeWidth="2"
+        strokeLinecap="round"
+        fill="none"
+      />
     </svg>
   )
 }

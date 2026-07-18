@@ -2,16 +2,10 @@
 
 import { useState } from 'react'
 import { CheckCircle2, Send } from 'lucide-react'
-
-const SUBJECTS = [
-  'Opšte pitanje',
-  'Podrška za korisnike',
-  'Saradnja za kompanije',
-  'Prijava problema',
-  'Mediji i partnerstva',
-]
+import { useI18n } from '@/lib/i18n/context'
 
 export function ContactForm() {
+  const { t } = useI18n()
   const [sent, setSent] = useState(false)
 
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -25,16 +19,14 @@ export function ContactForm() {
         <span className="grid size-14 place-items-center rounded-full bg-primary/10 text-primary">
           <CheckCircle2 className="size-7" />
         </span>
-        <h3 className="text-lg font-semibold text-navy">Poruka je poslata</h3>
-        <p className="max-w-sm text-sm text-muted-foreground">
-          Hvala što ste nam pisali. Naš tim će vam odgovoriti na email u roku od 24 sata radnim danima.
-        </p>
+        <h3 className="text-lg font-semibold text-navy">{t.contact.successTitle}</h3>
+        <p className="max-w-sm text-sm text-muted-foreground">{t.contact.successBody}</p>
         <button
           type="button"
           onClick={() => setSent(false)}
           className="mt-2 text-sm font-semibold text-primary hover:underline"
         >
-          Pošalji novu poruku
+          {t.contact.reset}
         </button>
       </div>
     )
@@ -45,27 +37,27 @@ export function ContactForm() {
       <div className="grid gap-4 sm:grid-cols-2">
         <div className="flex flex-col gap-1.5">
           <label htmlFor="name" className="text-sm font-medium text-navy">
-            Ime i prezime
+            {t.contact.nameLabel}
           </label>
           <input
             id="name"
             name="name"
             type="text"
             required
-            placeholder="Marko Petrović"
+            placeholder={t.contact.namePlaceholder}
             className="h-11 rounded-xl border border-border bg-background px-3.5 text-sm text-navy outline-none transition placeholder:text-muted-foreground/70 focus:border-primary focus:ring-2 focus:ring-primary/20"
           />
         </div>
         <div className="flex flex-col gap-1.5">
           <label htmlFor="email" className="text-sm font-medium text-navy">
-            Email adresa
+            {t.contact.emailLabel}
           </label>
           <input
             id="email"
             name="email"
             type="email"
             required
-            placeholder="marko@primer.rs"
+            placeholder={t.contact.emailPlaceholder}
             className="h-11 rounded-xl border border-border bg-background px-3.5 text-sm text-navy outline-none transition placeholder:text-muted-foreground/70 focus:border-primary focus:ring-2 focus:ring-primary/20"
           />
         </div>
@@ -73,15 +65,15 @@ export function ContactForm() {
 
       <div className="flex flex-col gap-1.5">
         <label htmlFor="subject" className="text-sm font-medium text-navy">
-          Tema
+          {t.contact.subjectLabel}
         </label>
         <select
           id="subject"
           name="subject"
           className="h-11 rounded-xl border border-border bg-background px-3.5 text-sm text-navy outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
-          defaultValue={SUBJECTS[0]}
+          defaultValue={t.contact.subjects[0]}
         >
-          {SUBJECTS.map((s) => (
+          {t.contact.subjects.map((s) => (
             <option key={s} value={s}>
               {s}
             </option>
@@ -91,14 +83,14 @@ export function ContactForm() {
 
       <div className="flex flex-col gap-1.5">
         <label htmlFor="message" className="text-sm font-medium text-navy">
-          Poruka
+          {t.contact.messageLabel}
         </label>
         <textarea
           id="message"
           name="message"
           required
           rows={5}
-          placeholder="Napišite nam kako možemo da pomognemo..."
+          placeholder={t.contact.messagePlaceholder}
           className="resize-none rounded-xl border border-border bg-background px-3.5 py-3 text-sm text-navy outline-none transition placeholder:text-muted-foreground/70 focus:border-primary focus:ring-2 focus:ring-primary/20"
         />
       </div>
@@ -108,12 +100,8 @@ export function ContactForm() {
         className="inline-flex h-12 items-center justify-center gap-2 rounded-xl bg-primary px-6 text-sm font-semibold text-primary-foreground shadow-float transition hover:bg-primary/90"
       >
         <Send className="size-4" />
-        Pošalji poruku
+        {t.contact.submit}
       </button>
-
-      <p className="text-xs text-muted-foreground">
-        Slanjem poruke prihvatate našu politiku privatnosti. Vaši podaci se koriste isključivo za odgovor na upit.
-      </p>
     </form>
   )
 }

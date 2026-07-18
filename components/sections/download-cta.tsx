@@ -1,9 +1,14 @@
+'use client'
+
 import { QrCode } from 'lucide-react'
 import { PhoneFrame } from '@/components/phone-frame'
 import { StoreButtons } from '@/components/store-buttons'
 import { ServicesScreen } from '@/components/app-screens'
+import { useI18n } from '@/lib/i18n/context'
 
 export function DownloadCta() {
+  const { t } = useI18n()
+
   return (
     <section id="preuzmi" className="mx-auto max-w-7xl px-4 py-24 sm:px-6 lg:px-8 lg:py-32">
       <div className="relative overflow-hidden rounded-[2rem] bg-gradient-to-br from-primary to-[#1e40af] px-6 py-14 shadow-float sm:px-14 lg:py-20">
@@ -19,11 +24,10 @@ export function DownloadCta() {
         <div className="relative grid items-center gap-12 lg:grid-cols-2">
           <div className="flex flex-col items-start gap-7 text-primary-foreground">
             <h2 className="text-balance text-3xl font-bold leading-[1.08] tracking-tight sm:text-4xl lg:text-5xl">
-              Ceo Balkan u jednoj aplikaciji
+              {t.download.title}
             </h2>
             <p className="max-w-md text-pretty text-lg leading-relaxed text-primary-foreground/90">
-              Preuzmite balkan.works i pristupite svim uslugama, poslovima i
-              plaćanjima — bilo gde u regionu.
+              {t.download.subtitle}
             </p>
 
             <div className="flex flex-wrap items-center gap-5">
@@ -39,10 +43,7 @@ export function DownloadCta() {
               </div>
               <div className="flex flex-col gap-1 text-sm text-primary-foreground/90">
                 <span className="flex items-center gap-2 font-semibold">
-                  <QrCode className="size-4" /> Skenirajte kod
-                </span>
-                <span className="max-w-[12rem] text-xs text-primary-foreground/70">
-                  Usmerite kameru telefona ka kodu za brzo preuzimanje.
+                  <QrCode className="size-4" /> {t.download.scan}
                 </span>
               </div>
             </div>
