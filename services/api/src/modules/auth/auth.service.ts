@@ -24,7 +24,7 @@ export class AuthService {
   }
 
   private async createSession(userId: string, email: string) {
-    const secret = process.env.JWT_ACCESS_SECRET;
+    const secret = process.env.JWT_ACCESS_SECRET ?? process.env.JWT_SECRET;
     if (!secret) throw new UnauthorizedException("JWT_NOT_CONFIGURED");
     const accessToken = await this.jwt.signAsync({ sub: userId, email }, { secret, expiresIn: "15m" });
     const refreshToken = await this.jwt.signAsync({ sub: userId, type: "refresh" }, { secret: process.env.JWT_REFRESH_SECRET || secret, expiresIn: "30d" });
