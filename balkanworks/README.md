@@ -131,6 +131,10 @@ The CI/CD and operational reliability model is in [BALKAN_WORKS_DEVOPS_INFRASTRU
 
 The ordered NestJS Core implementation plan is in [BALKAN_WORKS_BACKEND_IMPLEMENTATION_PLAN.md](docs/BALKAN_WORKS_BACKEND_IMPLEMENTATION_PLAN.md).
 
+## Frontend implementation
+
+The mobile/web/business/admin delivery plan is in [BALKAN_WORKS_FRONTEND_IMPLEMENTATION_PLAN.md](docs/BALKAN_WORKS_FRONTEND_IMPLEMENTATION_PLAN.md).
+
 ## Team roles
 
 Role-level responsibilities and hiring sequence are in [BALKAN_WORKS_TEAM_ROLES.md](docs/BALKAN_WORKS_TEAM_ROLES.md).
