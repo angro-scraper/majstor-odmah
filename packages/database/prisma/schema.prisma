@@ -135,6 +135,21 @@ enum FlyerStatus {
   ARCHIVED
 }
 
+enum SaveFoodPackageStatus {
+  DRAFT
+  ACTIVE
+  SOLD_OUT
+  EXPIRED
+  ARCHIVED
+}
+
+enum SaveFoodReservationStatus {
+  RESERVED
+  PICKED_UP
+  CANCELLED
+  EXPIRED
+}
+
 model User {
   id            String         @id @default(uuid()) @db.Uuid
   email         String         @unique
@@ -154,6 +169,7 @@ model User {
   searches      SearchQuery[]
   consents      UserConsent[]
   dataRequests  DataSubjectRequest[]
+  foodReservations SaveFoodReservation[]
   createdAt     DateTime       @default(now()) @map("created_at")
   updatedAt     DateTime       @updatedAt @map("updated_at")
   deletedAt     DateTime?      @map("deleted_at")
@@ -299,6 +315,7 @@ model Business {
   subscriptions Subscription[]
   events      Event[]
   flyers      DigitalFlyer[]
+  foodPackages SaveFoodPackage[]
   createdAt   DateTime           @default(now()) @map("created_at")
   updatedAt   DateTime           @updatedAt @map("updated_at")
   deletedAt   DateTime?          @map("deleted_at")
@@ -722,4 +739,48 @@ model FlyerView {
 
   @@index([flyerId, createdAt])
   @@map("flyer_views")
+}
+
+model SaveFoodPackage {
+  id                String                @id @default(uuid()) @db.Uuid
+  businessId        String                @map("business_id") @db.Uuid
+  title             String
+  description       String?
+  imageUrl          String?               @map("image_url")
+  originalPrice     Decimal?              @map("original_price") @db.Decimal(12, 2)
+  pickupPrice       Decimal               @map("pickup_price") @db.Decimal(12, 2)
+  currency          String                @default("RSD")
+  quantityAvailable Int                   @default(0) @map("quantity_available")
+  quantityTotal     Int                   @map("quantity_total")
+  pickupStartAt     DateTime              @map("pickup_start_at")
+  pickupEndAt       DateTime              @map("pickup_end_at")
+  status            SaveFoodPackageStatus @default(DRAFT)
+  business          Business              @relation(fields: [businessId], references: [id])
+  reservations      SaveFoodReservation[]
+  createdAt         DateTime              @default(now()) @map("created_at")
+  updatedAt         DateTime              @updatedAt @map("updated_at")
+  deletedAt         DateTime?             @map("deleted_at")
+
+  @@index([businessId, status])
+  @@index([status, pickupEndAt])
+  @@map("save_food_packages")
+}
+
+model SaveFoodReservation {
+  id          String                    @id @default(uuid()) @db.Uuid
+  packageId   String                    @map("package_id") @db.Uuid
+  userId      String                    @map("user_id") @db.Uuid
+  quantity    Int
+  status      SaveFoodReservationStatus @default(RESERVED)
+  reservedAt  DateTime                  @default(now()) @map("reserved_at")
+  cancelledAt DateTime?                 @map("cancelled_at")
+  pickedUpAt  DateTime?                 @map("picked_up_at")
+  package     SaveFoodPackage           @relation(fields: [packageId], references: [id])
+  user        User                      @relation(fields: [userId], references: [id])
+  createdAt   DateTime                  @default(now()) @map("created_at")
+  updatedAt   DateTime                  @updatedAt @map("updated_at")
+
+  @@index([userId, status])
+  @@index([packageId, status])
+  @@map("save_food_reservations")
 }

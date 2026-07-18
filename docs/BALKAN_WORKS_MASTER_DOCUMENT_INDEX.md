@@ -40,6 +40,7 @@ If a conflict remains, record a decision in the operating/work system before cha
 - [Design Language](BALKAN_WORKS_DESIGN_LANGUAGE.md)
 - [Brand Guidelines](BALKAN_WORKS_BRAND_GUIDELINES.md)
 - [Mobile App Specification](BALKAN_WORKS_MOBILE_APP_SPEC.md)
+- [Save Food Module](BALKAN_WORKS_SAVE_FOOD_MODULE.md)
 - [Admin Panel Specification](BALKAN_WORKS_ADMIN_PANEL_SPEC.md)
 - [Feature Backlog](BALKAN_WORKS_FEATURE_BACKLOG.md)
 

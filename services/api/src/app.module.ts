@@ -20,9 +20,10 @@ import { PartnersModule } from "./modules/partners/partners.module";
 import { ComplianceModule } from "./modules/compliance/compliance.module";
 import { FeaturesModule } from "./modules/features/features.module";
 import { FlyersModule } from "./modules/flyers/flyers.module";
+import { SaveFoodModule } from "./modules/save-food/save-food.module";
 import { SecurityModule } from "./common/security.module";
 
 @Module({
-  imports: [ConfigModule.forRoot({ isGlobal: true }), DatabaseModule, SecurityModule, AuthModule, UsersModule, BusinessesModule, CategoriesModule, LocationsModule, NotificationsModule, SearchModule, ReviewsModule, AdminModule, FavoritesModule, HealthModule, AiModule, OffersModule, AnalyticsModule, OperationsModule, PartnersModule, ComplianceModule, FeaturesModule, FlyersModule],
+  imports: [ConfigModule.forRoot({ isGlobal: true }), DatabaseModule, SecurityModule, AuthModule, UsersModule, BusinessesModule, CategoriesModule, LocationsModule, NotificationsModule, SearchModule, ReviewsModule, AdminModule, FavoritesModule, HealthModule, AiModule, OffersModule, AnalyticsModule, OperationsModule, PartnersModule, ComplianceModule, FeaturesModule, FlyersModule, SaveFoodModule],
 })
 export class AppModule {}
