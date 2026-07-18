@@ -129,6 +129,12 @@ enum DataSubjectRequestStatus {
   CANCELLED
 }
 
+enum FlyerStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
 model User {
   id            String         @id @default(uuid()) @db.Uuid
   email         String         @unique
@@ -292,6 +298,7 @@ model Business {
   contacts    ContactEvent[]
   subscriptions Subscription[]
   events      Event[]
+  flyers      DigitalFlyer[]
   createdAt   DateTime           @default(now()) @map("created_at")
   updatedAt   DateTime           @updatedAt @map("updated_at")
   deletedAt   DateTime?          @map("deleted_at")
@@ -682,4 +689,37 @@ model DataSubjectRequest {
   @@index([userId, status])
   @@index([status, createdAt])
   @@map("data_subject_requests")
+}
+
+model DigitalFlyer {
+  id          String      @id @default(uuid()) @db.Uuid
+  businessId  String      @map("business_id") @db.Uuid
+  title       String
+  description String?
+  imageUrl    String?     @map("image_url")
+  actionUrl   String?     @map("action_url")
+  status      FlyerStatus @default(DRAFT)
+  startsAt    DateTime?   @map("starts_at")
+  expiresAt   DateTime?   @map("expires_at")
+  business    Business    @relation(fields: [businessId], references: [id])
+  views       FlyerView[]
+  createdAt   DateTime    @default(now()) @map("created_at")
+  updatedAt   DateTime    @updatedAt @map("updated_at")
+  deletedAt   DateTime?   @map("deleted_at")
+
+  @@index([businessId, status])
+  @@index([status, expiresAt])
+  @@map("digital_flyers")
+}
+
+model FlyerView {
+  id        String        @id @default(uuid()) @db.Uuid
+  flyerId   String        @map("flyer_id") @db.Uuid
+  userId    String?       @map("user_id") @db.Uuid
+  source    String?
+  flyer     DigitalFlyer  @relation(fields: [flyerId], references: [id])
+  createdAt DateTime      @default(now()) @map("created_at")
+
+  @@index([flyerId, createdAt])
+  @@map("flyer_views")
 }

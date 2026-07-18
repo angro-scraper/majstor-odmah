@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 
-export type FeatureKey = "deals" | "saveFood" | "marketplace" | "wallet" | "aiAssistant" | "partnerApi";
+export type FeatureKey = "deals" | "digitalFlyers" | "saveFood" | "marketplace" | "wallet" | "aiAssistant" | "partnerApi";
 
 const parseFlag = (value: string | undefined, fallback: boolean) => value === undefined ? fallback : value.trim().toLowerCase() === "true";
 
@@ -8,6 +8,7 @@ const parseFlag = (value: string | undefined, fallback: boolean) => value === un
 export class FeaturesService {
   private readonly flags: Readonly<Record<FeatureKey, boolean>> = {
     deals: parseFlag(process.env.DEALS_ENABLED, true),
+    digitalFlyers: parseFlag(process.env.DIGITAL_FLYERS_ENABLED, false),
     saveFood: parseFlag(process.env.SAVE_FOOD_ENABLED, false),
     marketplace: parseFlag(process.env.MARKETPLACE_ENABLED, false),
     wallet: parseFlag(process.env.WALLET_ENABLED, false),

@@ -29,14 +29,16 @@ export class AnalyticsService {
   async businessMetrics(ownerId: string, businessId: string) {
     const business = await this.prisma.business.findFirst({ where: { id: businessId, ownerId, deletedAt: null }, select: { id: true } });
     if (!business) throw new ForbiddenException("BUSINESS_OWNERSHIP_REQUIRED");
-    const [views, contacts, approvedReviews, favoriteCount, activeOffers] = await Promise.all([
+    const [views, contacts, approvedReviews, favoriteCount, activeOffers, publishedFlyers, flyerViews] = await Promise.all([
       this.prisma.businessView.count({ where: { businessId } }),
       this.prisma.contactEvent.count({ where: { businessId } }),
       this.prisma.review.count({ where: { businessId, status: "APPROVED", deletedAt: null } }),
       this.prisma.favorite.count({ where: { businessId, deletedAt: null } }),
       this.prisma.offer.count({ where: { businessId, status: "ACTIVE", deletedAt: null } }),
+      this.prisma.digitalFlyer.count({ where: { businessId, status: "PUBLISHED", deletedAt: null } }),
+      this.prisma.flyerView.count({ where: { flyer: { businessId, deletedAt: null } } }),
     ]);
-    return { businessId, views, contacts, approvedReviews, favorites: favoriteCount, activeOffers };
+    return { businessId, views, contacts, approvedReviews, favorites: favoriteCount, activeOffers, publishedFlyers, flyerViews };
   }
 
   async businessInsights(ownerId: string, businessId: string) {
