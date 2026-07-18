@@ -219,6 +219,10 @@ The security-by-design, privacy, IAM, AI and release-control standards are in [B
 
 The category-level positioning, moat, risks and research agenda are in [BALKAN_WORKS_COMPETITIVE_ANALYSIS.md](docs/BALKAN_WORKS_COMPETITIVE_ANALYSIS.md).
 
+## Module roadmap
+
+The dependency-led sequencing of Core, engagement, business, transaction and intelligence modules is in [BALKAN_WORKS_MODULE_ROADMAP.md](docs/BALKAN_WORKS_MODULE_ROADMAP.md).
+
 ## Team roles
 
 Role-level responsibilities and hiring sequence are in [BALKAN_WORKS_TEAM_ROLES.md](docs/BALKAN_WORKS_TEAM_ROLES.md).
