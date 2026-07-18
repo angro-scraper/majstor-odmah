@@ -10,7 +10,9 @@ import {
   ArrowUpRight,
   ArrowDownLeft,
   Search,
+  Bell,
 } from 'lucide-react'
+import { LogoMark } from '@/components/logo'
 
 /* Novčanik / Wallet */
 export function WalletScreen() {
@@ -136,6 +138,17 @@ export function HomeScreen() {
   ]
   return (
     <div className="px-4 pb-5 pt-3">
+      <div className="mb-3 flex items-center justify-between">
+        <span className="inline-flex items-center gap-1.5">
+          <LogoMark className="size-6 rounded-md" />
+          <span className="font-display text-xs font-bold tracking-tight text-navy">
+            balkan<span className="text-primary">.works</span>
+          </span>
+        </span>
+        <span className="grid size-7 place-items-center rounded-full bg-secondary text-primary">
+          <Bell className="size-3.5" />
+        </span>
+      </div>
       <div className="rounded-2xl bg-gradient-to-br from-primary to-[#1e40af] p-4 text-primary-foreground">
         <p className="text-[11px] opacity-80">Ukupno stanje</p>
         <p className="mt-1 text-2xl font-bold">12.450,00 RSD</p>

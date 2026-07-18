@@ -1,38 +1,66 @@
 import { cn } from '@/lib/utils'
 
+export function LogoMark({ className }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 40 40"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      className={className}
+      role="img"
+      aria-label="balkan.works logo"
+    >
+      <defs>
+        <linearGradient id="bw-tile" x1="4" y1="2" x2="36" y2="38" gradientUnits="userSpaceOnUse">
+          <stop stopColor="#3B7BFF" />
+          <stop offset="1" stopColor="#2563EB" />
+        </linearGradient>
+      </defs>
+      {/* App tile */}
+      <rect x="1" y="1" width="38" height="38" rx="11" fill="url(#bw-tile)" />
+      {/* Subtle top highlight */}
+      <rect
+        x="1"
+        y="1"
+        width="38"
+        height="18"
+        rx="11"
+        fill="#ffffff"
+        fillOpacity="0.12"
+      />
+      {/* "b" stem */}
+      <rect x="10.5" y="7.5" width="4.6" height="25" rx="2.3" fill="#ffffff" />
+      {/* "b" bowl */}
+      <circle cx="20.2" cy="23.3" r="8.9" fill="#ffffff" />
+      {/* cyan counter */}
+      <circle cx="20.2" cy="23.3" r="3.8" fill="#06B6D4" />
+    </svg>
+  )
+}
+
 export function Logo({
   className,
   showText = true,
+  variant = 'default',
 }: {
   className?: string
   showText?: boolean
+  variant?: 'default' | 'light'
 }) {
   return (
     <span className={cn('inline-flex items-center gap-2.5', className)}>
-      <span
-        aria-hidden="true"
-        className="grid size-9 place-items-center rounded-xl bg-primary text-primary-foreground shadow-[0_6px_16px_-6px_rgba(37,99,235,0.7)]"
-      >
-        <svg
-          width="20"
-          height="20"
-          viewBox="0 0 24 24"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            d="M6 3.5v13.25a3.75 3.75 0 0 0 3.75 3.75h1.5A4.75 4.75 0 0 0 16 15.75 4.75 4.75 0 0 0 11.25 11H9"
-            stroke="currentColor"
-            strokeWidth="2.4"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-          <circle cx="16.5" cy="6.5" r="2.5" fill="var(--cyan-accent)" />
-        </svg>
-      </span>
+      <LogoMark className="size-9 rounded-xl shadow-[0_6px_16px_-6px_rgba(37,99,235,0.6)]" />
       {showText && (
-        <span className="font-display text-lg font-bold tracking-tight text-navy">
-          balkan<span className="text-primary">.works</span>
+        <span
+          className={cn(
+            'font-display text-lg font-bold tracking-tight',
+            variant === 'light' ? 'text-white' : 'text-navy',
+          )}
+        >
+          balkan
+          <span className={variant === 'light' ? 'text-cyan-accent' : 'text-primary'}>
+            .works
+          </span>
         </span>
       )}
     </span>
