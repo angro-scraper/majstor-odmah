@@ -17,7 +17,7 @@ services:
     name: balkanworks-api
     runtime: node
     plan: starter
-    buildCommand: pnpm install --frozen-lockfile --prod=false && pnpm --filter @balkanworks/database prisma:generate && pnpm --filter @balkanworks/api build
+    buildCommand: pnpm install --frozen-lockfile --prod=false && pnpm --filter @balkanworks/database prisma:generate && pnpm --filter @balkanworks/database build && pnpm --filter @balkanworks/api build
     # Free-tier services do not support Render pre-deploy commands.  Run the
     # idempotent Prisma migration immediately before the API starts instead.
     startCommand: pnpm --filter @balkanworks/database prisma:deploy && pnpm --filter @balkanworks/api start
