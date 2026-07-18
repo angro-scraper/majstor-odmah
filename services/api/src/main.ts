@@ -10,7 +10,7 @@ async function bootstrap(): Promise<void> {
     .split(",")
     .map((origin) => origin.trim())
     .filter(Boolean);
-  app.enableCors({ origin: allowedOrigins, methods: ["GET", "POST", "PATCH", "PUT", "DELETE", "OPTIONS"], allowedHeaders: ["Authorization", "Content-Type"] });
+  app.enableCors({ origin: allowedOrigins, methods: ["GET", "POST", "PATCH", "PUT", "DELETE", "OPTIONS"], allowedHeaders: ["Authorization", "Content-Type", "X-Partner-Api-Key"] });
   app.useGlobalPipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true, transform: true }));
   app.useGlobalFilters(new HttpExceptionFilter());
   const port = Number(process.env.PORT ?? process.env.API_PORT ?? 3001);

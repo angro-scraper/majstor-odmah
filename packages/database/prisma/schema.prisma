@@ -64,6 +64,41 @@ enum CategoryType {
   OTHER
 }
 
+enum PartnerCategory {
+  FINANCIAL
+  TELECOM
+  RETAIL
+  FOOD
+  CITY_GOVERNMENT
+  EDUCATION
+  LOGISTICS
+  TECHNOLOGY
+  OTHER
+}
+
+enum PartnerLevel {
+  BRONZE
+  SILVER
+  GOLD
+  ENTERPRISE
+}
+
+enum PartnerStatus {
+  PROSPECT
+  PILOT
+  ACTIVE
+  SUSPENDED
+  ARCHIVED
+}
+
+enum PartnerIntegrationStatus {
+  PLANNED
+  PILOT
+  ACTIVE
+  PAUSED
+  RETIRED
+}
+
 model User {
   id            String         @id @default(uuid()) @db.Uuid
   email         String         @unique
@@ -486,4 +521,79 @@ model Notification {
   deletedAt DateTime?        @map("deleted_at")
 
   @@map("notifications")
+}
+
+model Partner {
+  id             String               @id @default(uuid()) @db.Uuid
+  name           String
+  slug           String               @unique
+  category       PartnerCategory
+  level          PartnerLevel         @default(BRONZE)
+  status         PartnerStatus        @default(PROSPECT)
+  contactName    String?              @map("contact_name")
+  contactEmail   String?              @map("contact_email")
+  website        String?
+  description    String?
+  apiKeys        PartnerApiKey[]
+  integrations   PartnerIntegration[]
+  apiRequests    PartnerApiRequest[]
+  createdAt      DateTime             @default(now()) @map("created_at")
+  updatedAt      DateTime             @updatedAt @map("updated_at")
+  deletedAt      DateTime?            @map("deleted_at")
+
+  @@index([status, level])
+  @@index([category, status])
+  @@map("partners")
+}
+
+model PartnerApiKey {
+  id          String             @id @default(uuid()) @db.Uuid
+  partnerId   String             @map("partner_id") @db.Uuid
+  label       String
+  keyPrefix   String             @map("key_prefix")
+  keyHash     String             @unique @map("key_hash")
+  scopes      Json               @default("[]")
+  expiresAt   DateTime?          @map("expires_at")
+  lastUsedAt  DateTime?          @map("last_used_at")
+  revokedAt   DateTime?          @map("revoked_at")
+  partner     Partner            @relation(fields: [partnerId], references: [id])
+  requests    PartnerApiRequest[]
+  createdAt   DateTime           @default(now()) @map("created_at")
+  updatedAt   DateTime           @updatedAt @map("updated_at")
+  deletedAt   DateTime?          @map("deleted_at")
+
+  @@index([partnerId, revokedAt])
+  @@map("partner_api_keys")
+}
+
+model PartnerIntegration {
+  id            String                   @id @default(uuid()) @db.Uuid
+  partnerId     String                   @map("partner_id") @db.Uuid
+  name          String
+  integrationType String                 @map("integration_type")
+  status        PartnerIntegrationStatus @default(PLANNED)
+  scopes        Json                     @default("[]")
+  configuration Json                     @default("{}")
+  startedAt     DateTime?                @map("started_at")
+  partner       Partner                  @relation(fields: [partnerId], references: [id])
+  createdAt     DateTime                 @default(now()) @map("created_at")
+  updatedAt     DateTime                 @updatedAt @map("updated_at")
+  deletedAt     DateTime?                @map("deleted_at")
+
+  @@index([partnerId, status])
+  @@map("partner_integrations")
+}
+
+model PartnerApiRequest {
+  id          String         @id @default(uuid()) @db.Uuid
+  partnerId   String         @map("partner_id") @db.Uuid
+  apiKeyId    String?        @map("api_key_id") @db.Uuid
+  endpoint    String
+  statusCode  Int            @map("status_code")
+  partner     Partner        @relation(fields: [partnerId], references: [id])
+  apiKey      PartnerApiKey? @relation(fields: [apiKeyId], references: [id])
+  createdAt   DateTime       @default(now()) @map("created_at")
+
+  @@index([partnerId, createdAt])
+  @@map("partner_api_requests")
 }
