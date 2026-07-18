@@ -63,6 +63,48 @@ Include budget and burn history, cash/runway, financial model assumptions, actua
 
 Include terms, privacy/cookie materials, business terms, data-processing agreements, trademark/IP status, material regulatory analysis, dispute/litigation status and compliance gaps with owner/action plan. Obtain jurisdiction-specific legal review before relying on any framework as compliance proof.
 
+## Controlled folder structure
+
+When the data room is actually opened for diligence, organize it with a permissioned, time-bounded folder structure:
+
+```text
+BALKAN.WORKS_INVESTOR_ROOM/
+├── 01_COMPANY/             # Registration, ownership, cap table, corporate history
+├── 02_VISION_STRATEGY/     # Vision, Master Plan, market and competitive strategy
+├── 03_PRODUCT/             # MVP, roadmap, demo evidence, flows and product learning
+├── 04_TECHNOLOGY/          # Architecture, code/IP evidence, security and technical decisions
+├── 05_MARKET/              # Market research, customer evidence, competition and trends
+├── 06_GROWTH/              # GTM, sales, partnerships, acquisition and cohorts
+├── 07_FINANCE/             # P&L, cash flow, budget, forecast, revenue and runway
+├── 08_LEGAL/               # Contracts, privacy, IP, compliance and material matters
+├── 09_TEAM/                # Founders, key hires, organization and hiring plan
+└── 10_DUE_DILIGENCE/       # Q&A log, checklists, risk register and evidence tracker
+```
+
+Each folder has an owner, sensitivity classification, current date, external-share status and review date. Corporate records, cap table, contracts, financial statements, legal opinions and personal information are shared only through approved access controls and qualified legal/finance guidance.
+
+## Key investor materials
+
+1. **Pitch Deck:** concise, evidence-first company story.
+2. **One Pager:** problem, solution, market, team and current ask/status on one page.
+3. **Financial Model:** assumptions, actuals, scenarios, budget, cash flow and runway.
+4. **Product Demo:** accurate view of current product capability; planned features labeled clearly.
+5. **Data Room:** detailed, permissioned diligence evidence.
+
+## Investor updates and relationship system
+
+Maintain a permissioned relationship register with contact, organization, stage/interest, prior discussion, materials shared, confidentiality status, next step, owner and date. Do not store unnecessary personal data or sensitive investor notes without an approved purpose/retention rule.
+
+For appropriate existing investors/advisers, a monthly update includes:
+
+- **Progress:** product, business, team or operating milestones completed.
+- **Metrics:** dated/cohort-defined user, business, retention and financial evidence.
+- **Learnings:** what the company learned and how it changed a decision.
+- **Challenges:** material risks, blockers and specific help requested.
+- **Next steps:** priorities and evidence expected before the next update.
+
+Updates distinguish facts, targets and assumptions. They are not a substitute for required corporate disclosures or legal communications.
+
 ## Product and revenue progression
 
 | Stage | Product focus | Evidence sought |
