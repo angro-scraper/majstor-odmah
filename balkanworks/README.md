@@ -70,3 +70,7 @@ The Foundation-to-pilot-to-public launch operating plan is in [BALKAN_WORKS_LAUN
 ## Investor narrative
 
 The evidence-first investor narrative draft is in [BALKAN_WORKS_INVESTOR_READY.md](docs/BALKAN_WORKS_INVESTOR_READY.md).
+
+## Ten-year vision
+
+The long-horizon strategic direction is in [BALKAN_WORKS_10_YEAR_VISION.md](docs/BALKAN_WORKS_10_YEAR_VISION.md).
