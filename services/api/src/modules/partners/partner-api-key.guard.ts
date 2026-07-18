@@ -1,6 +1,7 @@
-import { CanActivate, ExecutionContext, Injectable, UnauthorizedException } from "@nestjs/common";
+import { CanActivate, ExecutionContext, Injectable, NotFoundException, UnauthorizedException } from "@nestjs/common";
 import { PrismaService } from "@balkanworks/database";
 import { createHash } from "crypto";
+import { FeaturesService } from "../features/features.service";
 
 export type PartnerApiPrincipal = { partnerId: string; apiKeyId: string; scopes: string[] };
 
@@ -13,9 +14,10 @@ type PartnerRequest = {
 
 @Injectable()
 export class PartnerApiKeyGuard implements CanActivate {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService, private readonly features: FeaturesService) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
+    if (!this.features.isEnabled("partnerApi")) throw new NotFoundException("PARTNER_API_DISABLED");
     const request = context.switchToHttp().getRequest<PartnerRequest>();
     const headerValue = request.headers["x-partner-api-key"];
     const apiKey = Array.isArray(headerValue) ? headerValue[0] : headerValue;

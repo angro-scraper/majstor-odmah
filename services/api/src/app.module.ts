@@ -18,9 +18,10 @@ import { CategoriesModule } from "./modules/categories/categories.module";
 import { OperationsModule } from "./modules/operations/operations.module";
 import { PartnersModule } from "./modules/partners/partners.module";
 import { ComplianceModule } from "./modules/compliance/compliance.module";
+import { FeaturesModule } from "./modules/features/features.module";
 import { SecurityModule } from "./common/security.module";
 
 @Module({
-  imports: [ConfigModule.forRoot({ isGlobal: true }), DatabaseModule, SecurityModule, AuthModule, UsersModule, BusinessesModule, CategoriesModule, LocationsModule, NotificationsModule, SearchModule, ReviewsModule, AdminModule, FavoritesModule, HealthModule, AiModule, OffersModule, AnalyticsModule, OperationsModule, PartnersModule, ComplianceModule],
+  imports: [ConfigModule.forRoot({ isGlobal: true }), DatabaseModule, SecurityModule, AuthModule, UsersModule, BusinessesModule, CategoriesModule, LocationsModule, NotificationsModule, SearchModule, ReviewsModule, AdminModule, FavoritesModule, HealthModule, AiModule, OffersModule, AnalyticsModule, OperationsModule, PartnersModule, ComplianceModule, FeaturesModule],
 })
 export class AppModule {}
