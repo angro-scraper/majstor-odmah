@@ -1,0 +1,232 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserStatus {
+  ACTIVE
+  INACTIVE
+  BLOCKED
+  PENDING
+}
+
+enum BusinessStatus {
+  DRAFT
+  PENDING
+  VERIFIED
+  BLOCKED
+}
+
+enum NotificationType {
+  IMPORTANT
+  RECOMMENDATION
+  PROMOTION
+  SYSTEM
+}
+
+model User {
+  id            String         @id @default(uuid()) @db.Uuid
+  email         String         @unique
+  phone         String?        @unique
+  passwordHash  String         @map("password_hash")
+  status        UserStatus     @default(PENDING)
+  profile       Profile?
+  businesses    Business[]
+  roles         UserRole[]
+  audits        AuditLog[]
+  files         File[]
+  notifications Notification[]
+  sessions      AuthSession[]
+  createdAt     DateTime       @default(now()) @map("created_at")
+  updatedAt     DateTime       @updatedAt @map("updated_at")
+  deletedAt     DateTime?      @map("deleted_at")
+
+  @@map("users")
+}
+
+model AuthSession {
+  id           String   @id @default(uuid()) @db.Uuid
+  userId       String   @map("user_id") @db.Uuid
+  refreshToken String   @unique @map("refresh_token")
+  expiresAt    DateTime @map("expires_at")
+  revokedAt    DateTime? @map("revoked_at")
+  user         User     @relation(fields: [userId], references: [id])
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+  deletedAt    DateTime? @map("deleted_at")
+
+  @@index([userId, expiresAt])
+  @@map("auth_sessions")
+}
+
+model Profile {
+  id          String   @id @default(uuid()) @db.Uuid
+  userId      String   @unique @map("user_id") @db.Uuid
+  firstName   String?  @map("first_name")
+  lastName    String?  @map("last_name")
+  avatarUrl   String?  @map("avatar_url")
+  countryId   String?  @map("country_id") @db.Uuid
+  cityId      String?  @map("city_id") @db.Uuid
+  preferences Json     @default("{}")
+  user        User     @relation(fields: [userId], references: [id])
+  country     Country? @relation(fields: [countryId], references: [id])
+  city        City?    @relation(fields: [cityId], references: [id])
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+  deletedAt   DateTime? @map("deleted_at")
+
+  @@map("profiles")
+}
+
+model Country {
+  id        String    @id @default(uuid()) @db.Uuid
+  code      String    @unique
+  name      String
+  currency  String?
+  cities    City[]
+  profiles  Profile[]
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+  deletedAt DateTime? @map("deleted_at")
+
+  @@map("countries")
+}
+
+model City {
+  id        String             @id @default(uuid()) @db.Uuid
+  countryId String             @map("country_id") @db.Uuid
+  name      String
+  latitude  Float?
+  longitude Float?
+  country   Country            @relation(fields: [countryId], references: [id])
+  profiles  Profile[]
+  locations BusinessLocation[]
+  createdAt DateTime           @default(now()) @map("created_at")
+  updatedAt DateTime           @updatedAt @map("updated_at")
+  deletedAt DateTime?          @map("deleted_at")
+
+  @@unique([countryId, name])
+  @@map("cities")
+}
+
+model Role {
+  id          String           @id @default(uuid()) @db.Uuid
+  name        String           @unique
+  permissions RolePermission[]
+  users       UserRole[]
+  createdAt   DateTime         @default(now()) @map("created_at")
+  updatedAt   DateTime         @updatedAt @map("updated_at")
+  deletedAt   DateTime?        @map("deleted_at")
+
+  @@map("roles")
+}
+
+model Permission {
+  id        String           @id @default(uuid()) @db.Uuid
+  name      String           @unique
+  roles     RolePermission[]
+  createdAt DateTime         @default(now()) @map("created_at")
+  updatedAt DateTime         @updatedAt @map("updated_at")
+  deletedAt DateTime?        @map("deleted_at")
+
+  @@map("permissions")
+}
+
+model UserRole {
+  userId String @map("user_id") @db.Uuid
+  roleId String @map("role_id") @db.Uuid
+  user   User   @relation(fields: [userId], references: [id])
+  role   Role   @relation(fields: [roleId], references: [id])
+
+  @@id([userId, roleId])
+  @@map("user_roles")
+}
+
+model RolePermission {
+  roleId       String     @map("role_id") @db.Uuid
+  permissionId String     @map("permission_id") @db.Uuid
+  role         Role       @relation(fields: [roleId], references: [id])
+  permission   Permission @relation(fields: [permissionId], references: [id])
+
+  @@id([roleId, permissionId])
+  @@map("role_permissions")
+}
+
+model Business {
+  id          String             @id @default(uuid()) @db.Uuid
+  ownerId     String             @map("owner_id") @db.Uuid
+  name        String
+  description String?
+  status      BusinessStatus     @default(DRAFT)
+  owner       User               @relation(fields: [ownerId], references: [id])
+  locations   BusinessLocation[]
+  createdAt   DateTime           @default(now()) @map("created_at")
+  updatedAt   DateTime           @updatedAt @map("updated_at")
+  deletedAt   DateTime?          @map("deleted_at")
+
+  @@map("businesses")
+}
+
+model BusinessLocation {
+  id         String   @id @default(uuid()) @db.Uuid
+  businessId String   @map("business_id") @db.Uuid
+  cityId     String   @map("city_id") @db.Uuid
+  address    String?
+  latitude   Float?
+  longitude  Float?
+  business   Business @relation(fields: [businessId], references: [id])
+  city       City     @relation(fields: [cityId], references: [id])
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
+  deletedAt  DateTime? @map("deleted_at")
+
+  @@map("business_locations")
+}
+
+model AuditLog {
+  id          String   @id @default(uuid()) @db.Uuid
+  actorUserId String?  @map("actor_user_id") @db.Uuid
+  action      String
+  resourceType String  @map("resource_type")
+  resourceId  String?  @map("resource_id")
+  payload     Json     @default("{}")
+  actor       User?    @relation(fields: [actorUserId], references: [id])
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+  deletedAt   DateTime? @map("deleted_at")
+
+  @@map("audit_logs")
+}
+
+model File {
+  id          String   @id @default(uuid()) @db.Uuid
+  ownerUserId String   @map("owner_user_id") @db.Uuid
+  storageKey  String   @unique @map("storage_key")
+  mimeType    String   @map("mime_type")
+  sizeBytes   Int      @map("size_bytes")
+  owner       User     @relation(fields: [ownerUserId], references: [id])
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+  deletedAt   DateTime? @map("deleted_at")
+
+  @@map("files")
+}
+
+model Notification {
+  id        String           @id @default(uuid()) @db.Uuid
+  userId    String           @map("user_id") @db.Uuid
+  type      NotificationType
+  title     String
+  message   String
+  readAt    DateTime?        @map("read_at")
+  user      User             @relation(fields: [userId], references: [id])
+  createdAt DateTime         @default(now()) @map("created_at")
+  updatedAt DateTime         @updatedAt @map("updated_at")
+  deletedAt DateTime?        @map("deleted_at")
+
+  @@map("notifications")
+}

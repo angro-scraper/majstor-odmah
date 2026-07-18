@@ -1,0 +1,1 @@
+{"name":"@balkanworks/mobile","private":true,"scripts":{"start":"expo start","test":"jest"},"dependencies":{"expo":"^52.0.0","react":"^19.0.0","react-native":"^0.76.0"}}
