@@ -13,3 +13,13 @@ uvicorn app:app --reload --port 8090
 ```
 
 Otvoriti `http://localhost:8090`.
+
+## Operativni admin panel
+
+`/admin` je kontrolni centar za Core platformu: pregled metrika, korisnika,
+firmi koje čekaju verifikaciju, marketplace oglasa i audit traga. Sve odluke se
+izvršavaju kroz zaštićeni Core API; portal ne sadrži administratorsku lozinku.
+
+Pristup imaju samo nalozi sa Core ulogom `ADMIN` ili `MODERATOR`. Prvi takav
+nalog se dodeljuje kontrolisano u bazi tokom administrator-onboardinga — javna
+registracija nikada ne može sama sebi dodeliti administrativnu ulogu.

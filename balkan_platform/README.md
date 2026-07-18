@@ -45,7 +45,7 @@ docker compose up --build
 | `business_tools` | Opsnestone adapteri | struktura spremna |
 | `payments` | wallet, transakcije, pretplate | struktura spremna |
 | `notifications` | push, email i SMS | struktura spremna |
-| `admin` | moderacija, statistika, audit | aktivan skeleton |
+| `admin` | moderacija, statistika, audit | aktivan |
 
 ## Migracije
 

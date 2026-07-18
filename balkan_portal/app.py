@@ -8,6 +8,7 @@ import httpx
 from fastapi import FastAPI, HTTPException, Query, Request, status
 from pydantic import BaseModel, EmailStr, Field
 from fastapi.responses import HTMLResponse, JSONResponse
+from admin_page import render_admin_page
 from business_page import render_business_page
 
 APP_NAME = "Balkan.works"
@@ -149,9 +150,72 @@ async def create_business(request: Request, payload: dict) -> JSONResponse:
     return await core_business(request, "POST", payload)
 
 
+async def core_admin(request: Request, path: str, method: str = "GET") -> JSONResponse:
+    authorization = request.headers.get("authorization")
+    if not authorization:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Prijava je obavezna.")
+    try:
+        async with httpx.AsyncClient(timeout=12) as client:
+            response = await client.request(method, f"{CORE_URL}/api/admin/{path}", headers={"Authorization": authorization})
+    except httpx.HTTPError as exc:
+        raise HTTPException(status_code=503, detail="Admin Core servis trenutno nije dostupan.") from exc
+    if response.is_error:
+        try:
+            detail = response.json().get("detail", "Admin zahtev nije uspeo.")
+        except ValueError:
+            detail = "Admin zahtev nije uspeo."
+        raise HTTPException(status_code=response.status_code, detail=detail)
+    return JSONResponse(response.json(), status_code=response.status_code)
+
+
+@app.get("/api/admin/dashboard", response_class=JSONResponse, include_in_schema=False)
+async def admin_dashboard(request: Request) -> JSONResponse:
+    return await core_admin(request, "dashboard")
+
+
+@app.get("/api/admin/users", response_class=JSONResponse, include_in_schema=False)
+async def admin_users(request: Request) -> JSONResponse:
+    return await core_admin(request, "users")
+
+
+@app.post("/api/admin/users/{user_id}/block", response_class=JSONResponse, include_in_schema=False)
+async def admin_block_user(user_id: str, request: Request) -> JSONResponse:
+    return await core_admin(request, f"users/{user_id}/block", "POST")
+
+
+@app.get("/api/admin/businesses", response_class=JSONResponse, include_in_schema=False)
+async def admin_businesses(request: Request) -> JSONResponse:
+    return await core_admin(request, "businesses")
+
+
+@app.post("/api/admin/businesses/{business_id}/verify", response_class=JSONResponse, include_in_schema=False)
+async def admin_verify_business(business_id: str, request: Request) -> JSONResponse:
+    return await core_admin(request, f"businesses/{business_id}/verify", "POST")
+
+
+@app.get("/api/admin/listings", response_class=JSONResponse, include_in_schema=False)
+async def admin_listings(request: Request) -> JSONResponse:
+    return await core_admin(request, "listings")
+
+
+@app.post("/api/admin/listings/{listing_id}/hide", response_class=JSONResponse, include_in_schema=False)
+async def admin_hide_listing(listing_id: str, request: Request) -> JSONResponse:
+    return await core_admin(request, f"listings/{listing_id}/hide", "POST")
+
+
+@app.get("/api/admin/audit-logs", response_class=JSONResponse, include_in_schema=False)
+async def admin_audit_logs(request: Request) -> JSONResponse:
+    return await core_admin(request, "audit-logs")
+
+
 @app.get("/business", response_class=HTMLResponse, include_in_schema=False)
 async def business() -> HTMLResponse:
     return render_business_page()
+
+
+@app.get("/admin", response_class=HTMLResponse, include_in_schema=False)
+async def admin() -> HTMLResponse:
+    return HTMLResponse(render_admin_page())
 
 
 @app.get("/account", response_class=HTMLResponse, include_in_schema=False)
