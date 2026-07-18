@@ -1,7 +1,8 @@
 import { ForbiddenException, Injectable, NotFoundException } from "@nestjs/common";
 import { Prisma, ReviewStatus } from "@prisma/client";
 import { PrismaService } from "@balkanworks/database";
-import { IsEmail, IsLatitude, IsLongitude, IsObject, IsOptional, IsPhoneNumber, IsString, IsUUID, MaxLength, MinLength } from "class-validator";
+import { IsEmail, IsLatitude, IsLongitude, IsObject, IsOptional, IsPhoneNumber, IsString, IsUUID, Max, MaxLength, Min, MinLength } from "class-validator";
+import { Type } from "class-transformer";
 
 export class CreateBusinessDto {
   @IsString() @MinLength(2) @MaxLength(160) name!: string;
@@ -31,6 +32,12 @@ export class CreateServiceDto {
   @IsString() @MinLength(2) @MaxLength(160) name!: string;
   @IsOptional() @IsString() @MaxLength(2000) description?: string;
   @IsOptional() @IsString() @MaxLength(100) priceRange?: string;
+}
+
+export class ListBusinessesDto {
+  @IsOptional() @IsUUID() categoryId?: string;
+  @IsOptional() @IsUUID() cityId?: string;
+  @IsOptional() @Type(() => Number) @Min(1) @Max(50) limit?: number;
 }
 
 @Injectable()
@@ -71,6 +78,34 @@ export class BusinessesService {
     return business;
   }
 
+  async findPublicBySlug(slug: string) {
+    const business = await this.prisma.business.findFirst({
+      where: { slug: slug.trim().toLowerCase(), deletedAt: null, status: "VERIFIED" },
+      include: this.detailInclude,
+    });
+    if (!business) throw new NotFoundException("BUSINESS_NOT_FOUND");
+    return business;
+  }
+
+  async listPublic(input: ListBusinessesDto) {
+    return this.prisma.business.findMany({
+      where: {
+        deletedAt: null,
+        status: "VERIFIED",
+        ...(input.categoryId ? { categoryId: input.categoryId } : {}),
+        ...(input.cityId ? { locations: { some: { cityId: input.cityId, deletedAt: null } } } : {}),
+      },
+      include: {
+        category: true,
+        locations: { include: { city: true }, where: { deletedAt: null } },
+        images: { where: { deletedAt: null }, orderBy: { orderIndex: "asc" }, take: 1 },
+        _count: { select: { reviews: true } },
+      },
+      orderBy: [{ verificationStatus: "desc" }, { name: "asc" }],
+      take: input.limit ?? 20,
+    });
+  }
+
   async findOwned(id: string, userId: string) {
     const business = await this.prisma.business.findFirst({ where: { id, ownerId: userId, deletedAt: null }, include: this.detailInclude });
     if (!business) throw new NotFoundException("BUSINESS_NOT_FOUND");
@@ -102,6 +137,11 @@ export class BusinessesService {
   async recordContact(id: string, userId: string, type: "PHONE" | "EMAIL" | "MESSAGE" | "LOCATION") {
     await this.findPublic(id);
     return this.prisma.contactEvent.create({ data: { businessId: id, userId, type } });
+  }
+
+  async recordView(id: string, userId: string) {
+    await this.findPublic(id);
+    return this.prisma.businessView.create({ data: { businessId: id, userId, source: "web" } });
   }
 
   private async nextSlug(name: string): Promise<string> {

@@ -12,9 +12,12 @@ import { AdminModule } from "./modules/admin/admin.module";
 import { FavoritesModule } from "./modules/favorites/favorites.module";
 import { HealthModule } from "./modules/health/health.module";
 import { AiModule } from "./modules/ai/ai.module";
+import { OffersModule } from "./modules/offers/offers.module";
+import { AnalyticsModule } from "./modules/analytics/analytics.module";
+import { CategoriesModule } from "./modules/categories/categories.module";
 import { SecurityModule } from "./common/security.module";
 
 @Module({
-  imports: [ConfigModule.forRoot({ isGlobal: true }), DatabaseModule, SecurityModule, AuthModule, UsersModule, BusinessesModule, LocationsModule, NotificationsModule, SearchModule, ReviewsModule, AdminModule, FavoritesModule, HealthModule, AiModule],
+  imports: [ConfigModule.forRoot({ isGlobal: true }), DatabaseModule, SecurityModule, AuthModule, UsersModule, BusinessesModule, CategoriesModule, LocationsModule, NotificationsModule, SearchModule, ReviewsModule, AdminModule, FavoritesModule, HealthModule, AiModule, OffersModule, AnalyticsModule],
 })
 export class AppModule {}

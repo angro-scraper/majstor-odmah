@@ -23,7 +23,7 @@ export class JwtAuthGuard implements CanActivate {
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest<RequestWithUser>();
     const token = request.headers.authorization?.match(/^Bearer\s+(.+)$/i)?.[1];
-    const secret = process.env.JWT_ACCESS_SECRET;
+    const secret = process.env.JWT_ACCESS_SECRET ?? process.env.JWT_SECRET;
 
     if (!token || !secret) throw new UnauthorizedException("AUTHENTICATION_REQUIRED");
 
