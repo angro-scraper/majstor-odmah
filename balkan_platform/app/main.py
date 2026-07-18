@@ -10,6 +10,7 @@ from app.modules.admin.router import router as admin_router
 from app.modules.business.router import router as business_router
 from app.modules.business_tools.router import router as business_tools_router
 from app.modules.catalog.router import router as catalog_router
+from app.modules.discovery.router import router as discovery_router
 from app.modules.identity.router import router as auth_router
 from app.modules.identity.router import users_router
 from app.modules.location.router import router as location_router
@@ -58,6 +59,7 @@ for router in (
     users_router,
     business_router,
     catalog_router,
+    discovery_router,
     location_router,
     offers_router,
     marketplace_router,
