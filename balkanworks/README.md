@@ -209,6 +209,8 @@ The reusable product, API, security, performance and UAT test cases are in [BALK
 
 The controlled due-diligence structure, evidence pack and sharing protocol are in [BALKAN_WORKS_INVESTOR_DATA_ROOM.md](docs/BALKAN_WORKS_INVESTOR_DATA_ROOM.md).
 
+The milestone-led capital strategy, investor evidence and use-of-funds discipline are in [BALKAN_WORKS_FUNDRAISING_STRATEGY.md](docs/BALKAN_WORKS_FUNDRAISING_STRATEGY.md).
+
 ## First 180 days
 
 The outcome-led MVP, pilot, validation and scale-readiness plan is in [BALKAN_WORKS_FIRST_180_DAYS_PLAN.md](docs/BALKAN_WORKS_FIRST_180_DAYS_PLAN.md).
