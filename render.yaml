@@ -2,7 +2,7 @@ services:
   - type: web
     name: balkanworks-web
     runtime: node
-    plan: free
+    plan: starter
     buildCommand: corepack enable && pnpm install --frozen-lockfile && pnpm --filter @balkanworks/web build
     startCommand: pnpm --filter @balkanworks/web exec next start --hostname 0.0.0.0 --port $PORT
     healthCheckPath: /
@@ -16,7 +16,7 @@ services:
   - type: web
     name: balkanworks-api
     runtime: node
-    plan: free
+    plan: starter
     buildCommand: corepack enable && pnpm install --frozen-lockfile && pnpm --filter @balkanworks/database prisma:generate && pnpm --filter @balkanworks/api build
     # Free-tier services do not support Render pre-deploy commands.  Run the
     # idempotent Prisma migration immediately before the API starts instead.
