@@ -267,6 +267,10 @@ The city-by-city operating system for local supply, content, partners, community
 
 The company-wide daily, weekly, monthly and quarterly decision/execution cadence is in [BALKAN_WORKS_OPERATING_SYSTEM.md](docs/BALKAN_WORKS_OPERATING_SYSTEM.md).
 
+## Master plan
+
+The executive synthesis of vision, phases, GTM, economics, team and North Star is in [BALKAN_WORKS_MASTER_PLAN.md](docs/BALKAN_WORKS_MASTER_PLAN.md).
+
 ## Team roles
 
 Role-level responsibilities and hiring sequence are in [BALKAN_WORKS_TEAM_ROLES.md](docs/BALKAN_WORKS_TEAM_ROLES.md).
