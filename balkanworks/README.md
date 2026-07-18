@@ -211,6 +211,10 @@ The phased package, pricing, revenue and commercial-safeguard strategy is in [BA
 
 The canonical monorepo, application, module and shared-package organization is in [BALKAN_WORKS_CODEBASE_STRUCTURE.md](docs/BALKAN_WORKS_CODEBASE_STRUCTURE.md).
 
+## Security and privacy framework
+
+The security-by-design, privacy, IAM, AI and release-control standards are in [BALKAN_WORKS_SECURITY_PRIVACY_FRAMEWORK.md](docs/BALKAN_WORKS_SECURITY_PRIVACY_FRAMEWORK.md).
+
 ## Team roles
 
 Role-level responsibilities and hiring sequence are in [BALKAN_WORKS_TEAM_ROLES.md](docs/BALKAN_WORKS_TEAM_ROLES.md).
