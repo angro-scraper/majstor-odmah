@@ -14,6 +14,13 @@ enum UserStatus {
   PENDING
 }
 
+enum UserType {
+  CONSUMER
+  BUSINESS_OWNER
+  EMPLOYEE
+  ADMIN
+}
+
 enum BusinessStatus {
   DRAFT
   PENDING
@@ -156,6 +163,10 @@ model User {
   phone         String?        @unique
   passwordHash  String         @map("password_hash")
   status        UserStatus     @default(PENDING)
+  userType      UserType       @default(CONSUMER) @map("user_type")
+  phoneVerified Boolean        @default(false) @map("phone_verified")
+  emailVerified Boolean        @default(false) @map("email_verified")
+  lastLoginAt   DateTime?      @map("last_login_at")
   profile       Profile?
   businesses    Business[]
   roles         UserRole[]
@@ -172,6 +183,7 @@ model User {
   foodReservations SaveFoodReservation[]
   businessFollows BusinessFollower[]
   contactInquiries ContactInquiry[]
+  locations       UserLocation[]
   createdAt     DateTime       @default(now()) @map("created_at")
   updatedAt     DateTime       @updatedAt @map("updated_at")
   deletedAt     DateTime?      @map("deleted_at")
@@ -200,6 +212,7 @@ model Profile {
   firstName   String?  @map("first_name")
   lastName    String?  @map("last_name")
   avatarUrl   String?  @map("avatar_url")
+  dateOfBirth DateTime? @map("date_of_birth")
   countryId   String?  @map("country_id") @db.Uuid
   cityId      String?  @map("city_id") @db.Uuid
   preferences Json     @default("{}")
@@ -238,12 +251,30 @@ model City {
   country   Country            @relation(fields: [countryId], references: [id])
   profiles  Profile[]
   locations BusinessLocation[]
+  userLocations UserLocation[]
   createdAt DateTime           @default(now()) @map("created_at")
   updatedAt DateTime           @updatedAt @map("updated_at")
   deletedAt DateTime?          @map("deleted_at")
 
   @@unique([countryId, name])
   @@map("cities")
+}
+
+model UserLocation {
+  id        String   @id @default(uuid()) @db.Uuid
+  userId    String   @map("user_id") @db.Uuid
+  cityId    String   @map("city_id") @db.Uuid
+  latitude  Float?
+  longitude Float?
+  isPrimary Boolean  @default(false) @map("is_primary")
+  user      User     @relation(fields: [userId], references: [id])
+  city      City     @relation(fields: [cityId], references: [id])
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@unique([userId, cityId])
+  @@index([userId, isPrimary])
+  @@map("user_locations")
 }
 
 model Role {

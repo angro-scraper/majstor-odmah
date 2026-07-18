@@ -1,4 +1,4 @@
-const { CategoryType, PrismaClient, UserStatus, VerificationStatus } = require("@prisma/client");
+const { CategoryType, PrismaClient, UserStatus, UserType, VerificationStatus } = require("@prisma/client");
 const bcrypt = require("bcrypt");
 
 const prisma = new PrismaClient();
@@ -24,7 +24,7 @@ async function ensureService(businessId, name, description) {
 }
 
 async function main() {
-  const roles = ["CUSTOMER", "BUSINESS_OWNER", "ADMIN", "SUPER_ADMIN"];
+  const roles = ["CUSTOMER", "BUSINESS_OWNER", "EMPLOYEE", "MODERATOR", "ADMIN", "SUPER_ADMIN"];
   const permissions = ["business:manage", "business:moderate", "user:manage", "review:moderate"];
   await Promise.all(roles.map((name) => prisma.role.upsert({ where: { name }, create: { name }, update: {} })));
   await Promise.all(permissions.map((name) => prisma.permission.upsert({ where: { name }, create: { name }, update: {} })));
@@ -47,9 +47,10 @@ async function main() {
       email: "admin@balkanworks.local",
       passwordHash,
       status: UserStatus.ACTIVE,
+      userType: UserType.ADMIN,
       profile: { create: { firstName: "Balkan", lastName: "Admin", cityId: belgrade.id, countryId: serbia.id } },
     },
-    update: { passwordHash, status: UserStatus.ACTIVE },
+    update: { passwordHash, status: UserStatus.ACTIVE, userType: UserType.ADMIN },
   });
   const owner = await prisma.user.upsert({
     where: { email: "owner@balkanworks.local" },
@@ -57,9 +58,10 @@ async function main() {
       email: "owner@balkanworks.local",
       passwordHash,
       status: UserStatus.ACTIVE,
+      userType: UserType.BUSINESS_OWNER,
       profile: { create: { firstName: "Demo", lastName: "Owner", cityId: belgrade.id, countryId: serbia.id } },
     },
-    update: { passwordHash, status: UserStatus.ACTIVE },
+    update: { passwordHash, status: UserStatus.ACTIVE, userType: UserType.BUSINESS_OWNER },
   });
   const customer = await prisma.user.upsert({
     where: { email: "customer@balkanworks.local" },
@@ -67,9 +69,10 @@ async function main() {
       email: "customer@balkanworks.local",
       passwordHash,
       status: UserStatus.ACTIVE,
+      userType: UserType.CONSUMER,
       profile: { create: { firstName: "Demo", lastName: "Customer", cityId: noviSad.id, countryId: serbia.id } },
     },
-    update: { passwordHash, status: UserStatus.ACTIVE },
+    update: { passwordHash, status: UserStatus.ACTIVE, userType: UserType.CONSUMER },
   });
   await assignRole(admin.id, "ADMIN");
   await assignRole(owner.id, "BUSINESS_OWNER");

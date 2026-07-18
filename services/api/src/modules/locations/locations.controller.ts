@@ -1,4 +1,4 @@
-import { Controller, Get, Query } from "@nestjs/common";
+import { Controller, Get, Param, Query } from "@nestjs/common";
 import { ok } from "../../common/api-response";
 import { LocationsService } from "./locations.service";
 
@@ -11,6 +11,11 @@ export class LocationsController {
 
   @Get("cities")
   async cities(@Query("countryId") countryId?: string, @Query("query") query?: string) {
+    return ok(await this.locations.cities(countryId, query));
+  }
+
+  @Get("cities/:countryId")
+  async citiesForCountry(@Param("countryId") countryId: string, @Query("query") query?: string) {
     return ok(await this.locations.cities(countryId, query));
   }
 }
