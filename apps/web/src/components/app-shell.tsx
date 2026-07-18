@@ -3,10 +3,10 @@ import { Icon, IconName } from "./icons";
 import { ThemeToggle } from "./theme-toggle";
 
 const links: { href: string; icon: IconName; label: string; key: string }[] = [
-  { href: "/", icon: "home", label: "Početna", key: "home" },
-  { href: "/usluge", icon: "grid", label: "Usluge", key: "services" },
-  { href: "/ai", icon: "sparkle", label: "Brzo", key: "ai" },
-  { href: "/discover", icon: "activity", label: "Aktivnost", key: "activity" },
+  { href: "/app", icon: "home", label: "Početna", key: "home" },
+  { href: "/search", icon: "grid", label: "Discover", key: "services" },
+  { href: "/ai", icon: "sparkle", label: "AI", key: "ai" },
+  { href: "/favorites", icon: "activity", label: "Sačuvano", key: "activity" },
   { href: "/profile", icon: "user", label: "Profil", key: "profile" },
 ];
 

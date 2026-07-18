@@ -1,95 +1,36 @@
-import "./super-app-home.css";
-
-function Icon({ name, size = 16 }: { name: string; size?: number }) {
-  const symbols: Record<string, string> = { sparkle: "✦", chevron: "›", shield: "◈", map: "⌖", utensils: "♨", car: "▱", house: "⌂", heart: "♥", scan: "⌗", receipt: "▤", card: "▣", more: "•••", bell: "♧", grid: "⊞", sliders: "≡", search: "⌕", settings: "⚙", activity: "◌", phone: "◔", star: "★", message: "◌", home: "⌂", user: "●", send: "➤" };
-  return <span className="super-glyph" style={{ fontSize: size, lineHeight: 1 }} aria-hidden="true">{symbols[name] ?? "•"}</span>;
-}
+import "./v0-landing.css";
 
 const categories = [
-  ["Hrana", "Restorani, dostava i ponude", "utensils"],
-  ["Auto", "Servisi, delovi i prevoz", "car"],
-  ["Dom", "Majstori i kućne usluge", "house"],
-  ["Zdravlje", "Lekari, klinike i apoteke", "heart"],
-] as const;
+  ["⌘", "Poslovi", "Pronađi prilike i poveži se sa poslodavcima."],
+  ["⌕", "Majstori i usluge", "Pouzdani lokalni profesionalci kad god zatrebaju."],
+  ["▦", "Kupovina", "Ponude, proizvodi i pametne lokalne akcije."],
+  ["↗", "Dostava hrane", "Omiljena mesta i dostava bez komplikacija."],
+  ["✈", "Putovanja", "Karte, smeštaj i planovi za sledeće putovanje."],
+  ["✚", "Zdravlje", "Lekari, klinike i podrška za tvoje zdravlje."],
+  ["▣", "Edukacija", "Kursevi, časovi i nova znanja u blizini."],
+  ["✦", "AI pomoćnik", "Rešenja, preporuke i pomoć baš kada ti treba."],
+];
 
-const serviceRows = [
-  ["Dom i majstori", "Popravke, instalacije i održavanje", "house"],
-  ["Čišćenje i održavanje", "Domaćice, nega i svakodnevna pomoć", "sparkle"],
-  ["Lepota i nega", "Frizeri, kozmetika i masaža", "heart"],
-] as const;
-
-export default function HomePage() {
-  return <main className="super-app-site">
-    <header className="super-app-header">
-      <a className="super-brand" href="/" aria-label="Balkan.works početna"><span className="super-brand-mark">b</span><span>balkan<span>.works</span></span></a>
-      <nav aria-label="Glavna navigacija"><a className="active" href="/">Početna</a><a href="/search">Usluge</a><a href="/dashboard">Poslovi</a><a href="/profile">Novčanik</a></nav>
-      <a className="super-header-cta" href="/ai">Otvori aplikaciju <Icon name="chevron" size={16} /></a>
-    </header>
-
-    <section className="super-app-hero">
-      <div className="super-app-copy">
-        <span className="super-eyebrow"><Icon name="sparkle" size={15} /> BALKAN AI · LOKALNO I PAMETNO</span>
-        <h1>Sve usluge<br /><span>na jednom mestu.</span></h1>
-        <p>Jedna moderna aplikacija za svakodnevni život i poslovanje širom Balkana — brzo, lokalno i pouzdano.</p>
-        <div className="super-principles">
-          <div><span><Icon name="shield" size={19} /></span><p><b>Jedna prijava</b>Pristupi svim uslugama sa jednim nalogom.</p></div>
-          <div><span><Icon name="map" size={19} /></span><p><b>Lokalno. Regionalno. Vaše.</b>Pronađi firme, ponude i prilike u svom gradu.</p></div>
-          <div><span><Icon name="sparkle" size={19} /></span><p><b>Pametno personalizovano</b>AI preporuke prilagođene tvojoj potrebi.</p></div>
-        </div>
-        <div className="super-hero-actions"><a className="super-primary" href="/ai">Pitaj Balkan AI <Icon name="sparkle" size={17} /></a><a className="super-secondary" href="/search">Istraži usluge</a></div>
-      </div>
-
-      <div className="phone-stage" aria-label="Prikaz Balkan.works aplikacije">
-        <article className="phone phone-home">
-          <div className="phone-status"><span>9:41</span><i /><i /><i /></div>
-          <div className="phone-logo"><span className="mini-mark">b</span> balkan<span>.works</span><Icon name="bell" size={15} /></div>
-          <div className="mini-wallet"><small>Ukupno stanje</small><strong>12.450,00 <em>RSD</em></strong><div><b>＋ Dodaj novac</b><b>↗ Pošalji</b></div></div>
-          <div className="mini-section-head"><b>Brze akcije</b><a href="/profile">Uredi</a></div>
-          <div className="mini-actions"><span><Icon name="scan" size={17} />Skeniraj QR</span><span><Icon name="receipt" size={17} />Plati račun</span><span><Icon name="card" size={17} />Dodaj karticu</span><span><Icon name="more" size={17} />Još</span></div>
-          <div className="mini-section-head"><b>Kategorije</b></div>
-          <div className="mini-category-grid">{categories.map(([name, , icon]) => <a href="/search" key={name}><Icon name={icon} size={18} /><small>{name}</small></a>)}</div>
-          <div className="mini-offer"><span>Wolt+ popust 20%<br />na prvu narudžbinu</span><Icon name="utensils" size={31} /></div>
-          <PhoneNav active="Početna" />
-        </article>
-
-        <article className="phone phone-services">
-          <div className="phone-status"><span>9:41</span><i /><i /><i /></div>
-          <h2>Usluge</h2><div className="mini-search"><Icon name="search" size={14} />Pretražite usluge...<Icon name="sliders" size={14} /></div>
-          <div className="mini-section-head"><b>Popularno</b><a href="/search">Prikaži sve</a></div>
-          <div className="mini-popular"><span><Icon name="house" size={18} />Majstor za sve</span><span><Icon name="sparkle" size={18} />Čišćenje doma</span><span><Icon name="heart" size={18} />Lepota i nega</span><span><Icon name="car" size={18} />Prevoz</span></div>
-          <div className="mini-section-head"><b>Sve kategorije</b></div>
-          <div className="mini-list">{serviceRows.map(([title, desc, icon]) => <a href="/search" key={title}><span><Icon name={icon} size={16} /></span><div><b>{title}</b><small>{desc}</small></div><Icon name="chevron" size={14} /></a>)}</div>
-          <PhoneNav active="Usluge" />
-        </article>
-
-        <article className="phone phone-ai">
-          <div className="phone-status"><span>9:41</span><i /><i /><i /></div>
-          <div className="ai-phone-head"><span className="ai-bot"><Icon name="sparkle" size={16} /></span><b>Balkan AI</b><Icon name="settings" size={15} /></div>
-          <div className="ai-phone-copy"><h2>Kako mogu pomoći?</h2><p>Reci šta ti treba, a Balkan AI pronalazi najbolji put do rešenja.</p></div>
-          <div className="chat-bubble bot">Zdravo! Tu sam da pronađem lokalnu uslugu koja ti stvarno odgovara.</div>
-          <div className="chat-bubble user">Treba mi dobar servis za auto blizu mene.</div>
-          <div className="chat-bubble bot">Našao sam proverene servise sa dobrim ocenama i brzim terminima.</div>
-          <a className="ai-result-card" href="/ai"><span><Icon name="car" size={18} /></span><div><b>Premium Auto Servis</b><small>4.9 · 1.5 km · Verifikovano</small></div><strong>AI izbor</strong></a>
-          <div className="chat-input">Napišite poruku... <span><Icon name="send" size={15} /></span></div>
-          <PhoneNav active="AI" />
-        </article>
-
-        <article className="phone phone-dashboard">
-          <div className="phone-status"><span>9:41</span><i /><i /><i /></div>
-          <div className="dash-greeting"><small>DOBRODOŠLI</small><h2>Vaši rezultati danas</h2><a href="/dashboard">Dashboard <Icon name="chevron" size={13} /></a></div>
-          <div className="metric-grid"><div><Icon name="activity" size={18} /><small>Pregledi</small><b>1.240</b><em>+12%</em></div><div><Icon name="phone" size={18} /><small>Kontakti</small><b>86</b><em>+8%</em></div><div><Icon name="star" size={18} /><small>Ocena</small><b>4.9</b><em>odlično</em></div><div><Icon name="heart" size={18} /><small>Sačuvano</small><b>320</b><em>+24%</em></div></div>
-          <div className="dashboard-growth"><span><Icon name="sparkle" size={18} /></span><div><b>AI savet za rast</b><p>Dodajte još fotografija da povećate interesovanje.</p></div></div>
-          <div className="dash-action"><Icon name="settings" size={17} /><span>Poboljšaj profil</span><Icon name="chevron" size={14} /></div>
-          <div className="dash-action"><Icon name="sparkle" size={17} /><span>Promoviši firmu</span><Icon name="chevron" size={14} /></div>
-          <PhoneNav active="Profil" />
-        </article>
-      </div>
-    </section>
-
-    <section className="super-proof"><div><span><Icon name="sparkle" size={25} /></span><b>Moderan dizajn</b><p>Intuitivno iskustvo i čist, moderan izgled.</p></div><div><span><Icon name="grid" size={25} /></span><b>Sve na jednom mestu</b><p>Usluge, ponude i poslovni alati u jednoj aplikaciji.</p></div><div><span><Icon name="shield" size={25} /></span><b>Sigurno i brzo</b><p>Jasne informacije, proverene firme i kontrola podataka.</p></div><div><span><Icon name="message" size={25} /></span><b>Podrška 24/7</b><p>Balkan AI i tim podrške su dostupni kada zatreba.</p></div></section>
-  </main>;
+function PhonePreview({ wallet = false }: { wallet?: boolean }) {
+  return <div className={`v0-phone ${wallet ? "v0-phone-wallet" : ""}`}>
+    <div className="v0-notch" /><div className="v0-status">9:41 <span>▰ ▰ ◉</span></div>
+    <div className="v0-phone-brand"><b>b</b> balkan<span>.works</span><i>♧</i></div>
+    <div className="v0-balance"><small>{wallet ? "Dostupna sredstva" : "Ukupno stanje"}</small><strong>12.450,00 RSD</strong><em>RS35 2650 0000 1234 5678 90</em><div><button>＋ Dodaj</button><button>⌁ Pošalji</button></div></div>
+    {wallet ? <div className="v0-transactions"><h4>Nedavne transakcije</h4><p><b>↗</b> Wolt <span>-1.250,00</span></p><p><b>↗</b> Maxi <span>-2.435,50</span></p><p className="income"><b>↙</b> Isplata <span>+15.000,00</span></p></div> : <><h4 className="v0-label">Kategorije</h4><div className="v0-mini-cats"><span>▦<small>Poslovi</small></span><span>⌕<small>Usluge</small></span><span>♨<small>Dostava</small></span><span>✈<small>Putovanja</small></span></div><div className="v0-mini-offer">Wolt+ popust 20%<br /><small>na prvu narudžbinu</small></div></>}
+    <div className="v0-phone-nav"><span>⌂<small>Početna</small></span><span>▦<small>Usluge</small></span><b>✦</b><span>◌<small>Poruke</small></span><span>◉<small>Profil</small></span></div>
+  </div>;
 }
 
-function PhoneNav({ active }: { active: string }) {
-  return <nav className="phone-nav" aria-label="Navigacija aplikacije"><span className={active === "Početna" ? "active" : ""}><Icon name="home" size={14} />Početna</span><span className={active === "Usluge" ? "active" : ""}><Icon name="grid" size={14} />Usluge</span><span className={active === "AI" ? "active ai" : "ai"}><Icon name="sparkle" size={16} />AI</span><span><Icon name="message" size={14} />Poruke</span><span className={active === "Profil" ? "active" : ""}><Icon name="user" size={14} />Profil</span></nav>;
+export default function HomePage() {
+  return <main className="v0-site">
+    <header className="v0-header"><a href="/" className="v0-logo"><b>b</b><span>balkan<span>.works</span></span></a><nav><a href="/">Početna</a><a href="/search">Usluge</a><a href="/dashboard">Za kompanije</a><a href="/o-nama">O nama</a><a href="/kontakt">Kontakt</a></nav><div className="v0-header-actions"><a href="/onboarding">Prijavi se</a><a className="v0-download" href="/app">⌄&nbsp; Preuzmi aplikaciju</a></div></header>
+    <section className="v0-hero"><div className="v0-hero-copy"><span className="v0-eyebrow">✦&nbsp; Super aplikacija za Balkan</span><h1>Sve usluge na<br />jednom mestu</h1><p>Jedna aplikacija za svakodnevni život i poslovanje širom Balkana. Poslovi, majstori, dostava, putovanja, zdravlje i novčanik — sve na dohvat ruke.</p><div className="v0-hero-actions"><a className="v0-primary" href="/app">Preuzmi aplikaciju&nbsp; →</a><a className="v0-secondary" href="/search">Istraži usluge</a></div><div className="v0-store-row"><span>●&nbsp; Preuzmi na<br /><b>App Store</b></span><span>▶&nbsp; Preuzmi na<br /><b>Google Play</b></span></div><div className="v0-rating"><i /> <i /> <i /> <i /> <b>★ 4.9 / 5 · 38.000+ ocena</b></div></div><div className="v0-phones"><div className="v0-floating">▦ <b>Novi posao za vas</b><small>Front-end Developer</small></div><PhonePreview wallet /><PhonePreview /><div className="v0-delivery">♨&nbsp; Dostava stiže<br /><small>★ 4.9 · 25 min</small></div></div></section>
+    <section className="v0-services"><div className="v0-section-title"><span>USLUGE</span><h2>Sve što vam treba,<br />u jednoj aplikaciji</h2><p>Od posla i majstora do putovanja i zdravlja — pronađite pravu uslugu u samo nekoliko dodira.</p></div><div className="v0-category-grid">{categories.map(([icon,title,text]) => <a href="/search" key={title}><b>{icon}</b><h3>{title}</h3><p>{text}</p><em>→</em></a>)}</div></section>
+    <section className="v0-steps"><div className="v0-section-title"><span>KAKO FUNKCIONIŠE</span><h2>Do rešenja u četiri koraka</h2><p>Jednostavan proces koji vas povezuje sa pravim ljudima i uslugama.</p></div><div className="v0-step-grid">{[["01","Napravi nalog","Jedna prijava za sve usluge."],["02","Izaberi uslugu","Pronađi kategoriju koja ti treba."],["03","Poveži se sa firmom","Kontaktiraj, rezerviši ili uporedi."],["04","Plati bezbedno","Završi posao uz sigurnu aplikaciju."]].map(([n,t,d])=><article key={n}><b>{n}</b><h3>{t}</h3><p>{d}</p></article>)}</div></section>
+    <section className="v0-stat-band"><b>1.2M+<small>korisnika</small></b><b>45.000+<small>pružalaca usluga</small></b><b>12M+<small>uspešnih interakcija</small></b><b>4.9/5<small>prosečna ocena</small></b></section>
+    <section className="v0-ai-section"><div><span>✦ BALKAN AI</span><h2>Pametni pomoćnik<br />koji radi umesto vas</h2><p>Kažite šta vam treba, a Balkan AI pronalazi najbolje lokalne opcije, upoređuje ponude i predlaže sledeći korak.</p><a href="/ai">Razgovaraj sa Balkan AI →</a></div><div className="v0-ai-card"><b>✦ balkan.works AI</b><p className="v0-ai-user">Treba mi električar blizu mene.</p><p>Znam proverene električare u Beogradu koji mogu doći danas.</p><article>Električar Marković <strong>4.9 · 1.2 km</strong></article><article>Brza kućna pomoć <strong>4.8 · 2.1 km</strong></article><input placeholder="Napišite poruku…" /></div></section>
+    <section className="v0-business"><div className="v0-business-chart"><b>Rezultati firme</b><div><strong>4.350</strong><strong>120</strong><strong>4.9</strong></div><svg viewBox="0 0 560 150" aria-hidden="true"><path d="M0 125 C75 95 100 110 150 65 S250 115 310 70 S420 25 560 48" /></svg></div><div><span>ZA KOMPANIJE</span><h2>Vodite ceo biznis<br />sa jednog mesta</h2><p>Od profila firme do ponuda i komunikacije sa kupcima, balkan.works je vaš digitalni kanal za rast.</p><ul><li>Digitalni profil firme</li><li>Promocije i ponude</li><li>Analitika i preporuke</li><li>Jednostavna komunikacija</li></ul><a href="/dashboard">Pokrenite poslovni profil →</a></div></section>
+    <section className="v0-download-strip"><div><h2>Ceo Balkan u<br />jednoj aplikaciji</h2><p>Pronađite lokalne usluge, poslove i prilike — brzo, lako i sigurno.</p><span>● App Store</span> <span>▶ Google Play</span></div><PhonePreview /></section>
+    <footer className="v0-footer"><a className="v0-logo" href="/"><b>b</b><span>balkan<span>.works</span></span></a><p>Super aplikacija za svakodnevni život i poslovanje širom Balkana.</p><small>© 2026 balkan.works. Sva prava zadržana.</small></footer>
+  </main>;
 }
