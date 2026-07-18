@@ -227,6 +227,10 @@ The dependency-led sequencing of Core, engagement, business, transaction and int
 
 The operating plan from foundation through MVP, pilot, validation and scale is in [BALKAN_WORKS_EXECUTION_PLAN.md](docs/BALKAN_WORKS_EXECUTION_PLAN.md).
 
+## Founder playbook
+
+The founder decision, operating rhythm and evidence-first leadership system is in [BALKAN_WORKS_FOUNDER_PLAYBOOK.md](docs/BALKAN_WORKS_FOUNDER_PLAYBOOK.md).
+
 ## Team roles
 
 Role-level responsibilities and hiring sequence are in [BALKAN_WORKS_TEAM_ROLES.md](docs/BALKAN_WORKS_TEAM_ROLES.md).
