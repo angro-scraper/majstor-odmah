@@ -271,6 +271,10 @@ The company-wide daily, weekly, monthly and quarterly decision/execution cadence
 
 The executive synthesis of vision, phases, GTM, economics, team and North Star is in [BALKAN_WORKS_MASTER_PLAN.md](docs/BALKAN_WORKS_MASTER_PLAN.md).
 
+## Implementation package
+
+The documentation taxonomy, workflow, project-management system and release checklist are in [BALKAN_WORKS_IMPLEMENTATION_PACKAGE.md](docs/BALKAN_WORKS_IMPLEMENTATION_PACKAGE.md).
+
 ## Team roles
 
 Role-level responsibilities and hiring sequence are in [BALKAN_WORKS_TEAM_ROLES.md](docs/BALKAN_WORKS_TEAM_ROLES.md).
