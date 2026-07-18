@@ -327,6 +327,8 @@ The exact phased build order and release gates for the platform are in [MASTER_I
 
 Role-level responsibilities and hiring sequence are in [BALKAN_WORKS_TEAM_ROLES.md](docs/BALKAN_WORKS_TEAM_ROLES.md).
 
+The phase-based hiring, leadership and regional organization plan is in [BALKAN_WORKS_TEAM_BUILDING_PLAN.md](docs/BALKAN_WORKS_TEAM_BUILDING_PLAN.md).
+
 ## Analytics
 
 Event taxonomy, dashboards and experimentation rules are in [BALKAN_WORKS_ANALYTICS_DATA_STRATEGY.md](docs/BALKAN_WORKS_ANALYTICS_DATA_STRATEGY.md).
