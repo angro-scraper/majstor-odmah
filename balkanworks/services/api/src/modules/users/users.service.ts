@@ -1,4 +1,5 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
+import { Prisma } from "@prisma/client";
 import { PrismaService } from "@balkanworks/database";
 import { IsObject, IsOptional, IsString, IsUUID, MaxLength } from "class-validator";
 
@@ -28,10 +29,24 @@ export class UsersService {
 
   async updateProfile(userId: string, input: UpdateProfileDto) {
     await this.getProfile(userId);
+    const { preferences, interests, ...fields } = input;
+    const jsonFields = {
+      ...(preferences !== undefined ? { preferences: preferences as unknown as Prisma.InputJsonValue } : {}),
+      ...(interests !== undefined ? { interests: interests as unknown as Prisma.InputJsonValue } : {}),
+    };
+    const createData: Prisma.ProfileUncheckedCreateInput = {
+      userId,
+      ...fields,
+      ...jsonFields,
+    };
+    const updateData: Prisma.ProfileUncheckedUpdateInput = {
+      ...fields,
+      ...jsonFields,
+    };
     return this.prisma.profile.upsert({
       where: { userId },
-      create: { userId, ...input },
-      update: input,
+      create: createData,
+      update: updateData,
       include: { country: true, city: true },
     });
   }

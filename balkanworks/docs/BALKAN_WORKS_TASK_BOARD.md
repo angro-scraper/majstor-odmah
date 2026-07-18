@@ -12,7 +12,7 @@ Task states are `BACKLOG`, `IN PROGRESS`, `REVIEW` and `DONE`. A task is `DONE` 
 | --- | --- | --- | --- | --- |
 | BW-001 | Critical | Create project foundation | DONE | Modular monorepo: `apps/`, `services/`, `packages/database/`, `docs/`, `infrastructure/` |
 | BW-002 | Critical | Git, README and base documentation | DONE | Repository, root README, root ignore rules and project documentation exist |
-| BW-003 | High | Docker configuration | REVIEW | Compose now defines PostgreSQL, Redis, MinIO, API and web services; runtime build is pending dependency installation and local Docker validation |
+| BW-003 | High | Docker configuration | REVIEW | Compose defines PostgreSQL, Redis, MinIO, API and web services; application builds now pass, while local Docker runtime validation remains pending |
 | BW-010 | Critical | Prisma setup | DONE | Prisma package and executable PostgreSQL schema exist in `packages/database/prisma/schema.prisma` |
 | BW-011 | Critical | Core models | DONE | User, Business, Category, Service and Review models plus their relations exist in the Prisma schema |
 
@@ -20,8 +20,8 @@ The requested `frontend/`, `backend/` and `database/` concerns are intentionally
 
 ## Next batch
 
-1. **BW-012 — Migration system:** create and validate the first reviewed Prisma migration against a local PostgreSQL instance.
-2. **BW-013 — Seed data:** add idempotent roles, an admin, a test user and demo businesses.
+1. **BW-012 — Migration system:** apply the committed initial migration against a disposable PostgreSQL database and verify migration history.
+2. **BW-013 — Seed data:** run the idempotent roles, users, locations, categories and demo-business seed after the migration.
 3. **BW-020 to BW-023 — Auth:** add endpoint-level automated tests, JWT protection verification and seeded role assignment.
 4. **BW-030 / BW-031 — User experience:** verify profile API and favorites against the migrated database.
 5. **BW-040 / BW-041 — Business platform:** validate create/edit/profile flows, including services, locations and images.

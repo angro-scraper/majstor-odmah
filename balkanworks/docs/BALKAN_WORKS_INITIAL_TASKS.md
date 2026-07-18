@@ -33,8 +33,8 @@ The canonical folders are `apps/`, `services/`, `packages/`, `docs/` and `infras
 | 005 | PostgreSQL environment | REVIEW | Local Docker Compose defines PostgreSQL; runtime Docker validation has not run in this environment. |
 | 006 | Connect Prisma ORM | DONE | `@balkanworks/database` contains Prisma client configuration. |
 | 007 | Add `schema.prisma` | DONE | PostgreSQL schema includes core MVP models, relations and indexes. |
-| 008 | Create first migration | BACKLOG | Generate, review and apply the initial migration against a disposable local database. |
-| 009 | Add seed data | BACKLOG | Add idempotent categories, locations, roles, an admin and test users/businesses after migration. |
+| 008 | Create first migration | REVIEW | Baseline SQL migration was generated from the validated Prisma schema; apply it against a disposable PostgreSQL database and inspect migration history. |
+| 009 | Add seed data | REVIEW | Idempotent roles, locations, categories, development users and demo businesses are ready in `prisma/seed.js`; run after migration. |
 
 ## Phase 3 — Backend foundation
 
@@ -42,7 +42,7 @@ The canonical folders are `apps/`, `services/`, `packages/`, `docs/` and `infras
 | --- | --- | --- | --- |
 | 010 | Create NestJS project | DONE | NestJS API application exists under `services/api`. |
 | 011 | TypeScript, environment and Prisma connection | REVIEW | TypeScript and environment configuration exist; connection needs the first migrated database. |
-| 012 | Global error handler | BACKLOG | Define one safe API error envelope and exception filter. |
+| 012 | Global error handler | DONE | Global Nest exception filter now returns a safe consistent error envelope and logs server failures. |
 | 013 | API documentation | PARTIAL | Versioned API specifications exist; interactive OpenAPI generation is not configured. |
 
 ## Phase 4 — Authentication
@@ -100,7 +100,7 @@ The canonical folders are `apps/`, `services/`, `packages/`, `docs/` and `infras
 | 048 | Event tracking | PARTIAL | Search, view and contact-related persistence exists; standard event contract and coverage remain. |
 | 049 | Basic dashboard | PARTIAL | Admin overview API exists; dashboard UI and validated metrics remain. |
 | 050 | Test auth, permissions, API and UI flows | BACKLOG | Add unit, integration and end-to-end suites after dependencies and database are available. |
-| 051 | Docker setup | REVIEW | Compose and API/web Dockerfiles exist; Docker CLI is unavailable in this workspace for a build/run check. |
+| 051 | Docker setup | REVIEW | Compose and API/web Dockerfiles exist; application builds pass, but Docker CLI is unavailable in this workspace for a build/run check. |
 | 052 | CI/CD pipeline | BACKLOG | Add after tests and migration verification exist. |
 | 053 | Production environment | BACKLOG | Requires hosting, secrets, backup and release authority. |
 | 054 | Monitoring | BACKLOG | Define error, uptime and business-event observability before production. |

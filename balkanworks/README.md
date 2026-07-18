@@ -52,10 +52,11 @@ pnpm install
 cp .env.example .env
 # Start PostgreSQL, Redis and object storage, then create/apply the reviewed Prisma migration.
 pnpm --filter @balkanworks/database prisma:migrate
+pnpm --filter @balkanworks/database prisma:seed
 pnpm dev
 ```
 
-On Windows PowerShell, replace the copy command with `Copy-Item .env.example .env`. Do not commit `.env` or development secrets.
+On Windows PowerShell, replace the copy command with `Copy-Item .env.example .env`. The seed creates local-only demo accounts and must run only against a disposable development database. Do not commit `.env` or development secrets.
 
 For the local container stack, run `docker compose -f infrastructure/docker/docker-compose.yml up --build`. It defines PostgreSQL, Redis, MinIO, the NestJS API and the Next.js app. The initial Prisma migration must be created and applied before the API can use database-backed flows; development-only Docker secrets must never be used outside local development.
 

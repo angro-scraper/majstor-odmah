@@ -33,10 +33,6 @@ export class CreateServiceDto {
   @IsOptional() @IsString() @MaxLength(100) priceRange?: string;
 }
 
-type BusinessDetail = Prisma.BusinessGetPayload<{
-  include: { category: true; locations: { include: { city: true } }; services: true; images: true; reviews: true; _count: true };
-}>;
-
 @Injectable()
 export class BusinessesService {
   private readonly detailInclude = {
@@ -50,7 +46,7 @@ export class BusinessesService {
 
   constructor(private readonly prisma: PrismaService) {}
 
-  async create(ownerId: string, input: CreateBusinessDto): Promise<BusinessDetail> {
+  async create(ownerId: string, input: CreateBusinessDto) {
     const slug = await this.nextSlug(input.name);
     return this.prisma.business.create({
       data: {
@@ -62,29 +58,30 @@ export class BusinessesService {
         phone: input.phone,
         email: input.email?.toLowerCase(),
         website: input.website,
-        openingHours: input.openingHours ?? {},
+        openingHours: (input.openingHours ?? {}) as Prisma.InputJsonValue,
         locations: { create: { cityId: input.cityId, address: input.address, latitude: input.latitude, longitude: input.longitude } },
       },
       include: this.detailInclude,
     });
   }
 
-  async findPublic(id: string): Promise<BusinessDetail> {
+  async findPublic(id: string) {
     const business = await this.prisma.business.findFirst({ where: { id, deletedAt: null, status: "VERIFIED" }, include: this.detailInclude });
     if (!business) throw new NotFoundException("BUSINESS_NOT_FOUND");
     return business;
   }
 
-  async findOwned(id: string, userId: string): Promise<BusinessDetail> {
+  async findOwned(id: string, userId: string) {
     const business = await this.prisma.business.findFirst({ where: { id, ownerId: userId, deletedAt: null }, include: this.detailInclude });
     if (!business) throw new NotFoundException("BUSINESS_NOT_FOUND");
     return business;
   }
 
-  async update(id: string, userId: string, input: UpdateBusinessDto): Promise<BusinessDetail> {
+  async update(id: string, userId: string, input: UpdateBusinessDto) {
     await this.findOwned(id, userId);
-    const { categoryId, ...fields } = input;
+    const { categoryId, openingHours, ...fields } = input;
     const data: Prisma.BusinessUpdateInput = { ...fields };
+    if (openingHours !== undefined) data.openingHours = openingHours as unknown as Prisma.InputJsonValue;
     if (input.name) data.name = input.name.trim();
     if (input.description) data.description = input.description.trim();
     if (input.email) data.email = input.email.toLowerCase();
