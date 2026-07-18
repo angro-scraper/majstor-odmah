@@ -17,7 +17,13 @@ Target TypeScript foundation for the Balkan.works platform. It is intentionally 
 
 Install Node.js 20+ and pnpm 9+, then run `pnpm install`, copy `.env.example` to `.env.local`, start PostgreSQL/Redis/Object Storage, run `pnpm --filter @balkanworks/database prisma:migrate`, then `pnpm dev`.
 
+For the local container stack, run `docker compose -f infrastructure/docker/docker-compose.yml up --build`. It starts PostgreSQL, Redis, MinIO, the NestJS API and the Next.js app. The initial Prisma migration must be created and applied before the API can use database-backed flows; development-only Docker secrets must never be used outside local development.
+
 No secret belongs in source control. MVP flags keep Wallet, Marketplace and AI disabled by default.
+
+## Task board
+
+The live first-batch status, evidence and next delivery group are in [BALKAN_WORKS_TASK_BOARD.md](docs/BALKAN_WORKS_TASK_BOARD.md).
 
 ## AI strategy
 

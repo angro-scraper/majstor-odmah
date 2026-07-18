@@ -1,13 +1,69 @@
 services:
   postgres:
     image: postgres:16-alpine
-    environment: [POSTGRES_DB=balkanworks, POSTGRES_USER=balkanworks, POSTGRES_PASSWORD=change-me]
-    ports: ["5432:5432"]
+    environment:
+      POSTGRES_DB: balkanworks
+      POSTGRES_USER: balkanworks
+      POSTGRES_PASSWORD: change-me
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U balkanworks -d balkanworks"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
   redis:
     image: redis:7-alpine
-    ports: ["6379:6379"]
+    ports:
+      - "6379:6379"
+
   minio:
     image: minio/minio
     command: server /data --console-address :9001
-    environment: [MINIO_ROOT_USER=balkanworks, MINIO_ROOT_PASSWORD=change-me-now]
-    ports: ["9000:9000", "9001:9001"]
+    environment:
+      MINIO_ROOT_USER: balkanworks
+      MINIO_ROOT_PASSWORD: change-me-now
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - minio_data:/data
+
+  api:
+    build:
+      context: ../..
+      dockerfile: infrastructure/docker/Dockerfile.api
+    environment:
+      NODE_ENV: development
+      API_PORT: 3001
+      DATABASE_URL: postgresql://balkanworks:change-me@postgres:5432/balkanworks
+      REDIS_URL: redis://redis:6379/0
+      JWT_ACCESS_SECRET: ${JWT_ACCESS_SECRET:-development-access-secret-change-before-deploy}
+      JWT_REFRESH_SECRET: ${JWT_REFRESH_SECRET:-development-refresh-secret-change-before-deploy}
+    ports:
+      - "3001:3001"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_started
+
+  web:
+    build:
+      context: ../..
+      dockerfile: infrastructure/docker/Dockerfile.web
+    environment:
+      NODE_ENV: development
+      NEXT_PUBLIC_API_URL: http://localhost:3001/api/v1
+    ports:
+      - "3000:3000"
+    depends_on:
+      api:
+        condition: service_started
+
+volumes:
+  postgres_data:
+  minio_data:
