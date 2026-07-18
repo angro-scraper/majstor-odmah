@@ -115,6 +115,10 @@ The MVP scope and acceptance criteria are in [BALKAN_WORKS_PRODUCT_REQUIREMENTS_
 
 The interaction, navigation and component-state standard is in [BALKAN_WORKS_UI_UX_SYSTEM.md](docs/BALKAN_WORKS_UI_UX_SYSTEM.md).
 
+## Team roles
+
+Role-level responsibilities and hiring sequence are in [BALKAN_WORKS_TEAM_ROLES.md](docs/BALKAN_WORKS_TEAM_ROLES.md).
+
 ## Analytics
 
 Event taxonomy, dashboards and experimentation rules are in [BALKAN_WORKS_ANALYTICS_DATA_STRATEGY.md](docs/BALKAN_WORKS_ANALYTICS_DATA_STRATEGY.md).
