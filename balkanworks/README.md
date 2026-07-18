@@ -34,3 +34,7 @@ The stack, security baseline and scaling decisions are in [BALKAN_WORKS_TECH_STA
 ## Product module map
 
 The Core-to-module model and feature-flag lifecycle are in [BALKAN_WORKS_PRODUCT_MODULE_MAP.md](docs/BALKAN_WORKS_PRODUCT_MODULE_MAP.md).
+
+## Data strategy
+
+Event governance, analytics boundaries and privacy principles are in [BALKAN_WORKS_DATA_STRATEGY.md](docs/BALKAN_WORKS_DATA_STRATEGY.md).
