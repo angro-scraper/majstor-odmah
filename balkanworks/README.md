@@ -263,6 +263,10 @@ The data foundation, AI phases, quality evaluation and governance strategy is in
 
 The city-by-city operating system for local supply, content, partners, community and referrals is in [BALKAN_WORKS_GROWTH_ENGINE.md](docs/BALKAN_WORKS_GROWTH_ENGINE.md).
 
+## Operating system
+
+The company-wide daily, weekly, monthly and quarterly decision/execution cadence is in [BALKAN_WORKS_OPERATING_SYSTEM.md](docs/BALKAN_WORKS_OPERATING_SYSTEM.md).
+
 ## Team roles
 
 Role-level responsibilities and hiring sequence are in [BALKAN_WORKS_TEAM_ROLES.md](docs/BALKAN_WORKS_TEAM_ROLES.md).
