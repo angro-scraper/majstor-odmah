@@ -287,6 +287,10 @@ The canonical V1 scope, flows, data/API direction, launch gate and non-goals are
 
 The concise evidence-first investment narrative is in [BALKAN_WORKS_INVESTMENT_PITCH.md](docs/BALKAN_WORKS_INVESTMENT_PITCH.md).
 
+## Master documentation index
+
+The central reading order, source-of-truth hierarchy and live document map are in [BALKAN_WORKS_MASTER_DOCUMENT_INDEX.md](docs/BALKAN_WORKS_MASTER_DOCUMENT_INDEX.md).
+
 ## Team roles
 
 Role-level responsibilities and hiring sequence are in [BALKAN_WORKS_TEAM_ROLES.md](docs/BALKAN_WORKS_TEAM_ROLES.md).
