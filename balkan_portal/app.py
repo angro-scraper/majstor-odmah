@@ -5,7 +5,7 @@ import os
 from html import escape
 
 import httpx
-from fastapi import FastAPI, HTTPException, Query, status
+from fastapi import FastAPI, HTTPException, Query, Request, status
 from pydantic import BaseModel, EmailStr, Field
 from fastapi.responses import HTMLResponse, JSONResponse
 
@@ -28,6 +28,11 @@ class PortalRegistration(BaseModel):
     email: EmailStr
     password: str = Field(min_length=10, max_length=128)
     preferred_locale: str = Field(default="sr", min_length=2, max_length=8)
+
+
+class PortalLogin(BaseModel):
+    email: EmailStr
+    password: str = Field(min_length=1, max_length=128)
 
 
 async def core_status() -> str:
@@ -81,3 +86,44 @@ async def register(payload: PortalRegistration) -> JSONResponse:
         detail = response.json().get("detail", "Registracija nije uspela.")
         raise HTTPException(status_code=response.status_code, detail=detail)
     return JSONResponse(response.json(), status_code=status.HTTP_201_CREATED)
+
+
+@app.post("/api/login", response_class=JSONResponse, include_in_schema=False)
+async def login(payload: PortalLogin) -> JSONResponse:
+    try:
+        async with httpx.AsyncClient(timeout=10) as client:
+            response = await client.post(f"{CORE_URL}/api/auth/login", json=payload.model_dump())
+    except httpx.HTTPError as exc:
+        raise HTTPException(status_code=status.HTTP_503_SERVICE_UNAVAILABLE, detail="Core servis trenutno nije dostupan.") from exc
+    if response.is_error:
+        raise HTTPException(status_code=response.status_code, detail=response.json().get("detail", "Prijava nije uspela."))
+    return JSONResponse(response.json())
+
+
+async def core_profile(request: Request, method: str, payload: dict | None = None) -> JSONResponse:
+    authorization = request.headers.get("authorization")
+    if not authorization:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Prijava je obavezna.")
+    try:
+        async with httpx.AsyncClient(timeout=10) as client:
+            response = await client.request(method, f"{CORE_URL}/api/users/me", headers={"Authorization": authorization}, json=payload)
+    except httpx.HTTPError as exc:
+        raise HTTPException(status_code=status.HTTP_503_SERVICE_UNAVAILABLE, detail="Core servis trenutno nije dostupan.") from exc
+    if response.is_error:
+        raise HTTPException(status_code=response.status_code, detail=response.json().get("detail", "Profil nije dostupan."))
+    return JSONResponse(response.json())
+
+
+@app.get("/api/me", response_class=JSONResponse, include_in_schema=False)
+async def me(request: Request) -> JSONResponse:
+    return await core_profile(request, "GET")
+
+
+@app.patch("/api/me", response_class=JSONResponse, include_in_schema=False)
+async def update_me(request: Request, payload: dict) -> JSONResponse:
+    return await core_profile(request, "PATCH", payload)
+
+
+@app.get("/account", response_class=HTMLResponse, include_in_schema=False)
+async def account() -> HTMLResponse:
+    return HTMLResponse('''<!doctype html><html lang="sr"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Moj nalog · Balkan.works</title><style>:root{--ink:#092c26;--pine:#0d4036;--paper:#fbfaf6;--orange:#ff6c37;--line:#d9e3dc;--muted:#62746e}*{box-sizing:border-box}body{margin:0;background:var(--paper);font-family:Inter,system-ui,sans-serif;color:var(--ink)}main{max-width:860px;margin:0 auto;padding:48px 20px}.brand{font-weight:900;font-size:24px;color:var(--ink);text-decoration:none}.brand i{color:var(--orange)}.card{background:#fff;border:1px solid var(--line);border-radius:18px;padding:28px;margin-top:28px;max-width:620px}h1{font-family:Georgia,serif;font-size:46px;letter-spacing:-1.6px;margin:8px 0}.eyebrow{font-size:12px;color:var(--orange);letter-spacing:1.4px;font-weight:800;text-transform:uppercase}p{color:var(--muted);line-height:1.5}input{width:100%;padding:13px;margin:7px 0;border:1px solid var(--line);border-radius:9px;font:inherit}button{padding:12px 16px;border:0;border-radius:9px;background:var(--orange);color:#fff;font-weight:800;cursor:pointer;margin-top:10px}.secondary{background:#fff;color:var(--pine);border:1px solid var(--pine);margin-left:8px}.hidden{display:none}.field{margin-top:15px}.status{margin-top:15px;font-size:14px}</style><main><a class="brand" href="/">balkan<i>.</i>works</a><section id="login-card" class="card"><div class="eyebrow">Prijava</div><h1>Dobro došao/la.</h1><p>Prijavi se jednim nalogom za sve Balkan.works module.</p><input id="login-email" type="email" placeholder="Email"><input id="login-password" type="password" placeholder="Lozinka"><button id="login">Prijavi se</button><p class="status" id="login-status"></p></section><section id="profile-card" class="card hidden"><div class="eyebrow">Moj Balkan.works nalog</div><h1 id="name">Profil</h1><p id="summary"></p><div class="field"><label>Ime i prezime<input id="display-name"></label></div><div class="field"><label>Država (npr. RS)<input id="country"></label></div><div class="field"><label>Grad<input id="city"></label></div><div class="field"><label>Jezik<input id="locale"></label></div><button id="save">Sačuvaj profil</button><button class="secondary" id="logout">Odjavi se</button><p class="status" id="profile-status"></p></section></main><script>const token=()=>localStorage.getItem('balkan_access_token');const headers=()=>({'content-type':'application/json','authorization':'Bearer '+token()});async function load(){if(!token())return;const r=await fetch('/api/me',{headers:headers()});if(!r.ok){localStorage.removeItem('balkan_access_token');return}const d=await r.json(),p=d.profile,u=d.user;document.querySelector('#login-card').classList.add('hidden');document.querySelector('#profile-card').classList.remove('hidden');document.querySelector('#name').textContent=p.display_name;document.querySelector('#summary').textContent=u.email+' · '+u.role;document.querySelector('#display-name').value=p.display_name||'';document.querySelector('#country').value=p.country_code||'';document.querySelector('#city').value=p.city_name||'';document.querySelector('#locale').value=p.preferred_locale||'sr'}document.querySelector('#login').onclick=async()=>{const r=await fetch('/api/login',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({email:document.querySelector('#login-email').value,password:document.querySelector('#login-password').value})}),d=await r.json();if(!r.ok){document.querySelector('#login-status').textContent=d.detail||'Prijava nije uspela.';return}localStorage.setItem('balkan_access_token',d.access_token);load()};document.querySelector('#save').onclick=async()=>{const r=await fetch('/api/me',{method:'PATCH',headers:headers(),body:JSON.stringify({display_name:document.querySelector('#display-name').value,country_code:document.querySelector('#country').value||null,city_name:document.querySelector('#city').value||null,preferred_locale:document.querySelector('#locale').value})}),d=await r.json();document.querySelector('#profile-status').textContent=r.ok?'Profil je sačuvan.':(d.detail||'Izmena nije uspela.');if(r.ok)load()};document.querySelector('#logout').onclick=()=>{localStorage.removeItem('balkan_access_token');location.reload()};load()</script></html>''')
