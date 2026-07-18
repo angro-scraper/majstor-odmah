@@ -191,6 +191,10 @@ The cost, revenue, unit-economics, scenario and financial-control framework is i
 
 The gateway, retrieval, model lifecycle, recommendation and future agent architecture is in [BALKAN_WORKS_AI_TECHNICAL_ARCHITECTURE.md](docs/BALKAN_WORKS_AI_TECHNICAL_ARCHITECTURE.md).
 
+## Test case library
+
+The reusable product, API, security, performance and UAT test cases are in [BALKAN_WORKS_TEST_CASE_LIBRARY.md](docs/BALKAN_WORKS_TEST_CASE_LIBRARY.md).
+
 ## Team roles
 
 Role-level responsibilities and hiring sequence are in [BALKAN_WORKS_TEAM_ROLES.md](docs/BALKAN_WORKS_TEAM_ROLES.md).
