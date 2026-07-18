@@ -99,6 +99,36 @@ enum PartnerIntegrationStatus {
   RETIRED
 }
 
+enum LegalDocumentType {
+  TERMS_OF_SERVICE
+  PRIVACY_POLICY
+  COOKIE_POLICY
+  BUSINESS_TERMS
+  PARTNER_TERMS
+  CONTENT_POLICY
+  REVIEW_POLICY
+}
+
+enum LegalDocumentStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+enum DataSubjectRequestType {
+  EXPORT
+  ERASURE
+  CORRECTION
+}
+
+enum DataSubjectRequestStatus {
+  PENDING
+  IN_REVIEW
+  COMPLETED
+  REJECTED
+  CANCELLED
+}
+
 model User {
   id            String         @id @default(uuid()) @db.Uuid
   email         String         @unique
@@ -116,6 +146,8 @@ model User {
   reviews       Review[]
   events        Event[]
   searches      SearchQuery[]
+  consents      UserConsent[]
+  dataRequests  DataSubjectRequest[]
   createdAt     DateTime       @default(now()) @map("created_at")
   updatedAt     DateTime       @updatedAt @map("updated_at")
   deletedAt     DateTime?      @map("deleted_at")
@@ -596,4 +628,58 @@ model PartnerApiRequest {
 
   @@index([partnerId, createdAt])
   @@map("partner_api_requests")
+}
+
+model LegalDocument {
+  id          String              @id @default(uuid()) @db.Uuid
+  type        LegalDocumentType
+  version     String
+  locale      String              @default("sr")
+  title       String
+  content     String
+  status      LegalDocumentStatus @default(DRAFT)
+  publishedAt DateTime?           @map("published_at")
+  consents    UserConsent[]
+  createdAt   DateTime            @default(now()) @map("created_at")
+  updatedAt   DateTime            @updatedAt @map("updated_at")
+  deletedAt   DateTime?           @map("deleted_at")
+
+  @@unique([type, version, locale])
+  @@index([type, locale, status])
+  @@map("legal_documents")
+}
+
+model UserConsent {
+  id           String        @id @default(uuid()) @db.Uuid
+  userId       String        @map("user_id") @db.Uuid
+  documentId   String        @map("document_id") @db.Uuid
+  source       String?
+  acceptedAt   DateTime?     @map("accepted_at")
+  withdrawnAt  DateTime?     @map("withdrawn_at")
+  user         User          @relation(fields: [userId], references: [id])
+  document     LegalDocument @relation(fields: [documentId], references: [id])
+  createdAt    DateTime      @default(now()) @map("created_at")
+  updatedAt    DateTime      @updatedAt @map("updated_at")
+
+  @@unique([userId, documentId])
+  @@index([userId, acceptedAt])
+  @@map("user_consents")
+}
+
+model DataSubjectRequest {
+  id           String                   @id @default(uuid()) @db.Uuid
+  userId       String                   @map("user_id") @db.Uuid
+  type         DataSubjectRequestType
+  status       DataSubjectRequestStatus @default(PENDING)
+  note         String?
+  resolutionNote String?                @map("resolution_note")
+  completedAt  DateTime?                @map("completed_at")
+  reviewedById String?                  @map("reviewed_by_id") @db.Uuid
+  user         User                     @relation(fields: [userId], references: [id])
+  createdAt    DateTime                 @default(now()) @map("created_at")
+  updatedAt    DateTime                 @updatedAt @map("updated_at")
+
+  @@index([userId, status])
+  @@index([status, createdAt])
+  @@map("data_subject_requests")
 }
