@@ -107,6 +107,10 @@ The quality and release testing standard is in [BALKAN_WORKS_TESTING_STRATEGY.md
 
 The one-city supply-first market-entry playbook is in [BALKAN_WORKS_GO_TO_MARKET_STRATEGY.md](docs/BALKAN_WORKS_GO_TO_MARKET_STRATEGY.md).
 
+## MVP requirements
+
+The MVP scope and acceptance criteria are in [BALKAN_WORKS_PRODUCT_REQUIREMENTS_DOCUMENT.md](docs/BALKAN_WORKS_PRODUCT_REQUIREMENTS_DOCUMENT.md).
+
 ## Analytics
 
 Event taxonomy, dashboards and experimentation rules are in [BALKAN_WORKS_ANALYTICS_DATA_STRATEGY.md](docs/BALKAN_WORKS_ANALYTICS_DATA_STRATEGY.md).
