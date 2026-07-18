@@ -101,6 +101,8 @@ The preserved architect/developer directive is in [BALKAN_WORKS_CODEX_MASTER_PRO
 
 The versioned REST response, security and compatibility contract is in [BALKAN_WORKS_API_CONTRACT.md](docs/BALKAN_WORKS_API_CONTRACT.md).
 
+The endpoint/resource catalog is in [BALKAN_WORKS_API_SPECIFICATION.md](docs/BALKAN_WORKS_API_SPECIFICATION.md).
+
 ## Deployment architecture
 
 Environment, release, monitoring and scale rules are in [BALKAN_WORKS_DEPLOYMENT_ARCHITECTURE.md](docs/BALKAN_WORKS_DEPLOYMENT_ARCHITECTURE.md).
