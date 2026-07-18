@@ -275,6 +275,10 @@ The executive synthesis of vision, phases, GTM, economics, team and North Star i
 
 The documentation taxonomy, workflow, project-management system and release checklist are in [BALKAN_WORKS_IMPLEMENTATION_PACKAGE.md](docs/BALKAN_WORKS_IMPLEMENTATION_PACKAGE.md).
 
+## Feature backlog
+
+The prioritized P0–P3 feature register and honest implementation status model are in [BALKAN_WORKS_FEATURE_BACKLOG.md](docs/BALKAN_WORKS_FEATURE_BACKLOG.md).
+
 ## Team roles
 
 Role-level responsibilities and hiring sequence are in [BALKAN_WORKS_TEAM_ROLES.md](docs/BALKAN_WORKS_TEAM_ROLES.md).
