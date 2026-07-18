@@ -24,6 +24,7 @@ export const NAV_LINKS: { label: string; href: string }[] = [
 ]
 
 export type Category = {
+  key: string
   title: string
   description: string
   icon: LucideIcon
@@ -32,72 +33,84 @@ export type Category = {
 
 export const CATEGORIES: Category[] = [
   {
+    key: 'poslovi',
     title: 'Poslovi',
     description: 'Oglasi za posao i honorarni angažmani širom regiona.',
     icon: Briefcase,
     accent: 'blue',
   },
   {
+    key: 'majstori',
     title: 'Majstori i usluge',
     description: 'Provereni majstori za popravke, montažu i održavanje.',
     icon: Wrench,
     accent: 'cyan',
   },
   {
+    key: 'kupovina',
     title: 'Kupovina',
     description: 'Proizvodi lokalnih i regionalnih prodavaca na jednom mestu.',
     icon: ShoppingBag,
     accent: 'teal',
   },
   {
+    key: 'dostava',
     title: 'Dostava hrane',
     description: 'Omiljeni restorani i brza dostava do vaših vrata.',
     icon: UtensilsCrossed,
     accent: 'blue',
   },
   {
+    key: 'putovanja',
     title: 'Putovanja',
     description: 'Letovi, hoteli i prevoz — rezervišite u par klikova.',
     icon: Plane,
     accent: 'cyan',
   },
   {
+    key: 'zdravlje',
     title: 'Zdravlje',
     description: 'Zakazivanje pregleda kod lekara i klinika u blizini.',
     icon: HeartPulse,
     accent: 'teal',
   },
   {
+    key: 'edukacija',
     title: 'Edukacija',
     description: 'Kursevi, časovi i obuke za nova znanja i veštine.',
     icon: GraduationCap,
     accent: 'blue',
   },
   {
+    key: 'nekretnine',
     title: 'Nekretnine',
     description: 'Stanovi, kuće i poslovni prostori za izdavanje i prodaju.',
     icon: Building2,
     accent: 'cyan',
   },
   {
+    key: 'finansije',
     title: 'Finansije',
     description: 'Digitalni novčanik, plaćanja i transferi bez naknada.',
     icon: Wallet,
     accent: 'teal',
   },
   {
+    key: 'prevoz',
     title: 'Prevoz',
     description: 'Vožnje, selidbe i transport robe kad god vam zatreba.',
     icon: Car,
     accent: 'blue',
   },
   {
+    key: 'dogadjaji',
     title: 'Događaji',
     description: 'Ulaznice za koncerte, sport i dešavanja u vašem gradu.',
     icon: CalendarDays,
     accent: 'cyan',
   },
   {
+    key: 'ai',
     title: 'AI pomoćnik',
     description: 'Pametni asistent koji pronalazi rešenja umesto vas.',
     icon: Sparkles,

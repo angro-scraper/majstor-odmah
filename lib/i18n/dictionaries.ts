@@ -93,8 +93,14 @@ const sr = {
     eyebrow: 'Za kompanije',
     title: 'Vodite ceo biznis sa jednog mesta',
     description:
-      'Upravljajte narudžbinama, plaćanjima, timom i klijentima kroz jednu platformu prilagođenu poslovanju u regionu.',
-    cta: 'Postanite partner',
+      'Bilo da ste samostalni profesionalac ili kompanija, balkan.works vam daje sve alate za rast — od oglašavanja do naplate i podrške.',
+    cta: 'Registrujte svoju kompaniju',
+    features: [
+      { title: 'Objavite usluge i oglase', desc: 'Predstavite ponudu i poslove hiljadama korisnika u regionu.' },
+      { title: 'Primajte rezervacije', desc: 'Upravljajte terminima i narudžbinama iz jednog kalendara.' },
+      { title: 'Naplaćujte bezbedno', desc: 'Prihvatajte plaćanja karticama i preko novčanika bez brige.' },
+      { title: 'Komunicirajte sa klijentima', desc: 'Poruke, ponude i podrška — sve u jednom razgovoru.' },
+    ],
   },
   security: {
     eyebrow: 'Bezbednost',
@@ -120,9 +126,17 @@ const sr = {
   },
   testimonials: {
     eyebrow: 'Iskustva korisnika',
-    title: 'Zašto nam korisnici veruju',
+    title: 'Vole nas širom regiona',
     description:
-      'Preko milion ljudi širom regiona koristi balkan.works svakog dana.',
+      'Hiljade korisnika, frilensera i kompanija svakodnevno koristi balkan.works.',
+    items: [
+      { quote: 'Za pola sata sam našla vodoinstalatera i zakazala termin. Sve iz jedne aplikacije — nestvarno praktično.', name: 'Jelena Marković', role: 'Korisnica, Beograd' },
+      { quote: 'Kao frilenser dobijam nove klijente svake nedelje. Naplata preko novčanika je brza i sigurna.', name: 'Anteo Kovačević', role: 'Grafički dizajner, Zagreb' },
+      { quote: 'Vodimo mali restoran i dostava preko balkan.works nam je udvostručila porudžbine.', name: 'Emir Hadžić', role: 'Vlasnik restorana, Sarajevo' },
+      { quote: 'AI pomoćnik mi je našao let i hotel jeftinije nego bilo gde. Preporuka za sva putovanja.', name: 'Ana Novak', role: 'Korisnica, Ljubljana' },
+      { quote: 'Kontrolna tabla za kompanije je pregledna i štedi mi sate posla svakog dana.', name: 'Nikola Popovski', role: 'Menadžer, Skoplje' },
+      { quote: 'Konačno jedna aplikacija za sve — od plaćanja računa do zakazivanja lekara.', name: 'Lorena Gjoka', role: 'Korisnica, Tirana' },
+    ],
   },
   download: {
     title: 'Preuzmite balkan.works danas',
@@ -314,8 +328,14 @@ const hr = asDict({
     eyebrow: 'Za tvrtke',
     title: 'Vodite cijeli posao s jednog mjesta',
     description:
-      'Upravljajte narudžbama, plaćanjima, timom i klijentima kroz jednu platformu prilagođenu poslovanju u regiji.',
-    cta: 'Postanite partner',
+      'Bez obzira jeste li samostalni profesionalac ili tvrtka, balkan.works vam daje sve alate za rast — od oglašavanja do naplate i podrške.',
+    cta: 'Registrirajte svoju tvrtku',
+    features: [
+      { title: 'Objavite usluge i oglase', desc: 'Predstavite ponudu i poslove tisućama korisnika u regiji.' },
+      { title: 'Primajte rezervacije', desc: 'Upravljajte terminima i narudžbama iz jednog kalendara.' },
+      { title: 'Naplaćujte sigurno', desc: 'Prihvaćajte plaćanja karticama i putem novčanika bez brige.' },
+      { title: 'Komunicirajte s klijentima', desc: 'Poruke, ponude i podrška — sve u jednom razgovoru.' },
+    ],
   },
   security: {
     eyebrow: 'Sigurnost',
@@ -341,9 +361,17 @@ const hr = asDict({
   },
   testimonials: {
     eyebrow: 'Iskustva korisnika',
-    title: 'Zašto nam korisnici vjeruju',
+    title: 'Vole nas diljem regije',
     description:
-      'Više od milijun ljudi diljem regije koristi balkan.works svaki dan.',
+      'Tisuće korisnika, freelancera i tvrtki svakodnevno koristi balkan.works.',
+    items: [
+      { quote: 'U pola sata sam našla vodoinstalatera i dogovorila termin. Sve iz jedne aplikacije — nevjerojatno praktično.', name: 'Jelena Marković', role: 'Korisnica, Beograd' },
+      { quote: 'Kao freelancer dobivam nove klijente svaki tjedan. Naplata putem novčanika je brza i sigurna.', name: 'Anteo Kovačević', role: 'Grafički dizajner, Zagreb' },
+      { quote: 'Vodimo mali restoran i dostava putem balkan.works udvostručila nam je narudžbe.', name: 'Emir Hadžić', role: 'Vlasnik restorana, Sarajevo' },
+      { quote: 'AI asistent mi je našao let i hotel jeftinije nego bilo gdje. Preporuka za sva putovanja.', name: 'Ana Novak', role: 'Korisnica, Ljubljana' },
+      { quote: 'Nadzorna ploča za tvrtke je pregledna i štedi mi sate posla svaki dan.', name: 'Nikola Popovski', role: 'Menadžer, Skopje' },
+      { quote: 'Konačno jedna aplikacija za sve — od plaćanja računa do naručivanja liječnika.', name: 'Lorena Gjoka', role: 'Korisnica, Tirana' },
+    ],
   },
   download: {
     title: 'Preuzmite balkan.works danas',
@@ -491,8 +519,14 @@ const bs = asDict({
     eyebrow: 'Za kompanije',
     title: 'Vodite cijeli biznis s jednog mjesta',
     description:
-      'Upravljajte narudžbama, plaćanjima, timom i klijentima kroz jednu platformu prilagođenu poslovanju u regiji.',
-    cta: 'Postanite partner',
+      'Bilo da ste samostalni profesionalac ili kompanija, balkan.works vam daje sve alate za rast — od oglašavanja do naplate i podrške.',
+    cta: 'Registrujte svoju kompaniju',
+    features: [
+      { title: 'Objavite usluge i oglase', desc: 'Predstavite ponudu i poslove hiljadama korisnika u regionu.' },
+      { title: 'Primajte rezervacije', desc: 'Upravljajte terminima i narudžbama iz jednog kalendara.' },
+      { title: 'Naplaćujte sigurno', desc: 'Prihvatajte plaćanja karticama i putem novčanika bez brige.' },
+      { title: 'Komunicirajte s klijentima', desc: 'Poruke, ponude i podrška — sve u jednom razgovoru.' },
+    ],
   },
   security: {
     eyebrow: 'Sigurnost',
@@ -518,9 +552,17 @@ const bs = asDict({
   },
   testimonials: {
     eyebrow: 'Iskustva korisnika',
-    title: 'Zašto nam korisnici vjeruju',
+    title: 'Vole nas širom regije',
     description:
-      'Više od milion ljudi širom regije koristi balkan.works svaki dan.',
+      'Hiljade korisnika, frilensera i kompanija svakodnevno koristi balkan.works.',
+    items: [
+      { quote: 'Za pola sata sam našla vodoinstalatera i zakazala termin. Sve iz jedne aplikacije — nevjerovatno praktično.', name: 'Jelena Marković', role: 'Korisnica, Beograd' },
+      { quote: 'Kao frilenser dobijam nove klijente svake sedmice. Naplata putem novčanika je brza i sigurna.', name: 'Anteo Kovačević', role: 'Grafički dizajner, Zagreb' },
+      { quote: 'Vodimo mali restoran i dostava putem balkan.works udvostručila nam je narudžbe.', name: 'Emir Hadžić', role: 'Vlasnik restorana, Sarajevo' },
+      { quote: 'AI asistent mi je našao let i hotel jeftinije nego bilo gdje. Preporuka za sva putovanja.', name: 'Ana Novak', role: 'Korisnica, Ljubljana' },
+      { quote: 'Kontrolna tabla za kompanije je pregledna i štedi mi sate posla svaki dan.', name: 'Nikola Popovski', role: 'Menadžer, Skopje' },
+      { quote: 'Konačno jedna aplikacija za sve — od plaćanja računa do zakazivanja ljekara.', name: 'Lorena Gjoka', role: 'Korisnica, Tirana' },
+    ],
   },
   download: {
     title: 'Preuzmite balkan.works danas',
@@ -668,8 +710,14 @@ const cnr = asDict({
     eyebrow: 'Za kompanije',
     title: 'Vodite cijeli biznis s jednog mjesta',
     description:
-      'Upravljajte narudžbama, plaćanjima, timom i klijentima kroz jednu platformu prilagođenu poslovanju u regionu.',
-    cta: 'Postanite partner',
+      'Bilo da ste samostalni profesionalac ili kompanija, balkan.works vam daje sve alate za rast — od oglašavanja do naplate i podrške.',
+    cta: 'Registrujte svoju kompaniju',
+    features: [
+      { title: 'Objavite usluge i oglase', desc: 'Predstavite ponudu i poslove hiljadama korisnika u regionu.' },
+      { title: 'Primajte rezervacije', desc: 'Upravljajte terminima i narudžbama iz jednog kalendara.' },
+      { title: 'Naplaćujte bezbjedno', desc: 'Prihvatajte plaćanja karticama i putem novčanika bez brige.' },
+      { title: 'Komunicirajte s klijentima', desc: 'Poruke, ponude i podrška — sve u jednom razgovoru.' },
+    ],
   },
   security: {
     eyebrow: 'Bezbjednost',
@@ -845,8 +893,14 @@ const mk = asDict({
     eyebrow: 'За компании',
     title: 'Водете го целиот бизнис од едно место',
     description:
-      'Управувајте со нарачки, плаќања, тим и клиенти преку една платформа прилагодена за работење во регионот.',
-    cta: 'Станете партнер',
+      'Без разлика дали сте самостоен професионалец или компанија, balkan.works ви ги дава сите алатки за раст — од огласување до наплата и поддршка.',
+    cta: 'Регистрирајте ја вашата компанија',
+    features: [
+      { title: 'Објавете услуги и огласи', desc: 'Претставете ја понудата и работните места на илјадници корисници во регионот.' },
+      { title: 'Примајте резервации', desc: 'Управувајте со термини и нарачки од еден календар.' },
+      { title: 'Наплаќајте безбедно', desc: 'Прифаќајте плаќања со картички и преку паричник без грижи.' },
+      { title: 'Комуницирајте со клиентите', desc: 'Пораки, понуди и поддршка — сè во еден разговор.' },
+    ],
   },
   security: {
     eyebrow: 'Безбедност',
@@ -1022,8 +1076,14 @@ const sl = asDict({
     eyebrow: 'Za podjetja',
     title: 'Vodite celotno poslovanje z enega mesta',
     description:
-      'Upravljajte naročila, plačila, ekipo in stranke prek ene platforme, prilagojene poslovanju v regiji.',
-    cta: 'Postanite partner',
+      'Ne glede na to, ali ste samostojni strokovnjak ali podjetje, balkan.works vam ponuja vsa orodja za rast — od oglaševanja do plačil in podpore.',
+    cta: 'Registrirajte svoje podjetje',
+    features: [
+      { title: 'Objavite storitve in oglase', desc: 'Predstavite ponudbo in delovna mesta tisočem uporabnikov v regiji.' },
+      { title: 'Sprejemajte rezervacije', desc: 'Upravljajte termine in naročila iz enega koledarja.' },
+      { title: 'Zaračunavajte varno', desc: 'Sprejemajte plačila s karticami in prek denarnice brez skrbi.' },
+      { title: 'Komunicirajte s strankami', desc: 'Sporočila, ponudbe in podpora — vse v enem pogovoru.' },
+    ],
   },
   security: {
     eyebrow: 'Varnost',
@@ -1199,8 +1259,14 @@ const bg = asDict({
     eyebrow: 'За компании',
     title: 'Управлявайте целия бизнес от едно място',
     description:
-      'Управлявайте поръчки, плащания, екип и клиенти чрез една платформа, пригодена за бизнеса в региона.',
-    cta: 'Станете партньор',
+      'Независимо дали сте самостоятелен професионалист или компания, balkan.works ви дава всички инструменти за растеж — от реклама до плащания и поддръжка.',
+    cta: 'Регистрирайте вашата компания',
+    features: [
+      { title: 'Публикувайте услуги и обяви', desc: 'Представете офертата и работните места на хиляди потребители в региона.' },
+      { title: 'Приемайте резервации', desc: 'Управлявайте часове и поръчки от един календар.' },
+      { title: 'Таксувайте сигурно', desc: 'Приемайте плащания с карти и през портфейла без притеснения.' },
+      { title: 'Комуникирайте с клиентите', desc: 'Съобщения, оферти и поддръжка — всичко в един разговор.' },
+    ],
   },
   security: {
     eyebrow: 'Сигурност',
@@ -1291,7 +1357,7 @@ const bg = asDict({
     submit: 'Изпрати съобщение',
     submitting: 'Изпращане...',
     successTitle: 'Съобщението е изпратено!',
-    successBody: 'Благодарим за съобщението. Ще се свържем с вас скоро.',
+    successBody: 'Благодари�� за съобщението. Ще се свържем с вас скоро.',
     reset: 'Изпрати ново съобщение',
   },
 })

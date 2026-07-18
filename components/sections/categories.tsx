@@ -1,6 +1,9 @@
+'use client'
+
 import { CATEGORIES } from '@/lib/site'
 import { SectionHeading } from '@/components/section-heading'
 import { cn } from '@/lib/utils'
+import { useI18n } from '@/lib/i18n/context'
 
 const ACCENT: Record<string, string> = {
   blue: 'bg-secondary text-primary',
@@ -9,35 +12,40 @@ const ACCENT: Record<string, string> = {
 }
 
 export function Categories() {
+  const { t } = useI18n()
+
   return (
     <section id="usluge" className="mx-auto max-w-7xl px-4 py-24 sm:px-6 lg:px-8 lg:py-32">
       <SectionHeading
-        eyebrow="Kategorije"
-        title="Sve što vam treba, u jednoj aplikaciji"
-        description="Od posla i majstora do putovanja i zdravlja — pronađite pravu uslugu u samo nekoliko dodira."
+        eyebrow={t.categories.eyebrow}
+        title={t.categories.title}
+        description={t.categories.description}
       />
 
       <div className="mt-14 grid grid-cols-2 gap-4 sm:gap-5 md:grid-cols-3 lg:grid-cols-4">
-        {CATEGORIES.map((cat) => (
-          <button
-            key={cat.title}
-            type="button"
-            className="group flex flex-col items-start gap-3.5 rounded-3xl border border-border bg-card p-6 text-left transition-all duration-300 hover:-translate-y-1 hover:border-primary/40 hover:shadow-card"
-          >
-            <span
-              className={cn(
-                'grid size-12 place-items-center rounded-2xl transition-transform group-hover:scale-105',
-                ACCENT[cat.accent],
-              )}
+        {CATEGORIES.map((cat) => {
+          const item = t.categoryItems[cat.key as keyof typeof t.categoryItems]
+          return (
+            <button
+              key={cat.key}
+              type="button"
+              className="group flex flex-col items-start gap-3.5 rounded-3xl border border-border bg-card p-6 text-left transition-all duration-300 hover:-translate-y-1 hover:border-primary/40 hover:shadow-card"
             >
-              <cat.icon className="size-5" />
-            </span>
-            <span className="text-base font-semibold text-navy">{cat.title}</span>
-            <span className="text-sm leading-relaxed text-muted-foreground">
-              {cat.description}
-            </span>
-          </button>
-        ))}
+              <span
+                className={cn(
+                  'grid size-12 place-items-center rounded-2xl transition-transform group-hover:scale-105',
+                  ACCENT[cat.accent],
+                )}
+              >
+                <cat.icon className="size-5" />
+              </span>
+              <span className="text-base font-semibold text-navy">{item.title}</span>
+              <span className="text-sm leading-relaxed text-muted-foreground">
+                {item.description}
+              </span>
+            </button>
+          )
+        })}
       </div>
     </section>
   )

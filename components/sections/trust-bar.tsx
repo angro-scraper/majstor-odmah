@@ -1,3 +1,7 @@
+'use client'
+
+import { useI18n } from '@/lib/i18n/context'
+
 const PARTNERS = [
   'Delhaize',
   'mts',
@@ -9,11 +13,13 @@ const PARTNERS = [
 ]
 
 export function TrustBar() {
+  const { t } = useI18n()
+
   return (
     <section className="border-y border-border bg-surface">
       <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8 lg:py-12">
         <p className="text-center text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground">
-          Poveravaju nam se vodeće kompanije regiona
+          {t.trust.label}
         </p>
         <div className="mt-7 flex flex-wrap items-center justify-center gap-x-10 gap-y-6 sm:gap-x-14">
           {PARTNERS.map((name) => (

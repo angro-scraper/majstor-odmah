@@ -1,5 +1,8 @@
+'use client'
+
 import Link from 'next/link'
 import { Sparkles, Send, Star, MapPin, Clock, CheckCircle2, ArrowRight } from 'lucide-react'
+import { useI18n } from '@/lib/i18n/context'
 
 const PROVIDERS = [
   { name: 'Marko Petrović', rating: '4.9', price: 'od 1.500 RSD', when: 'Sutra, 09–12h', verified: true },
@@ -8,6 +11,8 @@ const PROVIDERS = [
 ]
 
 export function AiAssistant() {
+  const { t } = useI18n()
+
   return (
     <section id="ai-pomocnik" className="bg-surface">
       <div className="mx-auto grid max-w-7xl items-center gap-12 px-4 py-24 sm:px-6 lg:grid-cols-2 lg:gap-16 lg:px-8 lg:py-32">
@@ -17,18 +22,13 @@ export function AiAssistant() {
             balkan.works AI
           </span>
           <h2 className="text-balance text-3xl font-bold leading-[1.1] tracking-tight text-navy sm:text-4xl lg:text-[2.75rem]">
-            Pametni pomoćnik koji radi umesto vas
+            {t.ai.title}
           </h2>
           <p className="text-pretty text-lg leading-relaxed text-muted-foreground">
-            Opišite šta vam treba običnim jezikom, a naš AI pronalazi najbolje
-            pružaoce, upoređuje cene i predlaže termine — sve u par sekundi.
+            {t.ai.description}
           </p>
           <ul className="flex flex-col gap-3">
-            {[
-              'Razume prirodni jezik na svim jezicima regiona',
-              'Predlaže proverene pružaoce sa ocenama i cenama',
-              'Rezerviše termin i plaćanje bez napuštanja razgovora',
-            ].map((f) => (
+            {t.ai.bullets.map((f) => (
               <li key={f} className="flex items-center gap-3 text-sm text-navy">
                 <CheckCircle2 className="size-5 text-turquoise" />
                 {f}
@@ -39,7 +39,7 @@ export function AiAssistant() {
             href="/preuzmi"
             className="inline-flex items-center gap-2 rounded-2xl bg-primary px-6 py-3.5 text-sm font-semibold text-primary-foreground shadow-float transition-transform hover:-translate-y-0.5"
           >
-            Isprobaj AI pomoćnika
+            {t.cta.getStarted}
             <ArrowRight className="size-4" />
           </Link>
         </div>

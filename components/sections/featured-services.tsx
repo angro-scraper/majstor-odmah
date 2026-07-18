@@ -15,21 +15,20 @@ import {
 } from 'lucide-react'
 import { SectionHeading } from '@/components/section-heading'
 import { cn } from '@/lib/utils'
+import { useI18n } from '@/lib/i18n/context'
 
 type Item = { title: string; meta: string; extra: string; badge?: string }
 
 const MODULES: {
   id: string
-  label: string
+  catKey: string
   icon: typeof Briefcase
-  heading: string
   items: Item[]
 }[] = [
   {
     id: 'poslovi',
-    label: 'Poslovi',
+    catKey: 'poslovi',
     icon: Briefcase,
-    heading: 'Aktuelni oglasi za posao',
     items: [
       { title: 'Front-end Developer', meta: 'Remote · Puno radno vreme', extra: '2.000 – 3.000 €', badge: 'Novo' },
       { title: 'Marketing Specijalista', meta: 'Beograd · Hibridno', extra: '1.200 – 1.800 €' },
@@ -38,9 +37,8 @@ const MODULES: {
   },
   {
     id: 'usluge',
-    label: 'Majstori',
+    catKey: 'majstori',
     icon: Wrench,
-    heading: 'Provereni majstori u blizini',
     items: [
       { title: 'Marko — Električar', meta: 'Novi Sad · Dostupan danas', extra: 'od 1.500 RSD', badge: 'Top' },
       { title: 'Ivan — Vodoinstalater', meta: 'Beograd · Za 2 sata', extra: 'od 2.000 RSD' },
@@ -49,9 +47,8 @@ const MODULES: {
   },
   {
     id: 'dostava',
-    label: 'Dostava',
+    catKey: 'dostava',
     icon: UtensilsCrossed,
-    heading: 'Popularni restorani',
     items: [
       { title: 'Burger House', meta: '30–40 min · Besplatna dostava', extra: '4.8', badge: 'Popust' },
       { title: 'Pizza Bar', meta: '25–35 min · Besplatna dostava', extra: '4.7' },
@@ -60,9 +57,8 @@ const MODULES: {
   },
   {
     id: 'putovanja',
-    label: 'Putovanja',
+    catKey: 'putovanja',
     icon: Plane,
-    heading: 'Najbolje ponude za let',
     items: [
       { title: 'Beograd → Istanbul', meta: 'Air Serbia · 20. jun', extra: 'od 128 €', badge: 'Akcija' },
       { title: 'Zagreb → Beč', meta: 'Croatia Airlines · 24. jun', extra: 'od 96 €' },
@@ -71,9 +67,8 @@ const MODULES: {
   },
   {
     id: 'novcanik',
-    label: 'Novčanik',
+    catKey: 'finansije',
     icon: Wallet,
-    heading: 'Vaš digitalni novčanik',
     items: [
       { title: 'Plaćanje računa', meta: 'Struja, voda, telefon', extra: 'Bez naknade', badge: 'Novo' },
       { title: 'Transfer novca', meta: 'Trenutno u celom regionu', extra: '0 €' },
@@ -82,9 +77,8 @@ const MODULES: {
   },
   {
     id: 'zdravlje',
-    label: 'Zdravlje',
+    catKey: 'zdravlje',
     icon: HeartPulse,
-    heading: 'Zakazivanje pregleda',
     items: [
       { title: 'Dr Marko Jovanović', meta: 'Kardiolog · Klinika Beograd', extra: '22. maj 10:30', badge: 'Slobodno' },
       { title: 'Dr Ana Perić', meta: 'Dermatolog · Novi Sad', extra: '23. maj 12:00' },
@@ -94,20 +88,23 @@ const MODULES: {
 ]
 
 export function FeaturedServices() {
+  const { t } = useI18n()
   const [active, setActive] = useState(MODULES[0].id)
   const current = MODULES.find((m) => m.id === active) ?? MODULES[0]
+  const currentLabel = t.categoryItems[current.catKey as keyof typeof t.categoryItems].title
 
   return (
     <section className="mx-auto max-w-7xl px-4 py-24 sm:px-6 lg:px-8 lg:py-32">
       <SectionHeading
-        eyebrow="Moduli"
-        title="Zavirite u aplikaciju"
-        description="Interaktivni pregled najvažnijih modula koji čine balkan.works."
+        eyebrow={t.featured.eyebrow}
+        title={t.featured.title}
+        description={t.featured.description}
       />
 
       <div className="mt-10 flex flex-wrap justify-center gap-2">
         {MODULES.map((m) => {
           const isActive = m.id === active
+          const label = t.categoryItems[m.catKey as keyof typeof t.categoryItems].title
           return (
             <button
               key={m.id}
@@ -121,7 +118,7 @@ export function FeaturedServices() {
               )}
             >
               <m.icon className="size-4" />
-              {m.label}
+              {label}
             </button>
           )
         })}
@@ -129,9 +126,9 @@ export function FeaturedServices() {
 
       <div className="mt-10 rounded-[1.75rem] border border-border bg-gradient-to-br from-surface to-secondary/40 p-5 sm:p-10">
         <div className="flex items-center justify-between">
-          <h3 className="text-lg font-semibold text-navy">{current.heading}</h3>
+          <h3 className="text-lg font-semibold text-navy">{currentLabel}</h3>
           <span className="inline-flex items-center gap-1 text-sm font-semibold text-primary">
-            Prikaži sve <ArrowUpRight className="size-4" />
+            {t.cta.showAll} <ArrowUpRight className="size-4" />
           </span>
         </div>
 

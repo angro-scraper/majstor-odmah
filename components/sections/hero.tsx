@@ -72,9 +72,9 @@ export function Hero() {
             <div className="flex flex-col">
               <span className="flex items-center gap-1 text-sm font-semibold text-navy">
                 <Star className="size-3.5 fill-current text-amber-400" />
-                4.9 / 5 · 38.000+ ocena
+                {t.hero.ratingLabel}
               </span>
-              <span className="text-xs text-muted-foreground">Prosečna ocena na App Store i Google Play</span>
+              <span className="text-xs text-muted-foreground">{t.hero.ratingSub}</span>
             </div>
           </div>
         </div>
@@ -98,7 +98,7 @@ export function Hero() {
               <Briefcase className="size-4" />
             </span>
             <span>
-              <span className="block text-xs font-semibold text-navy">Novi posao</span>
+              <span className="block text-xs font-semibold text-navy">{t.hero.floatingJob}</span>
               <span className="block text-[10px] text-muted-foreground">Front-end Developer</span>
             </span>
           </div>
@@ -108,7 +108,7 @@ export function Hero() {
               <UtensilsCrossed className="size-4" />
             </span>
             <span>
-              <span className="block text-xs font-semibold text-navy">Dostava stiže</span>
+              <span className="block text-xs font-semibold text-navy">{t.hero.floatingDelivery}</span>
               <span className="flex items-center gap-1 text-[10px] text-muted-foreground">
                 <Star className="size-3 fill-current text-amber-400" /> 4.9 · 25 min
               </span>
