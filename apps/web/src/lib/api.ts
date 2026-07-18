@@ -22,6 +22,27 @@ export type AiSearchResult = {
   results: ApiBusiness[];
 };
 
+export type ApiDeal = {
+  id: string;
+  title: string;
+  price?: number | string | null;
+  discountPrice?: number | string | null;
+  expiresAt?: string | null;
+  business?: { name?: string | null } | null;
+  category?: { name?: string | null } | null;
+};
+
+export type ApiSaveFoodPackage = {
+  id: string;
+  title: string;
+  originalPrice: number | string;
+  discountPrice: number | string;
+  quantity: number;
+  pickupStart: string;
+  pickupEnd: string;
+  business?: { name?: string | null } | null;
+};
+
 async function request<T>(path: string, init?: RequestInit): Promise<T> {
   const response = await fetch(`${apiBaseUrl}${path}`, { ...init, headers: { "Content-Type": "application/json", ...init?.headers } });
   const body = await response.json() as ApiEnvelope<T>;
@@ -31,6 +52,8 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
 
 export const searchBusinesses = (query: string) => request<ApiBusiness[]>(`/search?query=${encodeURIComponent(query)}`);
 export const aiSearch = (query: string) => request<AiSearchResult>("/ai/search", { method: "POST", body: JSON.stringify({ query }) });
+export const listDeals = () => request<ApiDeal[]>("/deals");
+export const listSaveFoodPackages = () => request<ApiSaveFoodPackage[]>("/save-food/packages");
 
 export function toBusinessCard(business: ApiBusiness): DemoBusiness {
   const initials = business.name.split(/\s+/).slice(0, 2).map((word) => word[0]).join("").toUpperCase();

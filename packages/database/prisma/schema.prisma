@@ -193,6 +193,7 @@ model User {
   consents      UserConsent[]
   dataRequests  DataSubjectRequest[]
   foodReservations SaveFoodReservation[]
+  foodReviews      SaveFoodReview[]
   businessFollows BusinessFollower[]
   contactInquiries ContactInquiry[]
   locations       UserLocation[]
@@ -883,17 +884,34 @@ model SaveFoodReservation {
   userId      String                    @map("user_id") @db.Uuid
   quantity    Int
   status      SaveFoodReservationStatus @default(RESERVED)
+  pickupCode  String                    @unique @default(uuid()) @map("pickup_code")
   reservedAt  DateTime                  @default(now()) @map("reserved_at")
   cancelledAt DateTime?                 @map("cancelled_at")
   pickedUpAt  DateTime?                 @map("picked_up_at")
   package     SaveFoodPackage           @relation(fields: [packageId], references: [id])
   user        User                      @relation(fields: [userId], references: [id])
+  review      SaveFoodReview?
   createdAt   DateTime                  @default(now()) @map("created_at")
   updatedAt   DateTime                  @updatedAt @map("updated_at")
 
   @@index([userId, status])
   @@index([packageId, status])
   @@map("save_food_reservations")
+}
+
+model SaveFoodReview {
+  id            String                @id @default(uuid()) @db.Uuid
+  reservationId String                @unique @map("reservation_id") @db.Uuid
+  userId        String                @map("user_id") @db.Uuid
+  rating        Int
+  comment       String?
+  reservation   SaveFoodReservation   @relation(fields: [reservationId], references: [id])
+  user          User                  @relation(fields: [userId], references: [id])
+  createdAt     DateTime              @default(now()) @map("created_at")
+  updatedAt     DateTime              @updatedAt @map("updated_at")
+
+  @@index([userId, createdAt])
+  @@map("save_food_reviews")
 }
 
 model ContactInquiry {

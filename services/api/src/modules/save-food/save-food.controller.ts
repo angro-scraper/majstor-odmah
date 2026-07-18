@@ -1,7 +1,7 @@
 import { Body, Controller, Get, Param, Patch, Post, Query, UseGuards } from "@nestjs/common";
 import { ok } from "../../common/api-response";
 import { AuthenticatedUser, CurrentUser, JwtAuthGuard } from "../../common/security";
-import { CreateSaveFoodPackageDto, ListSaveFoodPackagesDto, ReserveSaveFoodPackageDto, SaveFoodService, UpdateSaveFoodPackageDto } from "./save-food.service";
+import { CreateSaveFoodPackageDto, CreateSaveFoodReviewDto, ListSaveFoodPackagesDto, PickupSaveFoodReservationDto, ReserveSaveFoodPackageDto, SaveFoodService, UpdateSaveFoodPackageDto } from "./save-food.service";
 
 @Controller("save-food")
 export class SaveFoodController {
@@ -14,4 +14,6 @@ export class SaveFoodController {
   @Post("packages/:id/reserve") @UseGuards(JwtAuthGuard) async reserve(@CurrentUser() user: AuthenticatedUser, @Param("id") id: string, @Body() input: ReserveSaveFoodPackageDto) { return ok(await this.saveFood.reserve(user.id, id, input.quantity ?? 1), "Save Food package reserved"); }
   @Get("reservations/me") @UseGuards(JwtAuthGuard) async reservations(@CurrentUser() user: AuthenticatedUser) { return ok(await this.saveFood.reservations(user.id)); }
   @Post("reservations/:id/cancel") @UseGuards(JwtAuthGuard) async cancel(@CurrentUser() user: AuthenticatedUser, @Param("id") id: string) { return ok(await this.saveFood.cancel(user.id, id)); }
+  @Post("reservations/:id/review") @UseGuards(JwtAuthGuard) async review(@CurrentUser() user: AuthenticatedUser, @Param("id") id: string, @Body() input: CreateSaveFoodReviewDto) { return ok(await this.saveFood.review(user.id, id, input), "Save Food review created"); }
+  @Post("pickup") @UseGuards(JwtAuthGuard) async pickup(@CurrentUser() user: AuthenticatedUser, @Body() input: PickupSaveFoodReservationDto) { return ok(await this.saveFood.pickup(user.id, input.pickupCode), "Save Food pickup confirmed"); }
 }

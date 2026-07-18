@@ -32,6 +32,11 @@ export class UpdateSaveFoodPackageDto {
 
 export class ListSaveFoodPackagesDto { @IsOptional() @IsUUID() cityId?: string; @IsOptional() @Type(() => Number) @IsInt() @Min(1) @Max(50) limit?: number; }
 export class ReserveSaveFoodPackageDto { @IsOptional() @Type(() => Number) @IsInt() @Min(1) @Max(20) quantity?: number; }
+export class PickupSaveFoodReservationDto { @IsString() @MaxLength(64) pickupCode!: string; }
+export class CreateSaveFoodReviewDto {
+  @Type(() => Number) @IsInt() @Min(1) @Max(5) rating!: number;
+  @IsOptional() @IsString() @MaxLength(1000) comment?: string;
+}
 
 @Injectable()
 export class SaveFoodService {
@@ -77,6 +82,7 @@ export class SaveFoodService {
       const updated = await tx.saveFoodPackage.updateMany({ where: { id, deletedAt: null, status: SaveFoodPackageStatus.ACTIVE, quantityAvailable: { gte: quantity }, pickupEndAt: { gt: new Date() }, business: { status: "VERIFIED", deletedAt: null } }, data: { quantityAvailable: { decrement: quantity } } });
       if (updated.count !== 1) throw new ConflictException("SAVE_FOOD_PACKAGE_UNAVAILABLE");
       const reservation = await tx.saveFoodReservation.create({ data: { packageId: id, userId, quantity } });
+      await tx.notification.create({ data: { userId, type: "IMPORTANT", title: "Save Food rezervacija potvrđena", message: `Rezervisali ste ${quantity} paket(a). Kod za preuzimanje je dostupan u vašim rezervacijama.` } });
       await tx.auditLog.create({ data: { actorUserId: userId, action: "SAVE_FOOD_RESERVED", resourceType: "save_food_reservation", resourceId: reservation.id, payload: { packageId: id, quantity } } });
       return reservation;
     });
@@ -96,6 +102,30 @@ export class SaveFoodService {
       await tx.saveFoodPackage.update({ where: { id: reservation.packageId }, data: { quantityAvailable: { increment: reservation.quantity }, status: SaveFoodPackageStatus.ACTIVE } });
       await tx.auditLog.create({ data: { actorUserId: userId, action: "SAVE_FOOD_RESERVATION_CANCELLED", resourceType: "save_food_reservation", resourceId: id } }); return cancelled;
     });
+  }
+
+  async pickup(ownerId: string, pickupCode: string) {
+    this.requireEnabled();
+    return this.prisma.$transaction(async (tx) => {
+      const reservation = await tx.saveFoodReservation.findFirst({ where: { pickupCode, status: SaveFoodReservationStatus.RESERVED }, include: { package: { select: { businessId: true, title: true, pickupStartAt: true, pickupEndAt: true } } } });
+      if (!reservation) throw new NotFoundException("SAVE_FOOD_RESERVATION_NOT_FOUND");
+      await this.requireOwnership(reservation.package.businessId, ownerId);
+      const now = new Date();
+      if (now < reservation.package.pickupStartAt || now > reservation.package.pickupEndAt) throw new ConflictException("SAVE_FOOD_PICKUP_OUTSIDE_WINDOW");
+      const pickedUp = await tx.saveFoodReservation.update({ where: { id: reservation.id }, data: { status: SaveFoodReservationStatus.PICKED_UP, pickedUpAt: now } });
+      await tx.notification.create({ data: { userId: reservation.userId, type: "IMPORTANT", title: "Paket je preuzet", message: `Preuzimanje paketa „${reservation.package.title}“ je potvrđeno. Hvala što spašavate hranu.` } });
+      await tx.auditLog.create({ data: { actorUserId: ownerId, action: "SAVE_FOOD_PICKED_UP", resourceType: "save_food_reservation", resourceId: reservation.id, payload: { packageId: reservation.packageId } } });
+      return pickedUp;
+    });
+  }
+
+  async review(userId: string, reservationId: string, input: CreateSaveFoodReviewDto) {
+    this.requireEnabled();
+    const reservation = await this.prisma.saveFoodReservation.findFirst({ where: { id: reservationId, userId, status: SaveFoodReservationStatus.PICKED_UP }, select: { id: true } });
+    if (!reservation) throw new ConflictException("SAVE_FOOD_REVIEW_NOT_AVAILABLE");
+    const review = await this.prisma.saveFoodReview.upsert({ where: { reservationId }, create: { reservationId, userId, rating: input.rating, comment: input.comment?.trim() }, update: { rating: input.rating, comment: input.comment?.trim() } });
+    await this.audit(userId, "SAVE_FOOD_REVIEWED", review.id, { reservationId, rating: input.rating });
+    return review;
   }
 
   private requireEnabled() { if (!this.features.isEnabled("saveFood")) throw new NotFoundException("SAVE_FOOD_DISABLED"); }

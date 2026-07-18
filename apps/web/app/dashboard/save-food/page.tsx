@@ -1,0 +1,6 @@
+import { AppShell } from "../../../src/components/app-shell";
+import { Button, Input } from "../../../src/components/ui";
+
+export default function BusinessSaveFoodPage() {
+  return <AppShell active=""><section className="page-heading business-heading"><p>🌿 SAVE FOOD PARTNER</p><h1>Dodaj paket i smanji višak hrane.</h1><span>Postavi cenu i vreme preuzimanja. Kupci dobijaju jedinstveni kod koji potvrđuješ pri preuzimanju.</span></section><section className="creation-layout"><aside><div className="step active"><span>1</span>Paket</div><div className="step"><span>2</span>Cena</div><div className="step"><span>3</span>Preuzimanje</div></aside><form className="creation-form"><p className="label">NOVI SAVE FOOD PAKET</p><h2>Šta je danas dostupno?</h2><label>Naziv paketa<Input placeholder="npr. Večernji paket peciva" /></label><label>Količina<Input type="number" placeholder="10" /></label><label>Redovna cena / Save Food cena<Input placeholder="800 RSD / 240 RSD" /></label><label>Vreme preuzimanja<Input type="datetime-local" /></label><div className="form-actions"><a href="/dashboard"><Button className="secondary" type="button">Nazad</Button></a><Button type="button">Sačuvaj paket</Button></div></form></section></AppShell>;
+}

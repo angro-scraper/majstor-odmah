@@ -4,7 +4,7 @@ import { ThemeToggle } from "./theme-toggle";
 
 const links: { href: string; icon: IconName; label: string; key: string }[] = [
   { href: "/app", icon: "home", label: "Početna", key: "home" },
-  { href: "/search", icon: "grid", label: "Discover", key: "services" },
+  { href: "/deals", icon: "grid", label: "Ponude", key: "deals" },
   { href: "/ai", icon: "sparkle", label: "AI", key: "ai" },
   { href: "/favorites", icon: "activity", label: "Sačuvano", key: "activity" },
   { href: "/profile", icon: "user", label: "Profil", key: "profile" },
