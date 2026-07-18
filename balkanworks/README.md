@@ -42,3 +42,7 @@ Event governance, analytics boundaries and privacy principles are in [BALKAN_WOR
 ## City expansion
 
 The city-by-city network and launch gates are in [BALKAN_WORKS_LOCAL_CITY_EXPANSION_PLAN.md](docs/BALKAN_WORKS_LOCAL_CITY_EXPANSION_PLAN.md).
+
+## Design language
+
+The platform-wide visual and component rules are in [BALKAN_WORKS_DESIGN_LANGUAGE.md](docs/BALKAN_WORKS_DESIGN_LANGUAGE.md).
