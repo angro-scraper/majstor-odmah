@@ -183,6 +183,10 @@ The consumer, business and partner support model is in [BALKAN_WORKS_SUPPORT_SYS
 
 The operational security, incident, recovery and production-verification framework is in [BALKAN_WORKS_SECURITY_OPERATIONS.md](docs/BALKAN_WORKS_SECURITY_OPERATIONS.md).
 
+## Financial model
+
+The cost, revenue, unit-economics, scenario and financial-control framework is in [BALKAN_WORKS_FINANCIAL_MODEL.md](docs/BALKAN_WORKS_FINANCIAL_MODEL.md).
+
 ## Team roles
 
 Role-level responsibilities and hiring sequence are in [BALKAN_WORKS_TEAM_ROLES.md](docs/BALKAN_WORKS_TEAM_ROLES.md).
