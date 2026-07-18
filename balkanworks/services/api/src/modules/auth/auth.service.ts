@@ -1,12 +1,10 @@
 import { ConflictException, Injectable, UnauthorizedException } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
 import { PrismaService } from "@balkanworks/database";
-import { IsEmail, IsOptional, IsString, MinLength } from "class-validator";
 import * as bcrypt from "bcrypt";
 import { ok } from "../../common/api-response";
-
-export class RegisterDto { @IsEmail() email!: string; @IsOptional() @IsString() phone?: string; @IsString() @MinLength(10) password!: string; }
-export class LoginDto { @IsEmail() email!: string; @IsString() password!: string; }
+import { LoginDto } from "./dto/login.dto";
+import { RegisterDto } from "./dto/register.dto";
 
 @Injectable()
 export class AuthService {
@@ -15,7 +13,7 @@ export class AuthService {
   async register(input: RegisterDto) {
     const existing = await this.prisma.user.findFirst({ where: { OR: [{ email: input.email }, ...(input.phone ? [{ phone: input.phone }] : [])] } });
     if (existing) throw new ConflictException("AUTH_IDENTITY_EXISTS");
-    const user = await this.prisma.user.create({ data: { email: input.email.toLowerCase(), phone: input.phone, passwordHash: await bcrypt.hash(input.password, 12), profile: { create: {} } } });
+    const user = await this.prisma.user.create({ data: { email: input.email.toLowerCase(), phone: input.phone, passwordHash: await bcrypt.hash(input.password, 12), profile: { create: { firstName: input.firstName.trim(), lastName: input.lastName.trim() } } } });
     return this.createSession(user.id, user.email);
   }
 
