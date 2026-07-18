@@ -247,6 +247,10 @@ The one-city field plan for acquiring and activating the first quality business 
 
 The one-city activation, retention, content, referral and partnership plan is in [BALKAN_WORKS_FIRST_10K_USERS_PLAN.md](docs/BALKAN_WORKS_FIRST_10K_USERS_PLAN.md).
 
+## Investor pitch deck
+
+The evidence-first 15-slide investor narrative is in [BALKAN_WORKS_PITCH_DECK.md](docs/BALKAN_WORKS_PITCH_DECK.md).
+
 ## Team roles
 
 Role-level responsibilities and hiring sequence are in [BALKAN_WORKS_TEAM_ROLES.md](docs/BALKAN_WORKS_TEAM_ROLES.md).
