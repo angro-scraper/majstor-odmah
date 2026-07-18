@@ -155,6 +155,10 @@ The product/legal readiness checklist is in [BALKAN_WORKS_LEGAL_FRAMEWORK.md](do
 
 The measurable, local-network growth model is in [BALKAN_WORKS_GROWTH_LOOPS.md](docs/BALKAN_WORKS_GROWTH_LOOPS.md).
 
+## Business onboarding
+
+The business activation, verification, first-value and value-led upgrade flow is in [BALKAN_WORKS_BUSINESS_ONBOARDING_SYSTEM.md](docs/BALKAN_WORKS_BUSINESS_ONBOARDING_SYSTEM.md).
+
 ## Team roles
 
 Role-level responsibilities and hiring sequence are in [BALKAN_WORKS_TEAM_ROLES.md](docs/BALKAN_WORKS_TEAM_ROLES.md).
