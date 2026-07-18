@@ -1,6 +1,42 @@
 import Link from 'next/link'
-import { Globe, Facebook, Instagram, Linkedin, Youtube } from 'lucide-react'
+import { Globe } from 'lucide-react'
 import { Logo } from '@/components/logo'
+
+type IconProps = { className?: string }
+
+function FacebookIcon({ className }: IconProps) {
+  return (
+    <svg viewBox="0 0 24 24" fill="currentColor" className={className} aria-hidden="true">
+      <path d="M13.5 21v-8h2.7l.4-3.1h-3.1V7.9c0-.9.25-1.5 1.55-1.5H16.7V3.6c-.3 0-1.3-.1-2.45-.1-2.43 0-4.1 1.48-4.1 4.2v2.2H7.4V13h2.75v8h3.35Z" />
+    </svg>
+  )
+}
+
+function InstagramIcon({ className }: IconProps) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className={className} aria-hidden="true">
+      <rect x="3" y="3" width="18" height="18" rx="5" />
+      <circle cx="12" cy="12" r="4" />
+      <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none" />
+    </svg>
+  )
+}
+
+function LinkedinIcon({ className }: IconProps) {
+  return (
+    <svg viewBox="0 0 24 24" fill="currentColor" className={className} aria-hidden="true">
+      <path d="M6.94 8.5H4.06V20h2.88V8.5ZM5.5 3.9a1.67 1.67 0 1 0 0 3.34 1.67 1.67 0 0 0 0-3.34ZM20 20v-6.3c0-3.37-1.8-4.94-4.2-4.94-1.94 0-2.8 1.07-3.28 1.82V8.5H9.64V20h2.88v-6.08c0-.32.02-.64.12-.87.25-.64.84-1.3 1.83-1.3 1.29 0 1.81.98 1.81 2.42V20H20Z" />
+    </svg>
+  )
+}
+
+function YoutubeIcon({ className }: IconProps) {
+  return (
+    <svg viewBox="0 0 24 24" fill="currentColor" className={className} aria-hidden="true">
+      <path d="M21.6 7.2a2.5 2.5 0 0 0-1.76-1.77C18.27 5 12 5 12 5s-6.27 0-7.84.43A2.5 2.5 0 0 0 2.4 7.2 26 26 0 0 0 2 12a26 26 0 0 0 .4 4.8 2.5 2.5 0 0 0 1.76 1.77C5.73 19 12 19 12 19s6.27 0 7.84-.43a2.5 2.5 0 0 0 1.76-1.77A26 26 0 0 0 22 12a26 26 0 0 0-.4-4.8ZM10 15V9l5.2 3-5.2 3Z" />
+    </svg>
+  )
+}
 
 const COLUMNS: { title: string; links: { label: string; href: string }[] }[] = [
   {
@@ -42,10 +78,10 @@ const COLUMNS: { title: string; links: { label: string; href: string }[] }[] = [
 ]
 
 const SOCIALS = [
-  { label: 'Facebook', icon: Facebook, href: '#' },
-  { label: 'Instagram', icon: Instagram, href: '#' },
-  { label: 'LinkedIn', icon: Linkedin, href: '#' },
-  { label: 'YouTube', icon: Youtube, href: '#' },
+  { label: 'Facebook', icon: FacebookIcon, href: '#' },
+  { label: 'Instagram', icon: InstagramIcon, href: '#' },
+  { label: 'LinkedIn', icon: LinkedinIcon, href: '#' },
+  { label: 'YouTube', icon: YoutubeIcon, href: '#' },
 ]
 
 export function SiteFooter() {
