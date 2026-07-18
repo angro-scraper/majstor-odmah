@@ -195,6 +195,10 @@ The gateway, retrieval, model lifecycle, recommendation and future agent archite
 
 The reusable product, API, security, performance and UAT test cases are in [BALKAN_WORKS_TEST_CASE_LIBRARY.md](docs/BALKAN_WORKS_TEST_CASE_LIBRARY.md).
 
+## Investor data room
+
+The controlled due-diligence structure, evidence pack and sharing protocol are in [BALKAN_WORKS_INVESTOR_DATA_ROOM.md](docs/BALKAN_WORKS_INVESTOR_DATA_ROOM.md).
+
 ## Team roles
 
 Role-level responsibilities and hiring sequence are in [BALKAN_WORKS_TEAM_ROLES.md](docs/BALKAN_WORKS_TEAM_ROLES.md).
