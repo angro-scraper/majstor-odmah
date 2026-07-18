@@ -179,6 +179,10 @@ The operational, event, analytics and future governed-AI data layers are in [BAL
 
 The consumer, business and partner support model is in [BALKAN_WORKS_SUPPORT_SYSTEM.md](docs/BALKAN_WORKS_SUPPORT_SYSTEM.md).
 
+## Security operations
+
+The operational security, incident, recovery and production-verification framework is in [BALKAN_WORKS_SECURITY_OPERATIONS.md](docs/BALKAN_WORKS_SECURITY_OPERATIONS.md).
+
 ## Team roles
 
 Role-level responsibilities and hiring sequence are in [BALKAN_WORKS_TEAM_ROLES.md](docs/BALKAN_WORKS_TEAM_ROLES.md).
