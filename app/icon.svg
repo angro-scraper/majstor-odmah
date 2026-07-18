@@ -1,18 +1,12 @@
 <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
   <defs>
-    <linearGradient id="bw-gradient" x1="4" y1="2" x2="36" y2="38" gradientUnits="userSpaceOnUse">
+    <linearGradient id="bw-tile" x1="4" y1="2" x2="36" y2="38" gradientUnits="userSpaceOnUse">
       <stop stopColor="#3B7BFF" />
       <stop offset="1" stopColor="#2563EB" />
     </linearGradient>
   </defs>
-  <!-- Background tile -->
-  <rect x="0" y="0" width="40" height="40" rx="11" fill="url(#bw-gradient)" />
-  <!-- Top highlight -->
+  <rect x="0" y="0" width="40" height="40" rx="11" fill="url(#bw-tile)" />
   <rect x="0" y="0" width="40" height="20" rx="11" fill="#ffffff" fillOpacity="0.12" />
-  <!-- Letter "b" -->
-  <text x="20" y="24" fontSize="28" fontWeight="700" fontFamily="system-ui, -apple-system, sans-serif" fill="#ffffff" textAnchor="middle" dominantBaseline="middle">
-    b
-  </text>
-  <!-- Green dot indicator -->
-  <circle cx="28" cy="10" r="4" fill="#10b981" />
+  <text x="18" y="26" fontSize="28" fontWeight="800" fontFamily="system-ui, -apple-system, sans-serif" fill="#ffffff" textAnchor="middle" dominantBaseline="middle">b</text>
+  <circle cx="23" cy="15" r="3" fill="#10b981" />
 </svg>

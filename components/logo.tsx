@@ -21,11 +21,11 @@ export function LogoMark({ className }: { className?: string }) {
       {/* Subtle top highlight */}
       <rect x="1" y="1" width="38" height="18" rx="11" fill="#ffffff" fillOpacity="0.12" />
       {/* Letter "b" in center */}
-      <text x="20" y="28" fontSize="28" fontWeight="700" fontFamily="system-ui, -apple-system, sans-serif" fill="#ffffff" textAnchor="middle" dominantBaseline="middle">
+      <text x="18" y="26" fontSize="28" fontWeight="800" fontFamily="system-ui, -apple-system, sans-serif" fill="#ffffff" textAnchor="middle" dominantBaseline="middle">
         b
       </text>
-      {/* Green dot indicator */}
-      <circle cx="28" cy="12" r="4" fill="#10b981" />
+      {/* Green dot inside b */}
+      <circle cx="23" cy="15" r="3" fill="#10b981" />
     </svg>
   )
 }
