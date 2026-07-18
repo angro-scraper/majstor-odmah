@@ -151,6 +151,10 @@ The voice, positioning and visual communication rules are in [BALKAN_WORKS_BRAND
 
 The product/legal readiness checklist is in [BALKAN_WORKS_LEGAL_FRAMEWORK.md](docs/BALKAN_WORKS_LEGAL_FRAMEWORK.md); qualified legal review is required before launch.
 
+## Growth loops
+
+The measurable, local-network growth model is in [BALKAN_WORKS_GROWTH_LOOPS.md](docs/BALKAN_WORKS_GROWTH_LOOPS.md).
+
 ## Team roles
 
 Role-level responsibilities and hiring sequence are in [BALKAN_WORKS_TEAM_ROLES.md](docs/BALKAN_WORKS_TEAM_ROLES.md).
