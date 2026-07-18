@@ -82,3 +82,11 @@ The single source of prioritization across phases is [BALKAN_WORKS_MASTER_ROADMA
 ## Final system blueprint
 
 The high-level map of the complete ecosystem is [BALKAN_WORKS_FINAL_SYSTEM_BLUEPRINT.md](docs/BALKAN_WORKS_FINAL_SYSTEM_BLUEPRINT.md).
+
+## Core database
+
+The MVP data model and migration rules are in [BALKAN_WORKS_MVP_DATABASE_SCHEMA.md](docs/BALKAN_WORKS_MVP_DATABASE_SCHEMA.md). The executable schema is in `packages/database/prisma/schema.prisma`.
+
+## Master prompt
+
+The preserved architect/developer directive is in [BALKAN_WORKS_CODEX_MASTER_PROMPT.md](docs/BALKAN_WORKS_CODEX_MASTER_PROMPT.md).
