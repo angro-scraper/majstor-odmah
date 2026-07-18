@@ -91,6 +91,8 @@ The high-level map of the complete ecosystem is [BALKAN_WORKS_FINAL_SYSTEM_BLUEP
 
 The MVP data model and migration rules are in [BALKAN_WORKS_MVP_DATABASE_SCHEMA.md](docs/BALKAN_WORKS_MVP_DATABASE_SCHEMA.md). The executable schema is in `packages/database/prisma/schema.prisma`.
 
+The Core-to-future database domain map is in [BALKAN_WORKS_DATABASE_SCHEMA.md](docs/BALKAN_WORKS_DATABASE_SCHEMA.md).
+
 ## Master prompt
 
 The preserved architect/developer directive is in [BALKAN_WORKS_CODEX_MASTER_PROMPT.md](docs/BALKAN_WORKS_CODEX_MASTER_PROMPT.md).
