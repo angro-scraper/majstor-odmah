@@ -65,6 +65,8 @@ The implementation order and non-negotiable coding rules are in [BALKAN_WORKS_CO
 
 The consolidated implementation brief and current delivery boundary are in [BALKAN_WORKS_CODEX_MASTER.md](docs/BALKAN_WORKS_CODEX_MASTER.md).
 
+The next-cycle implementation order, quality gates and verified handoff rules are in [BALKAN_WORKS_CODEX_START_PROMPT.md](docs/BALKAN_WORKS_CODEX_START_PROMPT.md).
+
 ## Security and privacy
 
 Platform security, tenant isolation and privacy controls are governed by [BALKAN_WORKS_SECURITY_AND_PRIVACY.md](docs/BALKAN_WORKS_SECURITY_AND_PRIVACY.md).
