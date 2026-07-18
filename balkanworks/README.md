@@ -38,3 +38,7 @@ The Core-to-module model and feature-flag lifecycle are in [BALKAN_WORKS_PRODUCT
 ## Data strategy
 
 Event governance, analytics boundaries and privacy principles are in [BALKAN_WORKS_DATA_STRATEGY.md](docs/BALKAN_WORKS_DATA_STRATEGY.md).
+
+## City expansion
+
+The city-by-city network and launch gates are in [BALKAN_WORKS_LOCAL_CITY_EXPANSION_PLAN.md](docs/BALKAN_WORKS_LOCAL_CITY_EXPANSION_PLAN.md).
