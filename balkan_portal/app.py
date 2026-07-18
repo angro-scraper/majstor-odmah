@@ -14,6 +14,7 @@ from dashboard_page import render_dashboard_page
 from modules_page import render_module_page
 from search_page import render_search_page
 from hub_page import render_hub_page
+from superapp_page import render_superapp_page
 
 APP_NAME = "Balkan.works"
 CORE_URL = os.getenv("CORE_API_URL", "https://balkan-works-core.onrender.com").rstrip("/")
@@ -26,6 +27,7 @@ MODULES = [
     ("food", "Save Food", "Sačuvaj dobru hranu", "Rezerviši pakete viška hrane u blizini.", "Aktivno", "/save-food"),
     ("business", "Business", "Alati za firme", "Ponude, profil firme i alati za svakodnevni posao.", "Aktivno", "/business"),
     ("money", "Money", "Pametnije sa novcem", "Budžet, edukacija i finansijski alati za kasnije.", "Planirano", "/account"),
+    ("local", "Balkan Local", "Događaji u tvom kraju", "Koncerti, festivali, sajmovi i sport na jednom mestu.", "Aktivno", "/local"),
 ]
 
 
@@ -68,11 +70,17 @@ def page(language: str, status: str) -> str:
 
 
 def icon(key: str) -> str:
-    return {"work": "⌁", "deals": "◈", "food": "◌", "business": "▦", "money": "⌘"}[key]
+    return {"work": "⌁", "deals": "◈", "food": "◌", "business": "▦", "money": "⌘", "local": "◎"}[key]
 
 
 @app.get("/", response_class=HTMLResponse, include_in_schema=False)
 async def home(lang: str = Query("SR")) -> HTMLResponse:
+    return HTMLResponse(render_superapp_page(lang.upper()))
+
+
+@app.get("/welcome", response_class=HTMLResponse, include_in_schema=False)
+async def welcome(lang: str = Query("SR")) -> HTMLResponse:
+    """Public landing page retained for campaigns and partner links."""
     return HTMLResponse(page(lang.upper(), await core_status()))
 
 
@@ -268,6 +276,26 @@ async def notifications_read_all(request: Request) -> JSONResponse:
     return await core_module(request, "/api/notifications/read-all", "POST", require_auth=True)
 
 
+@app.get("/api/local/events", response_class=JSONResponse, include_in_schema=False)
+async def local_events(request: Request) -> JSONResponse:
+    return await core_module(request, "/api/local/events")
+
+
+@app.post("/api/local/events", response_class=JSONResponse, include_in_schema=False)
+async def local_create_event(request: Request, payload: dict) -> JSONResponse:
+    return await core_module(request, "/api/local/events", "POST", payload, require_auth=True)
+
+
+@app.get("/api/support/tickets", response_class=JSONResponse, include_in_schema=False)
+async def support_tickets(request: Request) -> JSONResponse:
+    return await core_module(request, "/api/support/tickets", require_auth=True)
+
+
+@app.post("/api/support/tickets", response_class=JSONResponse, include_in_schema=False)
+async def support_create_ticket(request: Request, payload: dict) -> JSONResponse:
+    return await core_module(request, "/api/support/tickets", "POST", payload, require_auth=True)
+
+
 @app.get("/api/payments/wallet", response_class=JSONResponse, include_in_schema=False)
 async def payments_wallet(request: Request) -> JSONResponse:
     return await core_module(request, "/api/payments/wallet", require_auth=True)
@@ -364,6 +392,11 @@ async def deals() -> HTMLResponse:
 @app.get("/save-food", response_class=HTMLResponse, include_in_schema=False)
 async def save_food() -> HTMLResponse:
     return HTMLResponse(render_module_page("food"))
+
+
+@app.get("/local", response_class=HTMLResponse, include_in_schema=False)
+async def local() -> HTMLResponse:
+    return HTMLResponse(render_superapp_page("SR", initial_tab="explore", initial_module="local"))
 
 
 @app.get("/admin", response_class=HTMLResponse, include_in_schema=False)

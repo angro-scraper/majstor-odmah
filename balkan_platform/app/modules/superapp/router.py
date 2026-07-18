@@ -78,4 +78,5 @@ def capabilities() -> dict:
         {"key": "business", "status": "adapter_ready", "description": "Opsnestone integration layer"},
         {"key": "money", "status": "adapter_ready", "description": "Wallet, rewards and Stock Radar layer"},
         {"key": "assistant", "status": "discovery_ready", "description": "Balkan Assistant can use cross-module search"},
+        {"key": "local", "status": "active", "description": "Regional events, fairs, sports and local culture"},
     ]}

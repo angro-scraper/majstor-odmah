@@ -14,6 +14,7 @@ from app.modules.discovery.router import router as discovery_router
 from app.modules.identity.router import router as auth_router
 from app.modules.identity.router import users_router
 from app.modules.location.router import router as location_router
+from app.modules.local.router import router as local_router
 from app.modules.marketplace.router import router as marketplace_router
 from app.modules.media.router import router as media_router
 from app.modules.notifications.router import router as notifications_router
@@ -21,6 +22,7 @@ from app.modules.offers.router import router as offers_router
 from app.modules.payments.router import router as payments_router
 from app.modules.save_food.router import router as save_food_router
 from app.modules.superapp.router import router as superapp_router
+from app.modules.support.router import router as support_router
 
 settings = get_settings()
 
@@ -63,11 +65,13 @@ for router in (
     catalog_router,
     discovery_router,
     location_router,
+    local_router,
     offers_router,
     marketplace_router,
     media_router,
     save_food_router,
     superapp_router,
+    support_router,
     payments_router,
     notifications_router,
     business_tools_router,
