@@ -9,7 +9,7 @@ export function ThemeToggle() {
 
   useEffect(() => {
     const storedTheme = window.localStorage.getItem("balkanworks-theme") as Theme | null;
-    const initialTheme = storedTheme ?? (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+    const initialTheme: Theme = storedTheme === "dark" ? "dark" : "light";
     document.documentElement.dataset.theme = initialTheme;
     setTheme(initialTheme);
   }, []);

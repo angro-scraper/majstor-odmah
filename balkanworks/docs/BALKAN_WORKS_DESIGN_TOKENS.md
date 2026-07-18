@@ -17,7 +17,7 @@
 
 ## Theme behavior
 
-The default theme follows the operating-system preference. The header control writes an explicit `data-theme="light"` or `data-theme="dark"` value to the document and stores that preference under `balkanworks-theme` in local storage. Reduced-motion preferences disable nonessential animation.
+The default theme is light. The header control writes an explicit `data-theme="light"` or `data-theme="dark"` value to the document and stores a user-selected dark preference under `balkanworks-theme` in local storage. Reduced-motion preferences disable nonessential animation.
 
 ## Component expectations
 
