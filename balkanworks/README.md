@@ -251,6 +251,10 @@ The one-city activation, retention, content, referral and partnership plan is in
 
 The evidence-first 15-slide investor narrative is in [BALKAN_WORKS_PITCH_DECK.md](docs/BALKAN_WORKS_PITCH_DECK.md).
 
+## KPI dashboard
+
+The North Star, funnel, business-health, revenue and decision-metric definitions are in [BALKAN_WORKS_KPI_DASHBOARD.md](docs/BALKAN_WORKS_KPI_DASHBOARD.md).
+
 ## Team roles
 
 Role-level responsibilities and hiring sequence are in [BALKAN_WORKS_TEAM_ROLES.md](docs/BALKAN_WORKS_TEAM_ROLES.md).
