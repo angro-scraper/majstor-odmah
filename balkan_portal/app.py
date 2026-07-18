@@ -175,6 +175,21 @@ async def core_module(
     return JSONResponse(response.json(), status_code=response.status_code)
 
 
+@app.get("/api/locations/countries", response_class=JSONResponse, include_in_schema=False)
+async def location_countries(request: Request) -> JSONResponse:
+    return await core_module(request, "/api/locations/countries")
+
+
+@app.get("/api/locations/cities", response_class=JSONResponse, include_in_schema=False)
+async def location_cities(request: Request) -> JSONResponse:
+    return await core_module(request, "/api/locations/cities")
+
+
+@app.get("/api/locations/nearby-cities", response_class=JSONResponse, include_in_schema=False)
+async def location_nearby_cities(request: Request) -> JSONResponse:
+    return await core_module(request, "/api/locations/nearby-cities")
+
+
 @app.get("/api/market/listings", response_class=JSONResponse, include_in_schema=False)
 async def market_listings(request: Request) -> JSONResponse:
     return await core_module(request, "/api/marketplace/listings")
