@@ -14,3 +14,7 @@ Target TypeScript foundation for the Balkan.works platform. It is intentionally 
 Install Node.js 20+ and pnpm 9+, then run `pnpm install`, copy `.env.example` to `.env.local`, start PostgreSQL/Redis/Object Storage, run `pnpm --filter @balkanworks/database prisma:migrate`, then `pnpm dev`.
 
 No secret belongs in source control. MVP flags keep Wallet, Marketplace and AI disabled by default.
+
+## AI strategy
+
+The planned AI layer is permissioned, grounded in approved platform data and controlled by the user or business owner. See [BALKAN_WORKS_AI_STRATEGY.md](docs/BALKAN_WORKS_AI_STRATEGY.md). Model keys and external integrations are intentionally not configured in this repository.
