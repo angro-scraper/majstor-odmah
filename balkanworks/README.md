@@ -79,6 +79,8 @@ AI Search, AI Assistant, Marketplace, Payments, mobile applications and regional
 
 The live first-batch status, evidence and next delivery group are in [BALKAN_WORKS_TASK_BOARD.md](docs/BALKAN_WORKS_TASK_BOARD.md).
 
+The detailed 001–054 delivery register and current implementation status are in [BALKAN_WORKS_INITIAL_TASKS.md](docs/BALKAN_WORKS_INITIAL_TASKS.md).
+
 ## AI strategy
 
 The planned AI layer is permissioned, grounded in approved platform data and controlled by the user or business owner. See [BALKAN_WORKS_AI_STRATEGY.md](docs/BALKAN_WORKS_AI_STRATEGY.md). Model keys and external integrations are intentionally not configured in this repository.

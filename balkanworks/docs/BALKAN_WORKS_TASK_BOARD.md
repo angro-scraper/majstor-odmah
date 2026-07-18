@@ -26,6 +26,8 @@ The requested `frontend/`, `backend/` and `database/` concerns are intentionally
 4. **BW-030 / BW-031 — User experience:** verify profile API and favorites against the migrated database.
 5. **BW-040 / BW-041 — Business platform:** validate create/edit/profile flows, including services, locations and images.
 
+For the task-by-task 001–054 register, evidence and implementation state, see [BALKAN_WORKS_INITIAL_TASKS.md](BALKAN_WORKS_INITIAL_TASKS.md).
+
 ## MVP exit condition
 
 The first MVP is ready for a controlled beta only when the complete loop is verified against a real local or staging database:
