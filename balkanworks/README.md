@@ -97,6 +97,8 @@ The MVP data model and migration rules are in [BALKAN_WORKS_MVP_DATABASE_SCHEMA.
 
 The Core-to-future database domain map is in [BALKAN_WORKS_DATABASE_SCHEMA.md](docs/BALKAN_WORKS_DATABASE_SCHEMA.md).
 
+The production-target mapping, migration gates and future data-model boundaries are in [BALKAN_WORKS_DATABASE_SCHEMA_FINAL.md](docs/BALKAN_WORKS_DATABASE_SCHEMA_FINAL.md).
+
 ## Master prompt
 
 The preserved architect/developer directive is in [BALKAN_WORKS_CODEX_MASTER_PROMPT.md](docs/BALKAN_WORKS_CODEX_MASTER_PROMPT.md).
