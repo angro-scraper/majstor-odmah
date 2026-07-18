@@ -179,6 +179,8 @@ The ethical, measurable local-business sales motion is in [BALKAN_WORKS_SALES_PL
 
 The operational, event, analytics and future governed-AI data layers are in [BALKAN_WORKS_DATA_ARCHITECTURE.md](docs/BALKAN_WORKS_DATA_ARCHITECTURE.md).
 
+The database-layer architecture linking operational models, search, trust, analytics and governed AI knowledge is in [BALKAN_WORKS_DATABASE_ARCHITECTURE.md](docs/BALKAN_WORKS_DATABASE_ARCHITECTURE.md).
+
 ## Support system
 
 The consumer, business and partner support model is in [BALKAN_WORKS_SUPPORT_SYSTEM.md](docs/BALKAN_WORKS_SUPPORT_SYSTEM.md).
