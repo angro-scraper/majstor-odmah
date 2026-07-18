@@ -167,6 +167,10 @@ The governed progression from AI search to permissioned assistants and future ag
 
 The REST contract, versioning, security requirements, observability and expansion path are in [BALKAN_WORKS_API_DOCUMENTATION.md](docs/BALKAN_WORKS_API_DOCUMENTATION.md).
 
+## Sales playbook
+
+The ethical, measurable local-business sales motion is in [BALKAN_WORKS_SALES_PLAYBOOK.md](docs/BALKAN_WORKS_SALES_PLAYBOOK.md).
+
 ## Team roles
 
 Role-level responsibilities and hiring sequence are in [BALKAN_WORKS_TEAM_ROLES.md](docs/BALKAN_WORKS_TEAM_ROLES.md).
