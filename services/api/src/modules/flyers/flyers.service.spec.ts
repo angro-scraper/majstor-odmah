@@ -29,4 +29,21 @@ describe("FlyersService", () => {
     expect(prisma.digitalFlyer.create).toHaveBeenCalledWith(expect.objectContaining({ data: expect.objectContaining({ title: "Letnja ponuda" }) }));
     expect(prisma.auditLog.create).toHaveBeenCalled();
   });
+
+  it("stores ordered pages when a business creates a multipage flyer", async () => {
+    features.isEnabled.mockReturnValue(true);
+    prisma.business.findFirst.mockResolvedValue({ id: "business-1" });
+    prisma.digitalFlyer.create.mockResolvedValue({ id: "flyer-2", businessId: "business-1", title: "Katalog", pages: [] });
+    prisma.auditLog.create.mockResolvedValue({ id: "audit-2" });
+
+    await service.create("owner-1", {
+      businessId: "business-1",
+      title: "Katalog",
+      pages: [{ imageUrl: "https://cdn.example.test/page-1.jpg", pageNumber: 1 }],
+    });
+
+    expect(prisma.digitalFlyer.create).toHaveBeenCalledWith(expect.objectContaining({
+      data: expect.objectContaining({ pages: { create: [{ imageUrl: "https://cdn.example.test/page-1.jpg", pageNumber: 1 }] } }),
+    }));
+  });
 });

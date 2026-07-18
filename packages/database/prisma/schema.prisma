@@ -170,6 +170,7 @@ model User {
   consents      UserConsent[]
   dataRequests  DataSubjectRequest[]
   foodReservations SaveFoodReservation[]
+  businessFollows BusinessFollower[]
   contactInquiries ContactInquiry[]
   createdAt     DateTime       @default(now()) @map("created_at")
   updatedAt     DateTime       @updatedAt @map("updated_at")
@@ -296,6 +297,8 @@ model Business {
   slug        String?            @unique
   description String?
   logoUrl     String?            @map("logo_url")
+  coverUrl    String?            @map("cover_url")
+  socialLinks Json               @default("{}") @map("social_links")
   categoryId  String?            @map("category_id") @db.Uuid
   phone       String?
   email       String?
@@ -310,6 +313,7 @@ model Business {
   services    Service[]
   images      BusinessImage[]
   favorites   Favorite[]
+  followers   BusinessFollower[]
   reviews     Review[]
   views       BusinessView[]
   contacts    ContactEvent[]
@@ -381,6 +385,18 @@ model Favorite {
 
   @@index([userId, createdAt])
   @@map("favorites")
+}
+
+model BusinessFollower {
+  userId     String   @map("user_id") @db.Uuid
+  businessId String   @map("business_id") @db.Uuid
+  user       User     @relation(fields: [userId], references: [id])
+  business   Business @relation(fields: [businessId], references: [id])
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  @@id([userId, businessId])
+  @@index([businessId, createdAt])
+  @@map("business_followers")
 }
 
 model Review {
@@ -721,6 +737,7 @@ model DigitalFlyer {
   expiresAt   DateTime?   @map("expires_at")
   business    Business    @relation(fields: [businessId], references: [id])
   views       FlyerView[]
+  pages       FlyerPage[]
   createdAt   DateTime    @default(now()) @map("created_at")
   updatedAt   DateTime    @updatedAt @map("updated_at")
   deletedAt   DateTime?   @map("deleted_at")
@@ -728,6 +745,19 @@ model DigitalFlyer {
   @@index([businessId, status])
   @@index([status, expiresAt])
   @@map("digital_flyers")
+}
+
+model FlyerPage {
+  id         String        @id @default(uuid()) @db.Uuid
+  flyerId    String        @map("flyer_id") @db.Uuid
+  imageUrl   String        @map("image_url")
+  pageNumber Int           @map("page_number")
+  flyer      DigitalFlyer  @relation(fields: [flyerId], references: [id])
+  createdAt  DateTime      @default(now()) @map("created_at")
+  updatedAt  DateTime      @updatedAt @map("updated_at")
+
+  @@unique([flyerId, pageNumber])
+  @@map("flyer_pages")
 }
 
 model FlyerView {

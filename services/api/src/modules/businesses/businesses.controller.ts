@@ -15,10 +15,19 @@ export class BusinessesController {
 
   @Get("slug/:slug") async getPublicBySlug(@Param("slug") slug: string) { return ok(await this.businesses.findPublicBySlug(slug)); }
 
+  @Get("following") @UseGuards(JwtAuthGuard)
+  async following(@CurrentUser() user: AuthenticatedUser) { return ok(await this.businesses.listFollowing(user.id)); }
+
   @Get(":id") async getPublic(@Param("id") id: string) { return ok(await this.businesses.findPublic(id)); }
 
   @Post(":id/view") @UseGuards(JwtAuthGuard)
   async view(@Param("id") id: string, @CurrentUser() user: AuthenticatedUser) { return ok(await this.businesses.recordView(id, user.id)); }
+
+  @Post(":id/follow") @UseGuards(JwtAuthGuard)
+  async follow(@Param("id") id: string, @CurrentUser() user: AuthenticatedUser) { return ok(await this.businesses.follow(id, user.id), "Business followed"); }
+
+  @Delete(":id/follow") @UseGuards(JwtAuthGuard)
+  async unfollow(@Param("id") id: string, @CurrentUser() user: AuthenticatedUser) { await this.businesses.unfollow(id, user.id); return ok({ id }, "Business unfollowed"); }
 
   @Patch(":id") @UseGuards(JwtAuthGuard)
   async update(@Param("id") id: string, @CurrentUser() user: AuthenticatedUser, @Body() input: UpdateBusinessDto) { return ok(await this.businesses.update(id, user.id, input)); }

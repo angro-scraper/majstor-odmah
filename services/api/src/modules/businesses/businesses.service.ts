@@ -1,7 +1,7 @@
 import { ForbiddenException, Injectable, NotFoundException } from "@nestjs/common";
 import { Prisma, ReviewStatus } from "@prisma/client";
 import { PrismaService } from "@balkanworks/database";
-import { IsEmail, IsLatitude, IsLongitude, IsObject, IsOptional, IsPhoneNumber, IsString, IsUUID, Max, MaxLength, Min, MinLength } from "class-validator";
+import { IsEmail, IsLatitude, IsLongitude, IsObject, IsOptional, IsPhoneNumber, IsString, IsUUID, Max, MaxLength, Min, MinLength, IsUrl } from "class-validator";
 import { Type } from "class-transformer";
 
 export class CreateBusinessDto {
@@ -15,6 +15,8 @@ export class CreateBusinessDto {
   @IsOptional() @IsPhoneNumber() phone?: string;
   @IsOptional() @IsEmail() email?: string;
   @IsOptional() @IsString() website?: string;
+  @IsOptional() @IsUrl({ require_tld: false }) @MaxLength(2048) coverUrl?: string;
+  @IsOptional() @IsObject() socialLinks?: Record<string, unknown>;
   @IsOptional() @IsObject() openingHours?: Record<string, unknown>;
 }
 
@@ -25,6 +27,8 @@ export class UpdateBusinessDto {
   @IsOptional() @IsPhoneNumber() phone?: string;
   @IsOptional() @IsEmail() email?: string;
   @IsOptional() @IsString() website?: string;
+  @IsOptional() @IsUrl({ require_tld: false }) @MaxLength(2048) coverUrl?: string;
+  @IsOptional() @IsObject() socialLinks?: Record<string, unknown>;
   @IsOptional() @IsObject() openingHours?: Record<string, unknown>;
 }
 
@@ -48,7 +52,7 @@ export class BusinessesService {
     services: { where: { deletedAt: null }, orderBy: { name: "asc" as const } },
     images: { where: { deletedAt: null }, orderBy: { orderIndex: "asc" as const } },
     reviews: { where: { status: ReviewStatus.APPROVED, deletedAt: null }, orderBy: { createdAt: "desc" as const }, take: 10 },
-    _count: { select: { reviews: true, favorites: true } },
+    _count: { select: { reviews: true, favorites: true, followers: true } },
   } satisfies Prisma.BusinessInclude;
 
   constructor(private readonly prisma: PrismaService) {}
@@ -65,6 +69,8 @@ export class BusinessesService {
         phone: input.phone,
         email: input.email?.toLowerCase(),
         website: input.website,
+        coverUrl: input.coverUrl,
+        socialLinks: (input.socialLinks ?? {}) as Prisma.InputJsonValue,
         openingHours: (input.openingHours ?? {}) as Prisma.InputJsonValue,
         locations: { create: { cityId: input.cityId, address: input.address, latitude: input.latitude, longitude: input.longitude } },
       },
@@ -114,9 +120,10 @@ export class BusinessesService {
 
   async update(id: string, userId: string, input: UpdateBusinessDto) {
     await this.findOwned(id, userId);
-    const { categoryId, openingHours, ...fields } = input;
+    const { categoryId, openingHours, socialLinks, ...fields } = input;
     const data: Prisma.BusinessUpdateInput = { ...fields };
     if (openingHours !== undefined) data.openingHours = openingHours as unknown as Prisma.InputJsonValue;
+    if (socialLinks !== undefined) data.socialLinks = socialLinks as Prisma.InputJsonValue;
     if (input.name) data.name = input.name.trim();
     if (input.description) data.description = input.description.trim();
     if (input.email) data.email = input.email.toLowerCase();
@@ -142,6 +149,28 @@ export class BusinessesService {
   async recordView(id: string, userId: string) {
     await this.findPublic(id);
     return this.prisma.businessView.create({ data: { businessId: id, userId, source: "web" } });
+  }
+
+  async follow(id: string, userId: string) {
+    await this.findPublic(id);
+    return this.prisma.businessFollower.upsert({
+      where: { userId_businessId: { userId, businessId: id } },
+      update: {},
+      create: { userId, businessId: id },
+    });
+  }
+
+  async unfollow(id: string, userId: string): Promise<void> {
+    const result = await this.prisma.businessFollower.deleteMany({ where: { userId, businessId: id } });
+    if (!result.count) throw new NotFoundException("BUSINESS_FOLLOW_NOT_FOUND");
+  }
+
+  async listFollowing(userId: string) {
+    return this.prisma.businessFollower.findMany({
+      where: { userId, business: { deletedAt: null, status: "VERIFIED" } },
+      include: { business: { include: { category: true, locations: { where: { deletedAt: null }, include: { city: true } } } } },
+      orderBy: { createdAt: "desc" },
+    });
   }
 
   private async nextSlug(name: string): Promise<string> {

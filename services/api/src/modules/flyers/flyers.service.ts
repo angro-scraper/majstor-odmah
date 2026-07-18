@@ -2,8 +2,13 @@ import { ForbiddenException, Injectable, NotFoundException } from "@nestjs/commo
 import { FlyerStatus, Prisma } from "@prisma/client";
 import { PrismaService } from "@balkanworks/database";
 import { Type } from "class-transformer";
-import { IsDateString, IsEnum, IsOptional, IsString, IsUUID, IsUrl, Max, MaxLength, Min } from "class-validator";
+import { ArrayMaxSize, IsArray, IsDateString, IsEnum, IsInt, IsOptional, IsString, IsUUID, IsUrl, Max, MaxLength, Min, ValidateNested } from "class-validator";
 import { FeaturesService } from "../features/features.service";
+
+export class FlyerPageDto {
+  @IsUrl({ require_tld: false }) @MaxLength(2048) imageUrl!: string;
+  @IsInt() @Min(1) pageNumber!: number;
+}
 
 export class CreateFlyerDto {
   @IsUUID() businessId!: string;
@@ -13,6 +18,7 @@ export class CreateFlyerDto {
   @IsOptional() @IsUrl({ require_tld: false }) @MaxLength(2048) actionUrl?: string;
   @IsOptional() @IsDateString() startsAt?: string;
   @IsOptional() @IsDateString() expiresAt?: string;
+  @IsOptional() @IsArray() @ArrayMaxSize(50) @ValidateNested({ each: true }) @Type(() => FlyerPageDto) pages?: FlyerPageDto[];
 }
 
 export class UpdateFlyerDto {
@@ -23,6 +29,7 @@ export class UpdateFlyerDto {
   @IsOptional() @IsDateString() startsAt?: string;
   @IsOptional() @IsDateString() expiresAt?: string;
   @IsOptional() @IsEnum(FlyerStatus) status?: FlyerStatus;
+  @IsOptional() @IsArray() @ArrayMaxSize(50) @ValidateNested({ each: true }) @Type(() => FlyerPageDto) pages?: FlyerPageDto[];
 }
 
 export class ListFlyersDto {
@@ -33,7 +40,7 @@ export class ListFlyersDto {
 
 @Injectable()
 export class FlyersService {
-  private readonly publicInclude = { business: { select: { id: true, name: true, slug: true, logoUrl: true, verificationStatus: true, locations: { where: { deletedAt: null }, include: { city: { select: { name: true } } } } } }, _count: { select: { views: true } } } satisfies Prisma.DigitalFlyerInclude;
+  private readonly publicInclude = { business: { select: { id: true, name: true, slug: true, logoUrl: true, verificationStatus: true, locations: { where: { deletedAt: null }, include: { city: { select: { name: true } } } } } }, pages: { orderBy: { pageNumber: "asc" as const } }, _count: { select: { views: true } } } satisfies Prisma.DigitalFlyerInclude;
 
   constructor(private readonly prisma: PrismaService, private readonly features: FeaturesService) {}
 
@@ -56,7 +63,7 @@ export class FlyersService {
     this.requireEnabled();
     this.ensureDates(input.startsAt, input.expiresAt);
     await this.requireOwnership(input.businessId, ownerId);
-    const flyer = await this.prisma.digitalFlyer.create({ data: { businessId: input.businessId, title: input.title.trim(), description: input.description?.trim(), imageUrl: input.imageUrl, actionUrl: input.actionUrl, startsAt: input.startsAt ? new Date(input.startsAt) : null, expiresAt: input.expiresAt ? new Date(input.expiresAt) : null }, include: this.publicInclude });
+    const flyer = await this.prisma.digitalFlyer.create({ data: { businessId: input.businessId, title: input.title.trim(), description: input.description?.trim(), imageUrl: input.imageUrl, actionUrl: input.actionUrl, startsAt: input.startsAt ? new Date(input.startsAt) : null, expiresAt: input.expiresAt ? new Date(input.expiresAt) : null, pages: input.pages ? { create: input.pages.map((page) => ({ imageUrl: page.imageUrl, pageNumber: page.pageNumber })) } : undefined }, include: this.publicInclude });
     await this.audit(ownerId, "FLYER_CREATED", flyer.id, { businessId: flyer.businessId });
     return flyer;
   }
@@ -67,7 +74,8 @@ export class FlyersService {
     if (!flyer) throw new NotFoundException("FLYER_NOT_FOUND");
     await this.requireOwnership(flyer.businessId, ownerId);
     this.ensureDates(input.startsAt ?? flyer.startsAt?.toISOString(), input.expiresAt ?? flyer.expiresAt?.toISOString());
-    const updated = await this.prisma.digitalFlyer.update({ where: { id }, data: { ...input, title: input.title?.trim(), description: input.description?.trim(), startsAt: input.startsAt ? new Date(input.startsAt) : undefined, expiresAt: input.expiresAt ? new Date(input.expiresAt) : undefined }, include: this.publicInclude });
+    const { pages, startsAt, expiresAt, ...fields } = input;
+    const updated = await this.prisma.digitalFlyer.update({ where: { id }, data: { ...fields, title: input.title?.trim(), description: input.description?.trim(), startsAt: startsAt ? new Date(startsAt) : undefined, expiresAt: expiresAt ? new Date(expiresAt) : undefined, pages: pages === undefined ? undefined : { deleteMany: {}, create: pages.map((page) => ({ imageUrl: page.imageUrl, pageNumber: page.pageNumber })) } }, include: this.publicInclude });
     await this.audit(ownerId, "FLYER_UPDATED", id, { businessId: flyer.businessId, status: updated.status });
     return updated;
   }
