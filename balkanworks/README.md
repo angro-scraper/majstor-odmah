@@ -275,6 +275,8 @@ The evidence-first 15-slide investor narrative is in [BALKAN_WORKS_PITCH_DECK.md
 
 The North Star, funnel, business-health, revenue and decision-metric definitions are in [BALKAN_WORKS_KPI_DASHBOARD.md](docs/BALKAN_WORKS_KPI_DASHBOARD.md).
 
+The event contract, KPI tree, dashboards and weekly analytics operating rhythm are in [BALKAN_WORKS_METRICS_AND_ANALYTICS.md](docs/BALKAN_WORKS_METRICS_AND_ANALYTICS.md).
+
 ## AI and data strategy
 
 The data foundation, AI phases, quality evaluation and governance strategy is in [BALKAN_WORKS_AI_DATA_STRATEGY.md](docs/BALKAN_WORKS_AI_DATA_STRATEGY.md).
