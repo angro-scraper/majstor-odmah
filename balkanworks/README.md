@@ -99,6 +99,10 @@ The versioned REST response, security and compatibility contract is in [BALKAN_W
 
 Environment, release, monitoring and scale rules are in [BALKAN_WORKS_DEPLOYMENT_ARCHITECTURE.md](docs/BALKAN_WORKS_DEPLOYMENT_ARCHITECTURE.md).
 
+## Testing
+
+The quality and release testing standard is in [BALKAN_WORKS_TESTING_STRATEGY.md](docs/BALKAN_WORKS_TESTING_STRATEGY.md).
+
 ## Analytics
 
 Event taxonomy, dashboards and experimentation rules are in [BALKAN_WORKS_ANALYTICS_DATA_STRATEGY.md](docs/BALKAN_WORKS_ANALYTICS_DATA_STRATEGY.md).
