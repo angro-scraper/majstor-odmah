@@ -67,6 +67,8 @@ The consolidated implementation brief and current delivery boundary are in [BALK
 
 The next-cycle implementation order, quality gates and verified handoff rules are in [BALKAN_WORKS_CODEX_START_PROMPT.md](docs/BALKAN_WORKS_CODEX_START_PROMPT.md).
 
+The mandatory engineering, review and release rules for AI-assisted work are in [BALKAN_WORKS_CODEX_AUTOMATION_RULES.md](docs/BALKAN_WORKS_CODEX_AUTOMATION_RULES.md).
+
 ## Security and privacy
 
 Platform security, tenant isolation and privacy controls are governed by [BALKAN_WORKS_SECURITY_AND_PRIVACY.md](docs/BALKAN_WORKS_SECURITY_AND_PRIVACY.md).
