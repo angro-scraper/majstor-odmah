@@ -4,15 +4,13 @@ import { PhoneFrame } from '@/components/phone-frame'
 import { StoreButtons } from '@/components/store-buttons'
 import { HomeScreen, WalletScreen } from '@/components/app-screens'
 
-const STATS = [
-  { value: '1.2M+', label: 'korisnika' },
-  { value: '45.000+', label: 'pružalaca usluga' },
-  { value: '8', label: 'zemalja Balkana' },
-]
-
 export function Hero() {
   return (
     <section className="relative overflow-hidden bg-gradient-to-b from-secondary/60 to-background">
+      <div
+        aria-hidden="true"
+        className="bg-grid bg-grid-fade pointer-events-none absolute inset-0"
+      />
       <div
         aria-hidden="true"
         className="pointer-events-none absolute -right-24 -top-24 size-96 rounded-full bg-primary/10 blur-3xl"
@@ -57,14 +55,25 @@ export function Hero() {
 
           <StoreButtons />
 
-          <dl className="mt-3 flex flex-wrap gap-x-12 gap-y-5 border-t border-border pt-7">
-            {STATS.map((s) => (
-              <div key={s.label}>
-                <dt className="text-2xl font-bold text-navy sm:text-3xl">{s.value}</dt>
-                <dd className="mt-0.5 text-sm text-muted-foreground">{s.label}</dd>
-              </div>
-            ))}
-          </dl>
+          <div className="flex items-center gap-3">
+            <div className="flex -space-x-2.5">
+              {['#2563eb', '#06b6d4', '#14b8a6', '#1e40af'].map((c) => (
+                <span
+                  key={c}
+                  className="size-8 rounded-full border-2 border-background"
+                  style={{ backgroundColor: c }}
+                  aria-hidden="true"
+                />
+              ))}
+            </div>
+            <div className="flex flex-col">
+              <span className="flex items-center gap-1 text-sm font-semibold text-navy">
+                <Star className="size-3.5 fill-current text-amber-400" />
+                4.9 / 5 · 38.000+ ocena
+              </span>
+              <span className="text-xs text-muted-foreground">Prosečna ocena na App Store i Google Play</span>
+            </div>
+          </div>
         </div>
 
         <div className="relative mx-auto flex items-center justify-center">
