@@ -229,6 +229,8 @@ The execution-oriented moat, competitive response and advantage metrics are in [
 
 The dependency-led sequencing of Core, engagement, business, transaction and intelligence modules is in [BALKAN_WORKS_MODULE_ROADMAP.md](docs/BALKAN_WORKS_MODULE_ROADMAP.md).
 
+The time-oriented evolution from local discovery through marketplace and AI is in [BALKAN_WORKS_PRODUCT_ROADMAP.md](docs/BALKAN_WORKS_PRODUCT_ROADMAP.md).
+
 ## Execution plan
 
 The operating plan from foundation through MVP, pilot, validation and scale is in [BALKAN_WORKS_EXECUTION_PLAN.md](docs/BALKAN_WORKS_EXECUTION_PLAN.md).
