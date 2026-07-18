@@ -217,6 +217,10 @@ The consumer, business and partner support model is in [BALKAN_WORKS_SUPPORT_SYS
 
 The operational security, incident, recovery and production-verification framework is in [BALKAN_WORKS_SECURITY_OPERATIONS.md](docs/BALKAN_WORKS_SECURITY_OPERATIONS.md).
 
+## Platform operations
+
+The platform-level onboarding, verification, quality, moderation, support, monitoring and scaling standard is in [BALKAN_WORKS_PLATFORM_OPERATIONS_SYSTEM.md](docs/BALKAN_WORKS_PLATFORM_OPERATIONS_SYSTEM.md).
+
 ## Financial model
 
 The cost, revenue, unit-economics, scenario and financial-control framework is in [BALKAN_WORKS_FINANCIAL_MODEL.md](docs/BALKAN_WORKS_FINANCIAL_MODEL.md).
