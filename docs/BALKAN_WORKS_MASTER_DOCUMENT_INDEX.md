@@ -94,6 +94,10 @@ If a conflict remains, record a decision in the operating/work system before cha
 - [Business Onboarding System](BALKAN_WORKS_BUSINESS_ONBOARDING_SYSTEM.md)
 - [Partnership Strategy](BALKAN_WORKS_PARTNERSHIP_STRATEGY.md)
 - [Support System](BALKAN_WORKS_SUPPORT_SYSTEM.md)
+- [Operation Manual](BALKAN_WORKS_OPERATION_MANUAL.md)
+- [Go-To-Market Strategy](BALKAN_WORKS_GTM_STRATEGY.md)
+- [SEO & Content Strategy](BALKAN_WORKS_SEO_STRATEGY.md)
+- [Community Strategy](BALKAN_WORKS_COMMUNITY_STRATEGY.md)
 
 ### 08 — Finance and investor materials
 
@@ -104,6 +108,12 @@ If a conflict remains, record a decision in the operating/work system before cha
 - [Investor Data Room](BALKAN_WORKS_INVESTOR_DATA_ROOM.md)
 - [Investor Pitch Deck](BALKAN_WORKS_PITCH_DECK.md)
 - [Investment Pitch](BALKAN_WORKS_INVESTMENT_PITCH.md)
+- [Business Model](BALKAN_WORKS_BUSINESS_MODEL.md)
+- [Investor Package](BALKAN_WORKS_INVESTOR_PACKAGE.md)
+- [Marketplace Strategy](BALKAN_WORKS_MARKETPLACE_STRATEGY.md)
+- [Loyalty Program](BALKAN_WORKS_LOYALTY_PROGRAM.md)
+- [Payment Architecture](BALKAN_WORKS_PAYMENT_ARCHITECTURE.md)
+- [Mobile Product Strategy](BALKAN_WORKS_MOBILE_PRODUCT_STRATEGY.md)
 
 ### 09 — Team and company operating system
 
