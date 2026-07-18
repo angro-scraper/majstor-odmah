@@ -743,9 +743,17 @@ const cnr = asDict({
   },
   testimonials: {
     eyebrow: 'Iskustva korisnika',
-    title: 'Zašto nam korisnici vjeruju',
+    title: 'Vole nas širom regiona',
     description:
-      'Više od milion ljudi širom regiona koristi balkan.works svaki dan.',
+      'Hiljade korisnika, frilensera i kompanija svakodnevno koristi balkan.works.',
+    items: [
+      { quote: 'Za pola sata sam našla vodoinstalatera i zakazala termin. Sve iz jedne aplikacije — nevjerovatno praktično.', name: 'Jelena Marković', role: 'Korisnica, Beograd' },
+      { quote: 'Kao frilenser dobijam nove klijente svake sedmice. Naplata putem novčanika je brza i bezbjedna.', name: 'Anteo Kovačević', role: 'Grafički dizajner, Zagreb' },
+      { quote: 'Vodimo mali restoran i dostava putem balkan.works udvostručila nam je narudžbe.', name: 'Emir Hadžić', role: 'Vlasnik restorana, Sarajevo' },
+      { quote: 'AI asistent mi je našao let i hotel jeftinije nego bilo gdje. Preporuka za sva putovanja.', name: 'Ana Novak', role: 'Korisnica, Ljubljana' },
+      { quote: 'Kontrolna tabla za kompanije je pregledna i štedi mi sate posla svaki dan.', name: 'Nikola Popovski', role: 'Menadžer, Skopje' },
+      { quote: 'Konačno jedna aplikacija za sve — od plaćanja računa do zakazivanja ljekara.', name: 'Lorena Gjoka', role: 'Korisnica, Tirana' },
+    ],
   },
   download: {
     title: 'Preuzmite balkan.works danas',
@@ -926,9 +934,17 @@ const mk = asDict({
   },
   testimonials: {
     eyebrow: 'Искуства на корисници',
-    title: 'Зошто корисниците ни веруваат',
+    title: 'Нè сакаат низ целиот регион',
     description:
-      'Повеќе од милион луѓе низ регионот користат balkan.works секој ден.',
+      'Илјадници корисници, слободни професионалци и компании секојдневно користат balkan.works.',
+    items: [
+      { quote: 'За половина час најдов водоинсталатер и закажав термин. Сè од една апликација — неверојатно практично.', name: 'Јелена Марковиќ', role: 'Корисничка, Белград' },
+      { quote: 'Како слободен професионалец добивам нови клиенти секоја недела. Наплатата преку паричник е брза и безбедна.', name: 'Антео Ковачевиќ', role: 'Графички дизајнер, Загреб' },
+      { quote: 'Водиме мал ресторан и доставата преку balkan.works ни ги удвои нарачките.', name: 'Емир Хаџиќ', role: 'Сопственик на ресторан, Сараево' },
+      { quote: 'AI асистентот ми најде лет и хотел поевтино од каде било. Препорака за сите патувања.', name: 'Ана Новак', role: 'Корисничка, Љубљана' },
+      { quote: 'Контролната табла за компании е прегледна и ми штеди часови работа секој ден.', name: 'Никола Поповски', role: 'Менаџер, Скопје' },
+      { quote: 'Конечно една апликација за сè — од плаќање сметки до закажување лекар.', name: 'Лорена Ѓока', role: 'Корисничка, Тирана' },
+    ],
   },
   download: {
     title: 'Преземете го balkan.works денес',
@@ -953,7 +969,7 @@ const mk = asDict({
     kupovina: { title: 'Купување', description: 'Производи од локални и регионални продавачи на едно место.' },
     dostava: { title: 'Достава на храна', description: 'Омилени ресторани и брза достава до вашата врата.' },
     putovanja: { title: 'Патувања', description: 'Летови, хотели и превоз — резервирајте во неколку клика.' },
-    zdravlje: { title: 'Здравје', description: 'Закажување прегледи кај лекари и клиники во близина.' },
+    zdravlje: { title: 'Здравје', description: 'Закажување прегледи кај лекари �� клиники во близина.' },
     edukacija: { title: 'Едукација', description: 'Курсеви, часови и обуки за нови знаења и вештини.' },
     nekretnine: { title: 'Недвижнини', description: 'Станови, куќи и деловни простори за издавање и продажба.' },
     finansije: { title: 'Финансии', description: 'Дигитален паричник, плаќања и трансфери без такси.' },
@@ -1109,9 +1125,17 @@ const sl = asDict({
   },
   testimonials: {
     eyebrow: 'Izkušnje uporabnikov',
-    title: 'Zakaj nam uporabniki zaupajo',
+    title: 'Obožujejo nas po vsej regiji',
     description:
-      'Več kot milijon ljudi po vsej regiji vsak dan uporablja balkan.works.',
+      'Tisoče uporabnikov, samostojnih podjetnikov in podjetij vsak dan uporablja balkan.works.',
+    items: [
+      { quote: 'V pol ure sem našla vodovodarja in se dogovorila za termin. Vse iz ene aplikacije — neverjetno priročno.', name: 'Jelena Marković', role: 'Uporabnica, Beograd' },
+      { quote: 'Kot samostojni podjetnik vsak teden dobim nove stranke. Plačilo prek denarnice je hitro in varno.', name: 'Anteo Kovačević', role: 'Grafični oblikovalec, Zagreb' },
+      { quote: 'Vodimo majhno restavracijo in dostava prek balkan.works nam je podvojila naročila.', name: 'Emir Hadžić', role: 'Lastnik restavracije, Sarajevo' },
+      { quote: 'AI pomočnik mi je našel let in hotel ceneje kot kjer koli drugje. Priporočam za vsa potovanja.', name: 'Ana Novak', role: 'Uporabnica, Ljubljana' },
+      { quote: 'Nadzorna plošča za podjetja je pregledna in mi vsak dan prihrani ure dela.', name: 'Nikola Popovski', role: 'Vodja, Skopje' },
+      { quote: 'Končno ena aplikacija za vse — od plačevanja računov do naročanja pri zdravniku.', name: 'Lorena Gjoka', role: 'Uporabnica, Tirana' },
+    ],
   },
   download: {
     title: 'Prenesite balkan.works še danes',
@@ -1251,7 +1275,7 @@ const bg = asDict({
       'Задайте въпрос на своя език, а AI асистентът намира най-добрите опции, сравнява цени и изпълнява задачи вместо вас.',
     bullets: [
       'Намира и сравнява услуги в реално време',
-      'Резервира, записва часове и поръчва вместо вас',
+      'Резервира, записва часове и ��оръчва вместо вас',
       'Разбира естествена реч на езиците от региона',
     ],
   },
@@ -1292,9 +1316,17 @@ const bg = asDict({
   },
   testimonials: {
     eyebrow: 'Мнения на потребители',
-    title: 'Защо потребителите ни се доверяват',
+    title: 'Обичат ни в целия регион',
     description:
-      'Над милион души в целия регион използват balkan.works всеки ден.',
+      'Хиляди потребители, фрийлансъри и компании ежедневно използват balkan.works.',
+    items: [
+      { quote: 'За половин час намерих водопроводчик и запазих час. Всичко от едно приложение — невероятно удобно.', name: 'Йелена Маркович', role: 'Потребител, Белград' },
+      { quote: 'Като фрийлансър получавам нови клиенти всяка седмица. Плащането през портфейла е бързо и сигурно.', name: 'Антео Ковачевич', role: 'Графичен дизайнер, Загреб' },
+      { quote: 'Управляваме малък ресторант и доставката през balkan.works удвои поръчките ни.', name: 'Емир Хаджич', role: 'Собственик на ресторант, Сараево' },
+      { quote: 'AI асистентът ми намери полет и хотел по-евтино от навсякъде. Препоръчвам за всички пътувания.', name: 'Ана Новак', role: 'Потребител, Любляна' },
+      { quote: 'Таблото за компании е прегледно и ми спестява часове работа всеки ден.', name: 'Никола Поповски', role: 'Мениджър, Скопие' },
+      { quote: 'Най-накрая едно приложение за всичко — от плащане на сметки до записване при лекар.', name: 'Лорена Гьока', role: 'Потребител, Тирана' },
+    ],
   },
   download: {
     title: 'Изтеглете balkan.works днес',
