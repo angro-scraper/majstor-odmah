@@ -13,6 +13,7 @@ from business_page import render_business_page
 from dashboard_page import render_dashboard_page
 from modules_page import render_module_page
 from search_page import render_search_page
+from hub_page import render_hub_page
 
 APP_NAME = "Balkan.works"
 CORE_URL = os.getenv("CORE_API_URL", "https://balkan-works-core.onrender.com").rstrip("/")
@@ -197,6 +198,11 @@ async def universal_search(request: Request) -> JSONResponse:
     return await core_module(request, "/api/discovery/search")
 
 
+@app.get("/api/super-app/hub", response_class=JSONResponse, include_in_schema=False)
+async def super_app_hub(request: Request) -> JSONResponse:
+    return await core_module(request, "/api/super-app/hub", require_auth=True)
+
+
 @app.get("/api/market/listings", response_class=JSONResponse, include_in_schema=False)
 async def market_listings(request: Request) -> JSONResponse:
     return await core_module(request, "/api/marketplace/listings")
@@ -338,6 +344,11 @@ async def dashboard() -> HTMLResponse:
 @app.get("/search", response_class=HTMLResponse, include_in_schema=False)
 async def search() -> HTMLResponse:
     return HTMLResponse(render_search_page())
+
+
+@app.get("/hub", response_class=HTMLResponse, include_in_schema=False)
+async def hub() -> HTMLResponse:
+    return HTMLResponse(render_hub_page())
 
 
 @app.get("/market", response_class=HTMLResponse, include_in_schema=False)

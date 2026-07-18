@@ -19,6 +19,7 @@ from app.modules.notifications.router import router as notifications_router
 from app.modules.offers.router import router as offers_router
 from app.modules.payments.router import router as payments_router
 from app.modules.save_food.router import router as save_food_router
+from app.modules.superapp.router import router as superapp_router
 
 settings = get_settings()
 
@@ -64,6 +65,7 @@ for router in (
     offers_router,
     marketplace_router,
     save_food_router,
+    superapp_router,
     payments_router,
     notifications_router,
     business_tools_router,
