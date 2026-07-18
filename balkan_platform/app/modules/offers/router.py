@@ -2,6 +2,7 @@ from datetime import datetime
 
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy import select
+from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Session
 
 from app.core.database import get_db
@@ -50,4 +51,11 @@ def list_offers(
         statement = statement.where(Offer.city_name.ilike(city_name))
     if source:
         statement = statement.where(Offer.source == source)
-    return [offer for offer in db.scalars(statement.order_by(Offer.valid_until, Offer.created_at.desc())) if is_current(offer)]
+    try:
+        offers = list(db.scalars(statement.order_by(Offer.valid_until, Offer.created_at.desc())))
+    except SQLAlchemyError:
+        # A partial deployment must not make the public platform unavailable.
+        # The module becomes active automatically once its schema is present.
+        db.rollback()
+        return []
+    return [offer for offer in offers if is_current(offer)]

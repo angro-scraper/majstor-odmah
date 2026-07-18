@@ -2,6 +2,7 @@ from datetime import datetime
 
 from fastapi import APIRouter, Query
 from sqlalchemy import or_, select
+from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Session
 from fastapi import Depends
 
@@ -59,7 +60,12 @@ def search(
         results.append({"id": str(item.id), "module": "MARKET", "title": item.title, "description": item.description,
                         "country_code": item.country_code, "city_name": item.city_name, "price": item.price, "currency": item.currency,
                         "url": "/market"})
-    for item in db.scalars(offer_statement.order_by(Offer.valid_until, Offer.created_at.desc()).limit(limit)):
+    try:
+        offers = list(db.scalars(offer_statement.order_by(Offer.valid_until, Offer.created_at.desc()).limit(limit)))
+    except SQLAlchemyError:
+        db.rollback()
+        offers = []
+    for item in offers:
         if not is_current(item):
             continue
         results.append({"id": str(item.id), "module": "DEALS", "title": item.title, "description": item.description,
