@@ -18,3 +18,7 @@ No secret belongs in source control. MVP flags keep Wallet, Marketplace and AI d
 ## AI strategy
 
 The planned AI layer is permissioned, grounded in approved platform data and controlled by the user or business owner. See [BALKAN_WORKS_AI_STRATEGY.md](docs/BALKAN_WORKS_AI_STRATEGY.md). Model keys and external integrations are intentionally not configured in this repository.
+
+## Partnership strategy
+
+Partner acquisition and future integrations follow [BALKAN_WORKS_PARTNERSHIP_STRATEGY.md](docs/BALKAN_WORKS_PARTNERSHIP_STRATEGY.md). Partner outreach, contracts and access credentials are never automated from source code.
