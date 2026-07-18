@@ -2,6 +2,10 @@
 
 Target TypeScript foundation for the Balkan.works platform. It is intentionally staged beside the existing live Core until a reviewed migration plan is approved; no production service or data is replaced by this scaffold.
 
+## Project source of truth
+
+[BALKAN_WORKS_MASTER_DOCUMENT.md](docs/BALKAN_WORKS_MASTER_DOCUMENT.md) defines the project direction and document hierarchy. The Master Roadmap controls delivery priority; the MVP PRD controls MVP acceptance.
+
 ## Layout
 
 - `apps/` — mobile, consumer web and admin clients
