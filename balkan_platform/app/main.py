@@ -15,6 +15,7 @@ from app.modules.identity.router import router as auth_router
 from app.modules.identity.router import users_router
 from app.modules.location.router import router as location_router
 from app.modules.marketplace.router import router as marketplace_router
+from app.modules.media.router import router as media_router
 from app.modules.notifications.router import router as notifications_router
 from app.modules.offers.router import router as offers_router
 from app.modules.payments.router import router as payments_router
@@ -64,6 +65,7 @@ for router in (
     location_router,
     offers_router,
     marketplace_router,
+    media_router,
     save_food_router,
     superapp_router,
     payments_router,

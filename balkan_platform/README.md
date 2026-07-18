@@ -45,6 +45,7 @@ docker compose up --build
 | `business_tools` | Opsnestone adapteri | struktura spremna |
 | `payments` | wallet, transakcije, pretplate | struktura spremna |
 | `notifications` | push, email i SMS | struktura spremna |
+| `media` | privatni upload slika i potpisani pristupni linkovi | aktivan |
 | `admin` | moderacija, statistika, audit | aktivan |
 
 ## Migracije
@@ -63,5 +64,7 @@ Obavezne promenljive:
 - `JWT_SECRET` — jedinstvena tajna od najmanje 32 karaktera
 - `REDIS_URL` — Redis za rate limit i kasnije notifikacije/cache
 - `CORS_ORIGINS` — dozvoljeni Web i mobilni origin-i
+- `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY` — serverska veza sa privatnim Supabase Storage bucketom
+- `SUPABASE_STORAGE_BUCKET=balkan-media` — odvojeni bucket za Balkan.works slike
 
 U produkciji se `AUTO_CREATE_SCHEMA` drži na `false`; šema se menja samo kroz Alembic migracije.

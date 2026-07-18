@@ -14,6 +14,11 @@ class Settings(BaseSettings):
     access_token_expire_minutes: int = 60
     cors_origins: str = "http://localhost:3000,http://localhost:8080,https://balkan.works"
     auto_create_schema: bool = False
+    supabase_url: str = ""
+    supabase_service_role_key: str = ""
+    supabase_storage_bucket: str = "balkan-media"
+    media_max_bytes: int = 10 * 1024 * 1024
+    media_signed_url_ttl_seconds: int = 900
 
     model_config = SettingsConfigDict(env_file=".env", case_sensitive=False, extra="ignore")
 
