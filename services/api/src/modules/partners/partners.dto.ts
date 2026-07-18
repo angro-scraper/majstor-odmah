@@ -1,5 +1,5 @@
-import { IsArray, IsDateString, IsEmail, IsEnum, IsObject, IsOptional, IsString, Matches, MaxLength } from "class-validator";
-import { PartnerCategory, PartnerIntegrationStatus, PartnerLevel, PartnerStatus } from "@prisma/client";
+import { IsArray, IsDateString, IsEmail, IsEnum, IsObject, IsOptional, IsString, IsUrl, Matches, MaxLength } from "class-validator";
+import { PartnerCategory, PartnerIntegrationStatus, PartnerLevel, PartnerStatus, WebhookStatus } from "@prisma/client";
 
 export class CreatePartnerDto {
   @IsString() @MaxLength(120) name!: string;
@@ -38,4 +38,14 @@ export class CreateIntegrationDto {
   @IsOptional() @IsArray() @IsString({ each: true }) scopes?: string[];
   @IsOptional() @IsObject() configuration?: Record<string, unknown>;
   @IsOptional() @IsDateString() startedAt?: string;
+}
+
+export class CreateWebhookDto {
+  @IsUrl({ protocols: ["https"], require_protocol: true, require_tld: true }) @MaxLength(2048) endpointUrl!: string;
+  @IsArray() @IsString({ each: true }) @Matches(/^[A-Z][A-Z0-9_]{2,80}$/, { each: true }) eventTypes!: string[];
+}
+
+export class UpdateWebhookDto {
+  @IsOptional() @IsEnum(WebhookStatus) status?: WebhookStatus;
+  @IsOptional() @IsArray() @IsString({ each: true }) @Matches(/^[A-Z][A-Z0-9_]{2,80}$/, { each: true }) eventTypes?: string[];
 }

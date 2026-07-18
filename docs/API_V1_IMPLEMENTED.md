@@ -75,9 +75,22 @@ Admin-only operational views:
 - `GET /operations/cities/readiness` — supply/verification density and city launch readiness.
 - `GET /operations/businesses/:id/onboarding` — owner-only onboarding steps, completion and next action.
 
+## Partner API ecosystem
+
+Partner endpoints are disabled by default and require `PARTNER_API_ENABLED=true`. An active partner API key is supplied with `X-Partner-Api-Key`; every key uses explicit scopes and API-key request activity is recorded.
+
+- `GET /partner/v1/me` — partner dashboard and 30-day usage snapshot.
+- `GET /partner/v1/catalog/businesses`, `/categories`, `/locations/countries`, `/locations/cities`, `/deals` — partner catalog, requires `catalog.read`.
+- `GET /partner/v1/webhooks` — partner webhook configuration, requires `webhooks.read`.
+- `POST /partner/v1/webhooks/test` — adds a webhook test event to the outbound outbox, requires `webhooks.test`.
+
+Admin routes under `/partners` create, revoke and audit partners, API keys, integrations and webhook subscriptions. Webhook endpoints must use public HTTPS; the signing secret is encrypted at rest and returned exactly once when a subscription is created. Delivery execution is deliberately an outbox concern, ready for a dedicated queue worker rather than an unbounded request-time network call.
+
 ## Environment
 
 - `DATABASE_URL`
 - `JWT_ACCESS_SECRET` (or `JWT_SECRET` for development)
 - `JWT_REFRESH_SECRET` (optional; falls back to the access secret only in development)
 - `WEB_ORIGIN` — comma-separated CORS allowlist
+- `PARTNER_API_ENABLED` — explicit partner API feature flag
+- `WEBHOOK_ENCRYPTION_KEY` — required to encrypt webhook signing secrets

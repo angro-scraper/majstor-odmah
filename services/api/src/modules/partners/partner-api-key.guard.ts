@@ -1,9 +1,12 @@
-import { CanActivate, ExecutionContext, Injectable, NotFoundException, UnauthorizedException } from "@nestjs/common";
+import { CanActivate, ExecutionContext, ForbiddenException, Injectable, NotFoundException, SetMetadata, UnauthorizedException } from "@nestjs/common";
+import { Reflector } from "@nestjs/core";
 import { PrismaService } from "@balkanworks/database";
 import { createHash } from "crypto";
 import { FeaturesService } from "../features/features.service";
 
 export type PartnerApiPrincipal = { partnerId: string; apiKeyId: string; scopes: string[] };
+export const PARTNER_SCOPES = "partner-scopes";
+export const PartnerScopes = (...scopes: string[]) => SetMetadata(PARTNER_SCOPES, scopes);
 
 type PartnerRequest = {
   headers: { "x-partner-api-key"?: string | string[]; authorization?: string };
@@ -14,7 +17,7 @@ type PartnerRequest = {
 
 @Injectable()
 export class PartnerApiKeyGuard implements CanActivate {
-  constructor(private readonly prisma: PrismaService, private readonly features: FeaturesService) {}
+  constructor(private readonly prisma: PrismaService, private readonly features: FeaturesService, private readonly reflector: Reflector) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     if (!this.features.isEnabled("partnerApi")) throw new NotFoundException("PARTNER_API_DISABLED");
@@ -37,6 +40,8 @@ export class PartnerApiKeyGuard implements CanActivate {
     if (!apiKeyRecord) throw new UnauthorizedException("INVALID_PARTNER_API_KEY");
 
     const scopes = Array.isArray(apiKeyRecord.scopes) ? apiKeyRecord.scopes.filter((scope): scope is string => typeof scope === "string") : [];
+    const requiredScopes = this.reflector.getAllAndOverride<string[]>(PARTNER_SCOPES, [context.getHandler(), context.getClass()]) ?? [];
+    if (requiredScopes.length && !requiredScopes.every((scope) => scopes.includes("*") || scopes.includes(scope))) throw new ForbiddenException("PARTNER_SCOPE_REQUIRED");
     request.partner = { partnerId: apiKeyRecord.partnerId, apiKeyId: apiKeyRecord.id, scopes };
     await this.prisma.$transaction([
       this.prisma.partnerApiKey.update({ where: { id: apiKeyRecord.id }, data: { lastUsedAt: new Date() } }),

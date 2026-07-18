@@ -1,8 +1,8 @@
-import { Body, Controller, Get, Param, Patch, Post, Req, UseGuards } from "@nestjs/common";
+import { Body, Controller, Get, Param, Patch, Post, Query, Req, UseGuards } from "@nestjs/common";
 import { ok } from "../../common/api-response";
 import { AdminGuard, AuthenticatedUser, CurrentUser, JwtAuthGuard } from "../../common/security";
-import { PartnerApiKeyGuard, PartnerApiPrincipal } from "./partner-api-key.guard";
-import { CreateIntegrationDto, CreatePartnerDto, CreatePartnerKeyDto, UpdatePartnerDto } from "./partners.dto";
+import { PartnerApiKeyGuard, PartnerApiPrincipal, PartnerScopes } from "./partner-api-key.guard";
+import { CreateIntegrationDto, CreatePartnerDto, CreatePartnerKeyDto, CreateWebhookDto, UpdatePartnerDto, UpdateWebhookDto } from "./partners.dto";
 import { PartnersService } from "./partners.service";
 
 @Controller("partners")
@@ -35,6 +35,18 @@ export class PartnersController {
   @Post(":id/integrations")
   @UseGuards(JwtAuthGuard, AdminGuard)
   async createIntegration(@CurrentUser() user: AuthenticatedUser, @Param("id") id: string, @Body() input: CreateIntegrationDto) { return ok(await this.partners.createIntegration(user.id, id, input), "Partner integration created"); }
+
+  @Get(":id/webhooks")
+  @UseGuards(JwtAuthGuard, AdminGuard)
+  async listWebhooks(@Param("id") id: string) { return ok(await this.partners.listWebhooks(id)); }
+
+  @Post(":id/webhooks")
+  @UseGuards(JwtAuthGuard, AdminGuard)
+  async createWebhook(@CurrentUser() user: AuthenticatedUser, @Param("id") id: string, @Body() input: CreateWebhookDto) { return ok(await this.partners.createWebhook(user.id, id, input), "Partner webhook created"); }
+
+  @Patch(":id/webhooks/:webhookId")
+  @UseGuards(JwtAuthGuard, AdminGuard)
+  async updateWebhook(@CurrentUser() user: AuthenticatedUser, @Param("id") id: string, @Param("webhookId") webhookId: string, @Body() input: UpdateWebhookDto) { return ok(await this.partners.updateWebhook(user.id, id, webhookId, input)); }
 }
 
 @Controller("partner/v1")
@@ -46,4 +58,27 @@ export class PartnerApiController {
   async me(@Req() request: { partner?: PartnerApiPrincipal }) {
     return ok(await this.partners.dashboard(request.partner!.partnerId));
   }
+
+  @Get("catalog/businesses") @PartnerScopes("catalog.read")
+  async businesses(@Query("limit") limit?: string) { return ok(await this.partners.catalogBusinesses(this.limit(limit))); }
+
+  @Get("catalog/categories") @PartnerScopes("catalog.read")
+  async categories() { return ok(await this.partners.catalogCategories()); }
+
+  @Get("catalog/locations/countries") @PartnerScopes("catalog.read")
+  async countries() { return ok(await this.partners.catalogCountries()); }
+
+  @Get("catalog/locations/cities") @PartnerScopes("catalog.read")
+  async cities(@Query("countryId") countryId?: string) { return ok(await this.partners.catalogCities(countryId)); }
+
+  @Get("catalog/deals") @PartnerScopes("catalog.read")
+  async deals(@Query("limit") limit?: string) { return ok(await this.partners.catalogDeals(this.limit(limit))); }
+
+  @Get("webhooks") @PartnerScopes("webhooks.read")
+  async webhooks(@Req() request: { partner?: PartnerApiPrincipal }) { return ok(await this.partners.listWebhooks(request.partner!.partnerId)); }
+
+  @Post("webhooks/test") @PartnerScopes("webhooks.test")
+  async testWebhook(@Req() request: { partner?: PartnerApiPrincipal }) { return ok(await this.partners.queueWebhookTest(request.partner!.partnerId), "Webhook test queued"); }
+
+  private limit(value?: string) { const parsed = Number(value ?? 20); return Number.isInteger(parsed) && parsed >= 1 && parsed <= 50 ? parsed : 20; }
 }

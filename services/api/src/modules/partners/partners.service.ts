@@ -1,8 +1,8 @@
 import { BadRequestException, Injectable, NotFoundException } from "@nestjs/common";
 import { PrismaService } from "@balkanworks/database";
-import { PartnerIntegrationStatus, PartnerStatus, Prisma } from "@prisma/client";
-import { createHash, randomBytes } from "crypto";
-import { CreateIntegrationDto, CreatePartnerDto, CreatePartnerKeyDto, UpdatePartnerDto } from "./partners.dto";
+import { PartnerIntegrationStatus, PartnerStatus, Prisma, WebhookStatus } from "@prisma/client";
+import { createCipheriv, createDecipheriv, createHash, randomBytes } from "crypto";
+import { CreateIntegrationDto, CreatePartnerDto, CreatePartnerKeyDto, CreateWebhookDto, UpdatePartnerDto, UpdateWebhookDto } from "./partners.dto";
 
 const partnerSelect = {
   id: true, name: true, slug: true, category: true, level: true, status: true,
@@ -93,6 +93,65 @@ export class PartnersService {
     return { partner, metrics: { apiRequestsLast30Days: totalRequests, activeIntegrations }, recentApiActivity: recentRequests, nextSteps: activeIntegrations ? ["Pratite API korišćenje i rezultate zajedničkih kampanja."] : ["Dogovorite pilot integraciju pre aktiviranja produkcionog pristupa."] };
   }
 
+  async createWebhook(actorUserId: string, partnerId: string, input: CreateWebhookDto) {
+    await this.requirePartner(partnerId);
+    this.assertWebhookUrl(input.endpointUrl);
+    const signingSecret = `bwps_${randomBytes(32).toString("base64url")}`;
+    const webhook = await this.prisma.partnerWebhookSubscription.create({
+      data: { partnerId, endpointUrl: input.endpointUrl, eventTypes: [...new Set(input.eventTypes)], signingSecretEncrypted: this.encryptSecret(signingSecret) },
+      select: { id: true, endpointUrl: true, eventTypes: true, status: true, createdAt: true },
+    });
+    await this.audit(actorUserId, "PARTNER_WEBHOOK_CREATED", webhook.id, { partnerId, eventTypes: webhook.eventTypes });
+    return { ...webhook, signingSecret, warning: "Webhook tajna se prikazuje samo sada. Sačuvajte je u sigurnom secrets manageru." };
+  }
+
+  async updateWebhook(actorUserId: string, partnerId: string, webhookId: string, input: UpdateWebhookDto) {
+    const webhook = await this.prisma.partnerWebhookSubscription.findFirst({ where: { id: webhookId, partnerId, deletedAt: null }, select: { id: true } });
+    if (!webhook) throw new NotFoundException("PARTNER_WEBHOOK_NOT_FOUND");
+    const updated = await this.prisma.partnerWebhookSubscription.update({ where: { id: webhookId }, data: { status: input.status, eventTypes: input.eventTypes ? [...new Set(input.eventTypes)] : undefined }, select: { id: true, endpointUrl: true, eventTypes: true, status: true, updatedAt: true } });
+    await this.audit(actorUserId, "PARTNER_WEBHOOK_UPDATED", webhookId, { partnerId, status: updated.status });
+    return updated;
+  }
+
+  async listWebhooks(partnerId: string) {
+    return this.prisma.partnerWebhookSubscription.findMany({
+      where: { partnerId, deletedAt: null }, orderBy: { createdAt: "desc" },
+      select: { id: true, endpointUrl: true, eventTypes: true, status: true, lastFailureAt: true, createdAt: true, updatedAt: true, _count: { select: { deliveries: true } } },
+    });
+  }
+
+  async enqueueWebhookEvent(eventType: string, payload: Record<string, unknown>) {
+    const subscriptions = await this.prisma.partnerWebhookSubscription.findMany({ where: { status: WebhookStatus.ACTIVE, deletedAt: null }, select: { id: true, eventTypes: true } });
+    const matching = subscriptions.filter(({ eventTypes }) => Array.isArray(eventTypes) && eventTypes.includes(eventType));
+    if (!matching.length) return { queued: 0 };
+    await this.prisma.partnerWebhookDelivery.createMany({ data: matching.map((subscription) => ({ subscriptionId: subscription.id, eventType, payload: payload as Prisma.InputJsonValue })) });
+    return { queued: matching.length };
+  }
+
+  async queueWebhookTest(partnerId: string) {
+    return this.enqueueWebhookEvent("WEBHOOK_TEST", { eventId: randomBytes(12).toString("hex"), emittedAt: new Date().toISOString(), partnerId, environment: process.env.PARTNER_API_ENVIRONMENT ?? "development" });
+  }
+
+  async catalogBusinesses(limit = 20) {
+    return this.prisma.business.findMany({ where: { deletedAt: null, status: "VERIFIED" }, select: { id: true, slug: true, name: true, description: true, phone: true, website: true, verificationStatus: true, category: { select: { name: true, slug: true, type: true } }, locations: { where: { deletedAt: null }, select: { address: true, city: { select: { name: true, country: { select: { code: true, name: true } } } } } } }, orderBy: { name: "asc" }, take: limit });
+  }
+
+  async catalogCategories() {
+    return this.prisma.category.findMany({ where: { deletedAt: null }, select: { id: true, name: true, slug: true, icon: true, type: true }, orderBy: [{ type: "asc" }, { name: "asc" }] });
+  }
+
+  async catalogCountries() {
+    return this.prisma.country.findMany({ where: { deletedAt: null }, select: { id: true, code: true, name: true, currency: true }, orderBy: { name: "asc" } });
+  }
+
+  async catalogCities(countryId?: string) {
+    return this.prisma.city.findMany({ where: { deletedAt: null, ...(countryId ? { countryId } : {}) }, select: { id: true, name: true, latitude: true, longitude: true, country: { select: { code: true, name: true } } }, orderBy: { name: "asc" }, take: 100 });
+  }
+
+  async catalogDeals(limit = 20) {
+    return this.prisma.offer.findMany({ where: { deletedAt: null, status: "ACTIVE", OR: [{ expiresAt: null }, { expiresAt: { gt: new Date() } }], business: { status: "VERIFIED", deletedAt: null } }, select: { id: true, title: true, description: true, imageUrl: true, price: true, discountPrice: true, currency: true, startsAt: true, expiresAt: true, business: { select: { id: true, slug: true, name: true } }, category: { select: { name: true, slug: true } } }, orderBy: [{ expiresAt: "asc" }, { createdAt: "desc" }], take: limit });
+  }
+
   private async requirePartner(id: string) {
     const partner = await this.prisma.partner.findFirst({ where: { id, deletedAt: null }, select: { id: true } });
     if (!partner) throw new NotFoundException("PARTNER_NOT_FOUND");
@@ -113,5 +172,22 @@ export class PartnersService {
     if (!value) return false;
     const blockedKey = /(?:api[_-]?key|secret|token|password|credential)/i;
     return Object.entries(value).some(([key, item]) => blockedKey.test(key) || (typeof item === "object" && item !== null && !Array.isArray(item) && this.containsSensitiveConfiguration(item as Record<string, unknown>)));
+  }
+
+  private assertWebhookUrl(value: string) {
+    const url = new URL(value);
+    const host = url.hostname.toLowerCase();
+    const privateIpv4 = /^(10\.|127\.|0\.|169\.254\.|172\.(1[6-9]|2\d|3[01])\.|192\.168\.)/;
+    if (url.protocol !== "https:" || host === "localhost" || host.endsWith(".local") || privateIpv4.test(host)) throw new BadRequestException("PARTNER_WEBHOOK_URL_NOT_ALLOWED");
+  }
+
+  private encryptSecret(value: string) {
+    const keySource = process.env.WEBHOOK_ENCRYPTION_KEY;
+    if (!keySource) throw new BadRequestException("WEBHOOK_ENCRYPTION_NOT_CONFIGURED");
+    const key = createHash("sha256").update(keySource).digest();
+    const iv = randomBytes(12);
+    const cipher = createCipheriv("aes-256-gcm", key, iv);
+    const ciphertext = Buffer.concat([cipher.update(value, "utf8"), cipher.final()]);
+    return `${iv.toString("base64url")}.${cipher.getAuthTag().toString("base64url")}.${ciphertext.toString("base64url")}`;
   }
 }

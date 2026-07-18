@@ -8,5 +8,6 @@ import { FeaturesModule } from "../features/features.module";
   imports: [FeaturesModule],
   controllers: [PartnersController, PartnerApiController],
   providers: [PartnersService, PartnerApiKeyGuard],
+  exports: [PartnersService],
 })
 export class PartnersModule {}

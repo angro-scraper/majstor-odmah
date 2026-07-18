@@ -106,6 +106,18 @@ enum PartnerIntegrationStatus {
   RETIRED
 }
 
+enum WebhookStatus {
+  ACTIVE
+  PAUSED
+  DISABLED
+}
+
+enum WebhookDeliveryStatus {
+  PENDING
+  DELIVERED
+  FAILED
+}
+
 enum LegalDocumentType {
   TERMS_OF_SERVICE
   PRIVACY_POLICY
@@ -641,6 +653,7 @@ model Partner {
   apiKeys        PartnerApiKey[]
   integrations   PartnerIntegration[]
   apiRequests    PartnerApiRequest[]
+  webhooks       PartnerWebhookSubscription[]
   createdAt      DateTime             @default(now()) @map("created_at")
   updatedAt      DateTime             @updatedAt @map("updated_at")
   deletedAt      DateTime?            @map("deleted_at")
@@ -700,6 +713,42 @@ model PartnerApiRequest {
 
   @@index([partnerId, createdAt])
   @@map("partner_api_requests")
+}
+
+model PartnerWebhookSubscription {
+  id                     String        @id @default(uuid()) @db.Uuid
+  partnerId              String        @map("partner_id") @db.Uuid
+  endpointUrl            String        @map("endpoint_url")
+  eventTypes             Json          @default("[]") @map("event_types")
+  signingSecretEncrypted String        @map("signing_secret_encrypted")
+  status                 WebhookStatus @default(ACTIVE)
+  lastFailureAt          DateTime?     @map("last_failure_at")
+  partner                Partner       @relation(fields: [partnerId], references: [id])
+  deliveries             PartnerWebhookDelivery[]
+  createdAt              DateTime      @default(now()) @map("created_at")
+  updatedAt              DateTime      @updatedAt @map("updated_at")
+  deletedAt              DateTime?     @map("deleted_at")
+
+  @@index([partnerId, status])
+  @@map("partner_webhook_subscriptions")
+}
+
+model PartnerWebhookDelivery {
+  id             String                 @id @default(uuid()) @db.Uuid
+  subscriptionId String                 @map("subscription_id") @db.Uuid
+  eventType      String                 @map("event_type")
+  payload        Json                   @default("{}")
+  status         WebhookDeliveryStatus  @default(PENDING)
+  attempts       Int                    @default(0)
+  responseStatus Int?                   @map("response_status")
+  errorCode      String?                @map("error_code")
+  deliveredAt    DateTime?              @map("delivered_at")
+  subscription   PartnerWebhookSubscription @relation(fields: [subscriptionId], references: [id])
+  createdAt      DateTime               @default(now()) @map("created_at")
+  updatedAt      DateTime               @updatedAt @map("updated_at")
+
+  @@index([subscriptionId, status, createdAt])
+  @@map("partner_webhook_deliveries")
 }
 
 model LegalDocument {
