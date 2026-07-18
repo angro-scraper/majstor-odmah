@@ -175,6 +175,10 @@ The ethical, measurable local-business sales motion is in [BALKAN_WORKS_SALES_PL
 
 The operational, event, analytics and future governed-AI data layers are in [BALKAN_WORKS_DATA_ARCHITECTURE.md](docs/BALKAN_WORKS_DATA_ARCHITECTURE.md).
 
+## Support system
+
+The consumer, business and partner support model is in [BALKAN_WORKS_SUPPORT_SYSTEM.md](docs/BALKAN_WORKS_SUPPORT_SYSTEM.md).
+
 ## Team roles
 
 Role-level responsibilities and hiring sequence are in [BALKAN_WORKS_TEAM_ROLES.md](docs/BALKAN_WORKS_TEAM_ROLES.md).
