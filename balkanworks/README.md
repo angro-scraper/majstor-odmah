@@ -159,6 +159,10 @@ The measurable, local-network growth model is in [BALKAN_WORKS_GROWTH_LOOPS.md](
 
 The business activation, verification, first-value and value-led upgrade flow is in [BALKAN_WORKS_BUSINESS_ONBOARDING_SYSTEM.md](docs/BALKAN_WORKS_BUSINESS_ONBOARDING_SYSTEM.md).
 
+## AI product roadmap
+
+The governed progression from AI search to permissioned assistants and future agents is in [BALKAN_WORKS_AI_PRODUCT_ROADMAP.md](docs/BALKAN_WORKS_AI_PRODUCT_ROADMAP.md).
+
 ## Team roles
 
 Role-level responsibilities and hiring sequence are in [BALKAN_WORKS_TEAM_ROLES.md](docs/BALKAN_WORKS_TEAM_ROLES.md).
