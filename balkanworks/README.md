@@ -187,6 +187,8 @@ The time-based AI capability roadmap from data quality through constrained agent
 
 The REST contract, versioning, security requirements, observability and expansion path are in [BALKAN_WORKS_API_DOCUMENTATION.md](docs/BALKAN_WORKS_API_DOCUMENTATION.md).
 
+The v1 route contract, implementation boundary and feature-gated API plan are in [BALKAN_WORKS_API_SPEC.md](docs/BALKAN_WORKS_API_SPEC.md).
+
 ## Sales playbook
 
 The ethical, measurable local-business sales motion is in [BALKAN_WORKS_SALES_PLAYBOOK.md](docs/BALKAN_WORKS_SALES_PLAYBOOK.md).
