@@ -1,0 +1,26 @@
+import { Body, Controller, Delete, Get, Param, Post, Patch, UseGuards } from "@nestjs/common";
+import { ok } from "../../common/api-response";
+import { AuthenticatedUser, CurrentUser, JwtAuthGuard } from "../../common/security";
+import { BusinessesService, CreateBusinessDto, CreateServiceDto, UpdateBusinessDto } from "./businesses.service";
+
+@Controller("businesses")
+export class BusinessesController {
+  constructor(private readonly businesses: BusinessesService) {}
+
+  @Post() @UseGuards(JwtAuthGuard)
+  async create(@CurrentUser() user: AuthenticatedUser, @Body() input: CreateBusinessDto) { return ok(await this.businesses.create(user.id, input), "Business created and awaiting review"); }
+
+  @Get(":id") async getPublic(@Param("id") id: string) { return ok(await this.businesses.findPublic(id)); }
+
+  @Patch(":id") @UseGuards(JwtAuthGuard)
+  async update(@Param("id") id: string, @CurrentUser() user: AuthenticatedUser, @Body() input: UpdateBusinessDto) { return ok(await this.businesses.update(id, user.id, input)); }
+
+  @Delete(":id") @UseGuards(JwtAuthGuard)
+  async archive(@Param("id") id: string, @CurrentUser() user: AuthenticatedUser) { await this.businesses.archive(id, user.id); return ok({ id }, "Business archived"); }
+
+  @Post(":id/services") @UseGuards(JwtAuthGuard)
+  async addService(@Param("id") id: string, @CurrentUser() user: AuthenticatedUser, @Body() input: CreateServiceDto) { return ok(await this.businesses.addService(id, user.id, input)); }
+
+  @Post(":id/contact/:type") @UseGuards(JwtAuthGuard)
+  async contact(@Param("id") id: string, @Param("type") type: "PHONE" | "EMAIL" | "MESSAGE" | "LOCATION", @CurrentUser() user: AuthenticatedUser) { return ok(await this.businesses.recordContact(id, user.id, type)); }
+}
