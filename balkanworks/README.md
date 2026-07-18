@@ -223,6 +223,10 @@ The category-level positioning, moat, risks and research agenda are in [BALKAN_W
 
 The dependency-led sequencing of Core, engagement, business, transaction and intelligence modules is in [BALKAN_WORKS_MODULE_ROADMAP.md](docs/BALKAN_WORKS_MODULE_ROADMAP.md).
 
+## Execution plan
+
+The operating plan from foundation through MVP, pilot, validation and scale is in [BALKAN_WORKS_EXECUTION_PLAN.md](docs/BALKAN_WORKS_EXECUTION_PLAN.md).
+
 ## Team roles
 
 Role-level responsibilities and hiring sequence are in [BALKAN_WORKS_TEAM_ROLES.md](docs/BALKAN_WORKS_TEAM_ROLES.md).
