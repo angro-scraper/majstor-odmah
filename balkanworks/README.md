@@ -255,6 +255,10 @@ The evidence-first 15-slide investor narrative is in [BALKAN_WORKS_PITCH_DECK.md
 
 The North Star, funnel, business-health, revenue and decision-metric definitions are in [BALKAN_WORKS_KPI_DASHBOARD.md](docs/BALKAN_WORKS_KPI_DASHBOARD.md).
 
+## AI and data strategy
+
+The data foundation, AI phases, quality evaluation and governance strategy is in [BALKAN_WORKS_AI_DATA_STRATEGY.md](docs/BALKAN_WORKS_AI_DATA_STRATEGY.md).
+
 ## Team roles
 
 Role-level responsibilities and hiring sequence are in [BALKAN_WORKS_TEAM_ROLES.md](docs/BALKAN_WORKS_TEAM_ROLES.md).
