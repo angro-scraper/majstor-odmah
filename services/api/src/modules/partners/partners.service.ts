@@ -1,7 +1,7 @@
 import { BadRequestException, Injectable, NotFoundException } from "@nestjs/common";
 import { PrismaService } from "@balkanworks/database";
 import { PartnerIntegrationStatus, PartnerStatus, Prisma, WebhookStatus } from "@prisma/client";
-import { createCipheriv, createDecipheriv, createHash, randomBytes } from "crypto";
+import { createCipheriv, createHash, randomBytes } from "crypto";
 import { CreateIntegrationDto, CreatePartnerDto, CreatePartnerKeyDto, CreateWebhookDto, UpdatePartnerDto, UpdateWebhookDto } from "./partners.dto";
 
 const partnerSelect = {

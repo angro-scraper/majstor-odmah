@@ -1,1 +1,1 @@
-{"name":"@balkanworks/mobile","private":true,"scripts":{"start":"expo start","typecheck":"tsc --noEmit","test":"jest"},"dependencies":{"expo":"^52.0.0","react":"^19.0.0","react-native":"^0.76.0"},"devDependencies":{"@types/react":"^19.2.17","typescript":"^5.7.2"}}
+{"name":"@balkanworks/mobile","private":true,"scripts":{"start":"expo start","typecheck":"tsc --noEmit","test":"jest","lint":"eslint App.tsx src --max-warnings=0"},"dependencies":{"expo":"^52.0.0","react":"^19.0.0","react-native":"^0.76.0"},"devDependencies":{"@types/react":"^19.2.17","typescript":"^5.7.2"}}
