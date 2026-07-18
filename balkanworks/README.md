@@ -243,6 +243,10 @@ The unified modular-monolith technical design and scaling path is in [BALKAN_WOR
 
 The one-city field plan for acquiring and activating the first quality business network is in [BALKAN_WORKS_FIRST_100_BUSINESSES_PLAN.md](docs/BALKAN_WORKS_FIRST_100_BUSINESSES_PLAN.md).
 
+## First 10,000 users
+
+The one-city activation, retention, content, referral and partnership plan is in [BALKAN_WORKS_FIRST_10K_USERS_PLAN.md](docs/BALKAN_WORKS_FIRST_10K_USERS_PLAN.md).
+
 ## Team roles
 
 Role-level responsibilities and hiring sequence are in [BALKAN_WORKS_TEAM_ROLES.md](docs/BALKAN_WORKS_TEAM_ROLES.md).
