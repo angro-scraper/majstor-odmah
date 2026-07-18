@@ -14,6 +14,14 @@ from app.modules.offers.schemas import OfferCreateRequest, OfferResponse
 router = APIRouter(prefix="/offers", tags=["Offers"])
 
 
+def is_current(offer: Offer) -> bool:
+    """Compare offer dates outside SQL to support legacy timestamp column types."""
+    now = datetime.utcnow()
+    valid_from = offer.valid_from.replace(tzinfo=None) if offer.valid_from.tzinfo else offer.valid_from
+    valid_until = offer.valid_until.replace(tzinfo=None) if offer.valid_until.tzinfo else offer.valid_until
+    return valid_from <= now <= valid_until
+
+
 @router.post("", response_model=OfferResponse, status_code=status.HTTP_201_CREATED)
 def create_offer(
     payload: OfferCreateRequest, current_user: User = Depends(get_current_user), db: Session = Depends(get_db)
@@ -35,15 +43,11 @@ def list_offers(
     source: OfferSource | None = None,
     db: Session = Depends(get_db),
 ) -> list[Offer]:
-    # Existing PostgreSQL deployment stores offer periods as UTC timestamps
-    # without an offset.  A naive UTC value keeps the comparison portable
-    # across PostgreSQL and the local SQLite development database.
-    now = datetime.utcnow()
-    statement = select(Offer).where(Offer.is_active.is_(True), Offer.valid_from <= now, Offer.valid_until >= now)
+    statement = select(Offer).where(Offer.is_active.is_(True))
     if country_code:
         statement = statement.where(Offer.country_code == country_code.upper())
     if city_name:
         statement = statement.where(Offer.city_name.ilike(city_name))
     if source:
         statement = statement.where(Offer.source == source)
-    return list(db.scalars(statement.order_by(Offer.valid_until, Offer.created_at.desc())))
+    return [offer for offer in db.scalars(statement.order_by(Offer.valid_until, Offer.created_at.desc())) if is_current(offer)]

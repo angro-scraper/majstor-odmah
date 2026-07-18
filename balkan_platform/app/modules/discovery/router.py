@@ -9,6 +9,7 @@ from app.core.database import get_db
 from app.modules.business.models import Business
 from app.modules.marketplace.models import Listing
 from app.modules.offers.models import Offer
+from app.modules.offers.router import is_current
 from app.modules.save_food.models import FoodPackage
 
 router = APIRouter(prefix="/discovery", tags=["Discovery"])
@@ -36,7 +37,7 @@ def search(
 
     business_statement = select(Business).where(Business.is_active.is_(True))
     listing_statement = select(Listing).where(Listing.is_active.is_(True))
-    offer_statement = select(Offer).where(Offer.is_active.is_(True), Offer.valid_from <= datetime.utcnow(), Offer.valid_until >= datetime.utcnow())
+    offer_statement = select(Offer).where(Offer.is_active.is_(True))
     food_statement = select(FoodPackage, Business).join(Business, FoodPackage.business_id == Business.id).where(FoodPackage.quantity_available > 0, Business.is_active.is_(True))
     if term:
         business_statement = business_statement.where(or_(Business.name.ilike(text_filter), Business.description.ilike(text_filter)))
@@ -59,6 +60,8 @@ def search(
                         "country_code": item.country_code, "city_name": item.city_name, "price": item.price, "currency": item.currency,
                         "url": "/market"})
     for item in db.scalars(offer_statement.order_by(Offer.valid_until, Offer.created_at.desc()).limit(limit)):
+        if not is_current(item):
+            continue
         results.append({"id": str(item.id), "module": "DEALS", "title": item.title, "description": item.description,
                         "country_code": item.country_code, "city_name": item.city_name, "price": item.price, "currency": item.currency,
                         "url": "/deals"})
