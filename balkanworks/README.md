@@ -235,6 +235,10 @@ The founder decision, operating rhythm and evidence-first leadership system is i
 
 The concise phase sequence from MVP through private beta, launch, growth, transactions and AI is in [BALKAN_WORKS_EXECUTION_ROADMAP.md](docs/BALKAN_WORKS_EXECUTION_ROADMAP.md).
 
+## System design
+
+The unified modular-monolith technical design and scaling path is in [BALKAN_WORKS_SYSTEM_DESIGN.md](docs/BALKAN_WORKS_SYSTEM_DESIGN.md).
+
 ## Team roles
 
 Role-level responsibilities and hiring sequence are in [BALKAN_WORKS_TEAM_ROLES.md](docs/BALKAN_WORKS_TEAM_ROLES.md).
