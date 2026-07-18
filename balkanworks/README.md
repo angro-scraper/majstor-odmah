@@ -249,6 +249,8 @@ The concise phase sequence from MVP through private beta, launch, growth, transa
 
 The unified modular-monolith technical design and scaling path is in [BALKAN_WORKS_SYSTEM_DESIGN.md](docs/BALKAN_WORKS_SYSTEM_DESIGN.md).
 
+The system-level application, API, data, infrastructure and AI-layer overview is in [BALKAN_WORKS_SYSTEM_ARCHITECTURE.md](docs/BALKAN_WORKS_SYSTEM_ARCHITECTURE.md).
+
 ## First 100 businesses
 
 The one-city field plan for acquiring and activating the first quality business network is in [BALKAN_WORKS_FIRST_100_BUSINESSES_PLAN.md](docs/BALKAN_WORKS_FIRST_100_BUSINESSES_PLAN.md).
