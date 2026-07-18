@@ -50,3 +50,7 @@ The platform-wide visual and component rules are in [BALKAN_WORKS_DESIGN_LANGUAG
 ## User experience
 
 The canonical consumer and business journey is in [BALKAN_WORKS_USER_EXPERIENCE_FLOW.md](docs/BALKAN_WORKS_USER_EXPERIENCE_FLOW.md).
+
+## Build instructions
+
+The implementation order and non-negotiable coding rules are in [BALKAN_WORKS_CODEX_BUILD_INSTRUCTIONS.md](docs/BALKAN_WORKS_CODEX_BUILD_INSTRUCTIONS.md).
