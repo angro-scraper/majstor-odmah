@@ -16,21 +16,16 @@ export function LogoMark({ className }: { className?: string }) {
           <stop offset="1" stopColor="#2563EB" />
         </linearGradient>
       </defs>
-      {/* App tile */}
+      {/* App tile background */}
       <rect x="1" y="1" width="38" height="38" rx="11" fill="url(#bw-tile)" />
       {/* Subtle top highlight */}
       <rect x="1" y="1" width="38" height="18" rx="11" fill="#ffffff" fillOpacity="0.12" />
-      {/* Letter "b" - rounded typographic mark */}
-      <g>
-        {/* Vertical stem */}
-        <rect x="10" y="8" width="4.5" height="24" rx="2" fill="#ffffff" />
-        {/* Top rounded bump */}
-        <path
-          d="M14.5 10 Q22 10 22 15.5 Q22 19 18 20.5 Q22 22 22 25.5 Q22 31 14.5 31 L10 31 L10 8 L14.5 8 Q20 8 20 12 Q20 15 16.5 15.5"
-          fill="#ffffff"
-          fillRule="evenodd"
-        />
-      </g>
+      {/* Letter "b" in center */}
+      <text x="20" y="28" fontSize="28" fontWeight="700" fontFamily="system-ui, -apple-system, sans-serif" fill="#ffffff" textAnchor="middle" dominantBaseline="middle">
+        b
+      </text>
+      {/* Green dot indicator */}
+      <circle cx="28" cy="12" r="4" fill="#10b981" />
     </svg>
   )
 }
