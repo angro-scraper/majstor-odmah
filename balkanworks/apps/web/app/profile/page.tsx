@@ -1,0 +1,3 @@
+import { AppShell } from "../../src/components/app-shell";
+import { StatCard } from "../../src/components/ui";
+export default function ProfilePage() { return <AppShell active="Profile"><section className="profile-page"><div className="avatar">MP</div><p>MOJ PROFIL</p><h1>Marko Petrović</h1><span>Beograd · Član od 2026.</span><div className="profile-stats"><StatCard icon="★" label="Recenzije" value="4" /><StatCard icon="♡" label="Sačuvano" value="12" /><StatCard icon="◷" label="Istorija" value="18" /></div><div className="settings-list">{["Interesovanja", "Notifikacije", "Privatnost i podaci", "Pomoć i podrška"].map((item) => <a href="#" key={item}>{item}<b>›</b></a>)}</div></section></AppShell>; }

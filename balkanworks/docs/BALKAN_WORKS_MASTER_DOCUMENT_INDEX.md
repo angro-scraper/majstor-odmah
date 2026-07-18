@@ -34,6 +34,7 @@ If a conflict remains, record a decision in the operating/work system before cha
 - [MVP Database Schema](BALKAN_WORKS_MVP_DATABASE_SCHEMA.md)
 - [User Experience Flow](BALKAN_WORKS_USER_EXPERIENCE_FLOW.md)
 - [UI/UX System](BALKAN_WORKS_UI_UX_SYSTEM.md)
+- [Super App Wireframes](BALKAN_WORKS_SUPER_APP_WIREFRAMES.md)
 - [Design Language](BALKAN_WORKS_DESIGN_LANGUAGE.md)
 - [Brand Guidelines](BALKAN_WORKS_BRAND_GUIDELINES.md)
 - [Mobile App Specification](BALKAN_WORKS_MOBILE_APP_SPEC.md)

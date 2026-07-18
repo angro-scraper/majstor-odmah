@@ -1,4 +1,5 @@
 import "./globals.css";
+import "./wireframes.css";
 
 export const metadata = { title: "Balkan.works", description: "Pronađi pouzdane lokalne firme." };
 

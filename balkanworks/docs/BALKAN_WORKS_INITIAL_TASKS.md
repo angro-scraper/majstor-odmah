@@ -87,18 +87,18 @@ The canonical folders are `apps/`, `services/`, `packages/`, `docs/` and `infras
 | IDs | Scope | Status | Current evidence / next action |
 | --- | --- | --- | --- |
 | 031 | Next.js project | DONE | `apps/web` Next.js app exists. |
-| 032 | Tailwind, UI components and routing | BACKLOG | Current web app has basic CSS and a demo page; add Tailwind and shared UI primitives deliberately. |
-| 033–034 | Layout and Home | PARTIAL | Root layout and discovery demo exist; connect to API and replace demo data. |
-| 035–040 | Search, results, profile, contact, favorites, reviews UI | BACKLOG | Backend foundations exist; build real user-facing routes and states. |
-| 041–043 | Business onboarding, edit profile, analytics dashboard | BACKLOG | Build after customer discovery routes are connected. |
-| 044–047 | Admin login, moderation, user management, reports | PARTIAL | Admin API actions exist; dedicated admin UI, reports and full workflow remain. |
+| 032 | Tailwind, UI components and routing | PARTIAL | Shared native CSS primitives and routes are implemented; Tailwind is deliberately not introduced yet. |
+| 033–034 | Layout and Home | PARTIAL | Responsive app shell and Home wireframe are implemented with demo data; connect typed API state next. |
+| 035–040 | Search, results, profile, contact, favorites, reviews UI | PARTIAL | All customer wireframe routes exist; mutations, loading/error/empty states and API integration remain. |
+| 041–043 | Business onboarding, edit profile, analytics dashboard | PARTIAL | Business dashboard and creation UI exist with illustrative metrics; authenticated persistence is pending. |
+| 044–047 | Admin login, moderation, user management, reports | PARTIAL | Admin dashboard shell and moderation queue UI exist; protected workflow and reports remain. |
 
 ## Phase 12–14 — Analytics, testing and deployment
 
 | IDs | Scope | Status | Current evidence / next action |
 | --- | --- | --- | --- |
 | 048 | Event tracking | PARTIAL | Search, view and contact-related persistence exists; standard event contract and coverage remain. |
-| 049 | Basic dashboard | PARTIAL | Admin overview API exists; dashboard UI and validated metrics remain. |
+| 049 | Basic dashboard | PARTIAL | Business and admin dashboard UI shells exist; connect validated API metrics and permissions. |
 | 050 | Test auth, permissions, API and UI flows | BACKLOG | Add unit, integration and end-to-end suites after dependencies and database are available. |
 | 051 | Docker setup | REVIEW | Compose and API/web Dockerfiles exist; application builds pass, but Docker CLI is unavailable in this workspace for a build/run check. |
 | 052 | CI/CD pipeline | BACKLOG | Add after tests and migration verification exist. |
