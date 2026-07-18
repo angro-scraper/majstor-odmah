@@ -15,6 +15,7 @@ from modules_page import render_module_page
 from search_page import render_search_page
 from hub_page import render_hub_page
 from superapp_page import render_superapp_page
+from everyday_page import render_everyday_page
 
 APP_NAME = "Balkan.works"
 CORE_URL = os.getenv("CORE_API_URL", "https://balkan-works-core.onrender.com").rstrip("/")
@@ -306,6 +307,21 @@ async def payments_wallet(request: Request) -> JSONResponse:
     return await core_module(request, "/api/payments/wallet", require_auth=True)
 
 
+@app.get("/api/life/directory", response_class=JSONResponse, include_in_schema=False)
+async def life_directory(request: Request) -> JSONResponse:
+    return await core_module(request, "/api/life/directory")
+
+
+@app.get("/api/life/homes", response_class=JSONResponse, include_in_schema=False)
+async def life_homes(request: Request) -> JSONResponse:
+    return await core_module(request, "/api/life/homes")
+
+
+@app.api_route("/api/life/{life_path:path}", methods=["GET", "POST"], response_class=JSONResponse, include_in_schema=False)
+async def life_actions(life_path: str, request: Request, payload: dict | None = None) -> JSONResponse:
+    return await core_module(request, f"/api/life/{life_path}", request.method, payload, require_auth=True)
+
+
 async def core_admin(request: Request, path: str, method: str = "GET") -> JSONResponse:
     authorization = request.headers.get("authorization")
     if not authorization:
@@ -402,6 +418,11 @@ async def save_food() -> HTMLResponse:
 @app.get("/local", response_class=HTMLResponse, include_in_schema=False)
 async def local() -> HTMLResponse:
     return HTMLResponse(render_superapp_page("SR", initial_tab="explore", initial_module="local"))
+
+
+@app.get("/everyday", response_class=HTMLResponse, include_in_schema=False)
+async def everyday() -> HTMLResponse:
+    return HTMLResponse(render_everyday_page())
 
 
 @app.get("/admin", response_class=HTMLResponse, include_in_schema=False)

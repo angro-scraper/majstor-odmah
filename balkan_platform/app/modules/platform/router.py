@@ -34,6 +34,8 @@ def registry() -> dict:
             {"key": "rewards", "name": "Balkan Rewards", "status": "foundation_ready"},
             {"key": "wallet", "name": "Balkan Wallet", "status": "foundation_ready"},
             {"key": "assistant", "name": "Balkan Assistant", "status": "credential_pending"},
+            {"key": "everyday", "name": "Balkan Everyday", "status": "foundation_ready", "description": "Health, pharmacy, bills, fuel, parking, homes, pets and family"},
+            {"key": "green_score", "name": "Balkan Green Score", "status": "active", "description": "Transparent Save Food impact estimate"},
         ],
         "future_connectors": [
             {

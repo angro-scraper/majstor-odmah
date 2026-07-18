@@ -15,6 +15,7 @@ from app.modules.identity.router import router as auth_router
 from app.modules.identity.router import users_router
 from app.modules.location.router import router as location_router
 from app.modules.local.router import router as local_router
+from app.modules.life.router import router as life_router
 from app.modules.marketplace.router import router as marketplace_router
 from app.modules.media.router import router as media_router
 from app.modules.notifications.router import router as notifications_router
@@ -67,6 +68,7 @@ for router in (
     discovery_router,
     location_router,
     local_router,
+    life_router,
     offers_router,
     marketplace_router,
     media_router,
