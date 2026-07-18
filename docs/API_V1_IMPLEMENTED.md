@@ -52,6 +52,7 @@ All routes require a bearer token and enforce ownership.
 - `POST /offers/:id/save`
 - `POST /reviews`
 - `POST /analytics/events`
+- `GET /analytics/me/summary` — privatni sažetak aktivnosti korisnika za poslednjih 30 dana
 - `GET /notifications`
 - `PATCH /notifications/:id/read`
 
@@ -66,6 +67,7 @@ Requires `ADMIN` or `SUPER_ADMIN` role.
 - `PATCH /admin/businesses/:id/status`
 - `PATCH /admin/reviews/:id/status`
 - `POST /notifications`
+- `GET /analytics/platform/summary` — agregirani 30-dnevni platform KPI (admin only)
 
 ## Operations
 

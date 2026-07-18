@@ -1,10 +1,19 @@
-import { ForbiddenException, Injectable } from "@nestjs/common";
+import { BadRequestException, ForbiddenException, Injectable } from "@nestjs/common";
 import { Prisma } from "@prisma/client";
 import { PrismaService } from "@balkanworks/database";
-import { IsObject, IsOptional, IsString, IsUUID, MaxLength } from "class-validator";
+import { IsIn, IsObject, IsOptional, IsUUID } from "class-validator";
+
+export const ANALYTICS_EVENT_TYPES = ["USER_REGISTERED", "BUSINESS_CREATED", "OFFER_CREATED", "OFFER_VIEWED", "OFFER_SAVED", "SEARCH_COMPLETED", "FOOD_PACKAGE_RESERVED", "NOTIFICATION_OPENED", "BUSINESS_VIEWED", "BUSINESS_CONTACTED"] as const;
+type AnalyticsEventType = (typeof ANALYTICS_EVENT_TYPES)[number];
+
+const EVENT_METADATA_FIELDS: Record<AnalyticsEventType, readonly string[]> = {
+  USER_REGISTERED: ["source"], BUSINESS_CREATED: ["source"], OFFER_CREATED: ["source"], OFFER_VIEWED: ["source"], OFFER_SAVED: ["source"],
+  SEARCH_COMPLETED: ["resultsCount", "categoryId", "cityId"], FOOD_PACKAGE_RESERVED: ["quantity"], NOTIFICATION_OPENED: ["notificationType"],
+  BUSINESS_VIEWED: ["source"], BUSINESS_CONTACTED: ["contactType"],
+};
 
 export class TrackEventDto {
-  @IsString() @MaxLength(100) eventType!: string;
+  @IsIn(ANALYTICS_EVENT_TYPES) eventType!: AnalyticsEventType;
   @IsOptional() @IsUUID() businessId?: string;
   @IsOptional() @IsUUID() offerId?: string;
   @IsOptional() @IsObject() metadata?: Record<string, unknown>;
@@ -15,15 +24,44 @@ export class AnalyticsService {
   constructor(private readonly prisma: PrismaService) {}
 
   async track(userId: string, input: TrackEventDto) {
+    const eventType = input.eventType;
     return this.prisma.event.create({
       data: {
         userId,
         businessId: input.businessId,
         offerId: input.offerId,
-        eventType: input.eventType.trim().toUpperCase(),
-        metadata: (input.metadata ?? {}) as Prisma.InputJsonValue,
+        eventType,
+        metadata: this.sanitizeMetadata(eventType, input.metadata),
       },
     });
+  }
+
+  async userSummary(userId: string) {
+    const since = new Date(); since.setDate(since.getDate() - 30);
+    const [searches, savedBusinesses, savedOffers, contacts, reviews, recentEvents] = await Promise.all([
+      this.prisma.searchQuery.count({ where: { userId, createdAt: { gte: since } } }),
+      this.prisma.favorite.count({ where: { userId, businessId: { not: null }, deletedAt: null } }),
+      this.prisma.favorite.count({ where: { userId, offerId: { not: null }, deletedAt: null } }),
+      this.prisma.contactEvent.count({ where: { userId, createdAt: { gte: since } } }),
+      this.prisma.review.count({ where: { userId, deletedAt: null } }),
+      this.prisma.event.findMany({ where: { userId, createdAt: { gte: since }, deletedAt: null }, select: { eventType: true, createdAt: true }, orderBy: { createdAt: "desc" }, take: 10 }),
+    ]);
+    return { periodDays: 30, searches, savedBusinesses, savedOffers, contacts, reviews, recentActivity: recentEvents };
+  }
+
+  async platformSummary() {
+    const since = new Date(); since.setDate(since.getDate() - 30);
+    const [users, activeUsers, businesses, verifiedBusinesses, activeOffers, searches, contacts, reservations] = await Promise.all([
+      this.prisma.user.count({ where: { deletedAt: null } }),
+      this.prisma.user.count({ where: { deletedAt: null, lastLoginAt: { gte: since } } }),
+      this.prisma.business.count({ where: { deletedAt: null } }),
+      this.prisma.business.count({ where: { deletedAt: null, status: "VERIFIED" } }),
+      this.prisma.offer.count({ where: { deletedAt: null, status: "ACTIVE", OR: [{ expiresAt: null }, { expiresAt: { gt: new Date() } }] } }),
+      this.prisma.searchQuery.count({ where: { createdAt: { gte: since } } }),
+      this.prisma.contactEvent.count({ where: { createdAt: { gte: since } } }),
+      this.prisma.saveFoodReservation.count({ where: { createdAt: { gte: since } } }),
+    ]);
+    return { periodDays: 30, users, activeUsers, businesses, verifiedBusinesses, activeOffers, successfulConnections: contacts, searches, saveFoodReservations: reservations };
   }
 
   async businessMetrics(ownerId: string, businessId: string) {
@@ -70,5 +108,18 @@ export class AnalyticsService {
         ? "Profil izgleda spremno za veću vidljivost. Nastavi da ažuriraš ponude i odgovaraš na korisnike."
         : "Poboljšaj označene stavke da bi korisnici lakše pronašli i izabrali tvoju firmu.",
     };
+  }
+
+  private sanitizeMetadata(eventType: AnalyticsEventType, metadata: Record<string, unknown> | undefined): Prisma.InputJsonValue {
+    const allowed = EVENT_METADATA_FIELDS[eventType];
+    const sanitized: Record<string, string | number | boolean> = {};
+    for (const key of allowed) {
+      const value = metadata?.[key];
+      if (typeof value === "string" && value.length <= 160) sanitized[key] = value;
+      else if (typeof value === "number" && Number.isFinite(value)) sanitized[key] = value;
+      else if (typeof value === "boolean") sanitized[key] = value;
+    }
+    if (metadata && Object.keys(metadata).some((key) => !allowed.includes(key))) throw new BadRequestException("ANALYTICS_METADATA_FIELD_NOT_ALLOWED");
+    return sanitized as Prisma.InputJsonValue;
   }
 }
