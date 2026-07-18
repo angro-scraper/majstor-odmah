@@ -78,10 +78,10 @@ const COLUMNS: { title: string; links: { label: string; href: string }[] }[] = [
 ]
 
 const SOCIALS = [
-  { label: 'Facebook', icon: FacebookIcon, href: '#' },
-  { label: 'Instagram', icon: InstagramIcon, href: '#' },
-  { label: 'LinkedIn', icon: LinkedinIcon, href: '#' },
-  { label: 'YouTube', icon: YoutubeIcon, href: '#' },
+  { label: 'Facebook', icon: FacebookIcon, href: 'https://facebook.com/balkanworks' },
+  { label: 'Instagram', icon: InstagramIcon, href: 'https://instagram.com/balkanworks' },
+  { label: 'LinkedIn', icon: LinkedinIcon, href: 'https://linkedin.com/company/balkanworks' },
+  { label: 'YouTube', icon: YoutubeIcon, href: 'https://youtube.com/@balkanworks' },
 ]
 
 export function SiteFooter() {
@@ -100,6 +100,8 @@ export function SiteFooter() {
                 <a
                   key={s.label}
                   href={s.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   aria-label={s.label}
                   className="grid size-9 place-items-center rounded-xl border border-border bg-card text-muted-foreground transition-colors hover:border-primary hover:text-primary"
                 >
