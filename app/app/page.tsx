@@ -6,6 +6,7 @@ import { NearbyBusinesses } from '@/components/app/home/nearby-businesses'
 import { TrendingSection } from '@/components/app/home/trending'
 import { OffersCarousel } from '@/components/app/home/offers'
 import { SuperAppModules } from '@/components/app/home/super-app-modules'
+import { LocationPicker } from '@/components/app/home/location-picker'
 import Link from 'next/link'
 import { Calendar, FileText, Wallet, MessageSquare } from 'lucide-react'
 
@@ -18,6 +19,7 @@ export default function HomePage() {
   return (
     <div className="space-y-6 pt-6">
       <WelcomeHeader />
+      <LocationPicker />
       <AISearch />
       <SuperAppModules />
       <CategoriesGrid />
