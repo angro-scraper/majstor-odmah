@@ -38,7 +38,7 @@ const RECOMMENDATIONS = [
 export function RecommendationsSection() {
   return (
     <div className="px-4 space-y-3">
-      <h2 className="text-lg font-semibold">Recommended for You</h2>
+      <h2 className="text-lg font-semibold text-navy">Preporučeno za tebe</h2>
       <div className="space-y-3">
         {RECOMMENDATIONS.map((business) => (
           <BusinessCard key={business.id} business={business} />

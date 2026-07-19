@@ -1,49 +1,47 @@
 'use client'
 
-import { ChevronLeft, Filter, Search, X } from 'lucide-react'
 import Link from 'next/link'
-import { use, useMemo, useState } from 'react'
+import { use, useMemo, useState, type ComponentType } from 'react'
+import { ArrowRight, BookOpen, ChevronLeft, Dumbbell, Filter, Home, MapPin, PawPrint, Plane, Scissors, Search, Sparkles, Stethoscope, TrendingUp, UtensilsCrossed, Wrench, Zap } from 'lucide-react'
 import { BusinessCard } from '@/components/app/business-card'
 
-const CATEGORY_LABELS: Record<string, string> = {
-  'home-services': 'Usluge za dom', food: 'Hrana', auto: 'Auto', health: 'Zdravlje', 'real-estate': 'Nekretnine', sports: 'Sport', beauty: 'Lepota', education: 'Edukacija', travel: 'Putovanja', pet: 'Kućni ljubimci', events: 'Događaji',
+type Business = { id: number; name: string; rating: number; reviews: number; distance: string; category: string; verified: boolean; responseTime: string }
+type Category = { title: string; eyebrow: string; description: string; icon: ComponentType<{ className?: string }>; softClass: string; actionHref: string; actionLabel: string; highlights: string[]; businesses: Business[] }
+
+const makeBusinesses = (items: Array<[string, string, number, string, boolean, string]>, offset: number): Business[] => items.map(([name, category, rating, distance, verified, responseTime], index) => ({ id: offset + index, name, category, rating, distance, verified, responseTime, reviews: 84 + index * 57 }))
+
+const CATEGORIES: Record<string, Category> = {
+  'home-services': { title: 'Usluge za dom', eyebrow: 'POUZDANI MAJSTORI U BLIZINI', description: 'Električari, vodoinstalateri i majstori za brza rešenja u domu.', icon: Wrench, softClass: 'bg-primary/10 text-primary', actionHref: '/app/requests', actionLabel: 'Objavi zahtev', highlights: ['Dostupni danas', 'Provereni profili', 'Brz odgovor'], businesses: makeBusinesses([['Elite Electricians', 'Električar', 4.9, '0.5 km', true, '< 1 sat'], ['Quick Plumbing Co', 'Vodoinstalater', 4.8, '1.2 km', true, '< 2 sata'], ['Pro Painting Services', 'Krečenje', 4.7, '2.1 km', false, 'Danas']], 1) },
+  food: { title: 'Hrana i restorani', eyebrow: 'UKUSI IZ TVOG KRAJA', description: 'Restorani, pekare i svakodnevne ponude za obrok u tvojoj blizini.', icon: UtensilsCrossed, softClass: 'bg-turquoise/10 text-turquoise', actionHref: '/app/save-food', actionLabel: 'Pogledaj Save Food', highlights: ['Otvoreno sada', 'Lokalne ponude', 'Preuzimanje brzo'], businesses: makeBusinesses([['Pekara Jutro', 'Pekara', 4.8, '0.6 km', true, 'Otvoreno sada'], ['Bistro Dunav', 'Restoran', 4.9, '1.4 km', true, '20 min'], ['Kafa Komšiluk', 'Kafić', 4.7, '0.9 km', false, 'Otvoreno sada']], 11) },
+  auto: { title: 'Auto usluge', eyebrow: 'ZA TVOJ AUTOMOBIL', description: 'Servisi, vulkanizeri i auto pomoć kada ti je najpotrebnija.', icon: Zap, softClass: 'bg-primary/10 text-primary', actionHref: '/app/requests', actionLabel: 'Zatraži auto uslugu', highlights: ['Hitna pomoć', 'Provereni servisi', 'Dostupni termini'], businesses: makeBusinesses([['Premium Auto Servis', 'Auto servis', 4.9, '1.5 km', true, '< 1 sat'], ['Gume Plus', 'Vulkanizer', 4.8, '2.0 km', true, 'Danas'], ['Auto Spa Beograd', 'Pranje vozila', 4.7, '2.6 km', false, 'Otvoreno sada']], 21) },
+  health: { title: 'Zdravlje', eyebrow: 'BRIGA O TEBI', description: 'Ordinacije, apoteke i zdravstvene usluge na dohvat ruke.', icon: Stethoscope, softClass: 'bg-turquoise/10 text-turquoise', actionHref: '/app/discover', actionLabel: 'Istraži zdravlje', highlights: ['Proverene ordinacije', 'Apoteke blizu tebe', 'Dostupni termini'], businesses: makeBusinesses([['Ordinacija Vita', 'Privatna ordinacija', 4.9, '1.0 km', true, 'Danas'], ['Apoteka Zdravlje', 'Apoteka', 4.8, '0.4 km', true, 'Otvoreno sada'], ['Fizio Centar', 'Fizioterapija', 4.7, '2.3 km', false, 'Sutra']], 31) },
+  'real-estate': { title: 'Nekretnine', eyebrow: 'PRONAĐI PRAVI PROSTOR', description: 'Agencije, stanovi i poslovni prostori u gradu i okolini.', icon: Home, softClass: 'bg-primary/10 text-primary', actionHref: '/app/requests', actionLabel: 'Objavi zahtev', highlights: ['Kupovina i zakup', 'Lokalne agencije', 'Poredi ponude'], businesses: makeBusinesses([['Dom Plus Nekretnine', 'Agencija za nekretnine', 4.9, '1.8 km', true, '< 2 sata'], ['Kvadrat Studio', 'Nekretnine', 4.8, '2.5 km', true, 'Danas'], ['Beo Invest', 'Poslovni prostori', 4.6, '3.2 km', false, 'Sutra']], 41) },
+  sports: { title: 'Sport i rekreacija', eyebrow: 'KRENI U POKRET', description: 'Teretane, treneri i aktivnosti koje održavaju energiju svaki dan.', icon: Dumbbell, softClass: 'bg-turquoise/10 text-turquoise', actionHref: '/app/discover', actionLabel: 'Otkrij aktivnosti', highlights: ['Članarine', 'Lični treneri', 'Blizu tebe'], businesses: makeBusinesses([['Fit Zone', 'Teretana', 4.8, '0.8 km', true, 'Otvoreno sada'], ['Trener Marko', 'Lični trener', 4.9, '1.9 km', true, 'Danas'], ['Yoga Studio Mira', 'Joga', 4.7, '2.4 km', false, 'Sutra']], 51) },
+  beauty: { title: 'Lepota i nega', eyebrow: 'VREME ZA TEBE', description: 'Saloni, frizeri i beauty profesionalci sa slobodnim terminima.', icon: Scissors, softClass: 'bg-primary/10 text-primary', actionHref: '/app/requests', actionLabel: 'Zatraži termin', highlights: ['Slobodni termini', 'Top ocene', 'U tvojoj blizini'], businesses: makeBusinesses([['Studio Ana', 'Frizerski salon', 4.9, '0.7 km', true, 'Danas'], ['Glow Beauty Bar', 'Kozmetički salon', 4.8, '1.3 km', true, '< 2 sata'], ['Nail Atelier', 'Manikir', 4.7, '2.0 km', false, 'Sutra']], 61) },
+  education: { title: 'Edukacija', eyebrow: 'UČI I NAPREDUJ', description: 'Kursevi, časovi i stručnjaci za nova znanja i veštine.', icon: BookOpen, softClass: 'bg-turquoise/10 text-turquoise', actionHref: '/app/discover', actionLabel: 'Pogledaj prilike', highlights: ['Kursevi uživo', 'Online časovi', 'Stručni mentori'], businesses: makeBusinesses([['Lingua Centar', 'Škola jezika', 4.9, '1.1 km', true, 'Upis otvoren'], ['Code Lab', 'IT obuka', 4.8, '2.2 km', true, 'Nova grupa'], ['Muzika Studio', 'Časovi muzike', 4.7, '2.8 km', false, 'Dostupno']], 71) },
+  travel: { title: 'Putovanja', eyebrow: 'ISTRAŽI REGION', description: 'Turističke agencije, izleti i putovanja za sledeći odmor.', icon: Plane, softClass: 'bg-primary/10 text-primary', actionHref: '/app/deals', actionLabel: 'Istraži ponude', highlights: ['Vikend putovanja', 'Regionalne ture', 'Posebne cene'], businesses: makeBusinesses([['Balkan Travel', 'Turistička agencija', 4.9, '1.6 km', true, 'Danas'], ['Vikend Escape', 'Izleti', 4.8, '2.4 km', true, 'Nova ponuda'], ['Adria Tours', 'Putovanja', 4.7, '3.0 km', false, 'Dostupno']], 81) },
+  pet: { title: 'Kućni ljubimci', eyebrow: 'ZA TVOG NAJBOLJEG PRIJATELJA', description: 'Veterinari, pet shopovi i nega kućnih ljubimaca.', icon: PawPrint, softClass: 'bg-turquoise/10 text-turquoise', actionHref: '/app/requests', actionLabel: 'Zatraži uslugu', highlights: ['Veterinari blizu', 'Nega i šetanje', 'Pet shopovi'], businesses: makeBusinesses([['Vet Care', 'Veterinarska ambulanta', 4.9, '0.9 km', true, 'Otvoreno sada'], ['Šape i Rep', 'Pet shop', 4.8, '1.7 km', true, 'Danas'], ['Happy Paws', 'Nega ljubimaca', 4.7, '2.9 km', false, 'Sutra']], 91) },
+  events: { title: 'Događaji', eyebrow: 'ŽIVOT U GRADU', description: 'Koncerti, radionice i događaji koji se dešavaju baš sada.', icon: TrendingUp, softClass: 'bg-primary/10 text-primary', actionHref: '/app/discover', actionLabel: 'Otkrij događaje', highlights: ['Ove nedelje', 'U tvom gradu', 'Sačuvaj za kasnije'], businesses: makeBusinesses([['Dom omladine', 'Kulturni događaji', 4.9, '1.3 km', true, 'Večeras'], ['Event Hall 24', 'Konferencije', 4.8, '2.1 km', true, 'Ove nedelje'], ['Letnja scena', 'Koncerti', 4.7, '3.4 km', false, 'Petak']], 101) },
 }
 
-const CATEGORY_RESULTS = [
-  { id: 1, name: 'Elite Electricians', rating: 4.9, reviews: 234, distance: '0.5 km', category: 'Električar', verified: true, responseTime: '< 1 sat' },
-  { id: 2, name: 'Quick Plumbing Co', rating: 4.8, reviews: 189, distance: '1.2 km', category: 'Vodoinstalater', verified: true, responseTime: '< 2 sata' },
-  { id: 3, name: 'Pro Painting Services', rating: 4.7, reviews: 156, distance: '2.1 km', category: 'Majstori za dom', verified: false, responseTime: 'Danas' },
-  { id: 4, name: 'Pekara Jutro', rating: 4.8, reviews: 98, distance: '0.6 km', category: 'Pekara', verified: true, responseTime: 'Otvoreno sada' },
-]
+const DEFAULT_CATEGORY = CATEGORIES['home-services']
 
 export default function CategoryPage({ params }: { params: Promise<{ slug: string }> }) {
-  const [showFilters, setShowFilters] = useState(false)
+  const { slug } = use(params)
+  const category = CATEGORIES[slug] ?? DEFAULT_CATEGORY
+  const Icon = category.icon
   const [query, setQuery] = useState('')
   const [verifiedOnly, setVerifiedOnly] = useState(false)
   const [nearbyOnly, setNearbyOnly] = useState(false)
-  const { slug } = use(params)
-  const category = CATEGORY_LABELS[slug] ?? slug.replaceAll('-', ' ')
-  const visibleBusinesses = useMemo(() => CATEGORY_RESULTS.filter((business) => {
-    const matchesQuery = `${business.name} ${business.category}`.toLowerCase().includes(query.toLowerCase().trim())
-    const matchesVerified = !verifiedOnly || business.verified
-    const matchesNearby = !nearbyOnly || Number.parseFloat(business.distance) <= 1.5
-    return matchesQuery && matchesVerified && matchesNearby
-  }), [nearbyOnly, query, verifiedOnly])
+  const [showFilters, setShowFilters] = useState(false)
+  const visibleBusinesses = useMemo(() => category.businesses.filter((business) => {
+    const matchingQuery = `${business.name} ${business.category}`.toLocaleLowerCase().includes(query.trim().toLocaleLowerCase())
+    return matchingQuery && (!verifiedOnly || business.verified) && (!nearbyOnly || Number.parseFloat(business.distance) <= 1.5)
+  }), [category.businesses, nearbyOnly, query, verifiedOnly])
 
-  return (
-    <div className="pb-24">
-      <div className="sticky top-0 z-20 flex items-center justify-between border-b border-border bg-background px-4 py-4">
-        <Link href="/app" className="p-2 hover:bg-secondary rounded-lg transition" aria-label="Nazad na početnu"><ChevronLeft className="w-6 h-6" /></Link>
-        <h1 className="ml-2 flex-1 text-lg font-bold capitalize">{category}</h1>
-        <button type="button" onClick={() => setShowFilters((current) => !current)} className={`p-2 rounded-lg transition ${showFilters ? 'bg-primary/10 text-primary' : 'hover:bg-secondary'}`} aria-expanded={showFilters} aria-label="Prikaži filtere"><Filter className="w-6 h-6" /></button>
-      </div>
-
-      <div className="border-b border-border px-4 py-4"><div className="flex gap-2"><div className="relative flex-1"><Search className="absolute left-3 top-3 w-5 h-5 text-muted-foreground" /><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Pretraži u ovoj kategoriji…" className="w-full rounded-xl border border-border bg-card py-2.5 pl-10 pr-9 text-sm placeholder:text-muted-foreground focus:outline-none focus:border-primary" />{query ? <button type="button" onClick={() => setQuery('')} className="absolute right-2 top-2 p-1 text-muted-foreground" aria-label="Obriši pretragu"><X className="size-4" /></button> : null}</div></div></div>
-
-      {showFilters ? <div className="space-y-3 border-b border-border bg-secondary/50 px-4 py-4"><p className="text-sm font-semibold">Filteri</p><div className="flex flex-wrap gap-2"><button type="button" onClick={() => setNearbyOnly((current) => !current)} className={`rounded-full border px-3 py-1.5 text-xs font-medium ${nearbyOnly ? 'border-primary bg-primary text-primary-foreground' : 'border-border bg-card text-muted-foreground'}`}>Do 1.5 km</button><button type="button" onClick={() => setVerifiedOnly((current) => !current)} className={`rounded-full border px-3 py-1.5 text-xs font-medium ${verifiedOnly ? 'border-primary bg-primary text-primary-foreground' : 'border-border bg-card text-muted-foreground'}`}>Verifikovano</button></div></div> : null}
-
-      <div className="px-4 py-4"><p className="text-sm text-muted-foreground">{visibleBusinesses.length} rezultata</p></div>
-      <div className="space-y-3 px-4">{visibleBusinesses.length ? visibleBusinesses.map((business) => <BusinessCard key={business.id} business={business} />) : <div className="rounded-2xl border border-border bg-card p-6 text-center"><p className="font-semibold text-navy">Nema rezultata za ovaj izbor</p><button type="button" onClick={() => { setQuery(''); setNearbyOnly(false); setVerifiedOnly(false) }} className="mt-3 text-sm font-medium text-primary">Obriši filtere</button></div>}</div>
-    </div>
-  )
+  return <div className="space-y-5 pb-24">
+    <header className="border-b border-border bg-background px-4 pb-5 pt-4"><div className="flex items-center justify-between"><Link href="/app" className="rounded-lg p-2 transition hover:bg-secondary" aria-label="Nazad na početnu"><ChevronLeft className="size-6" /></Link><button type="button" onClick={() => setShowFilters((current) => !current)} className={`rounded-lg p-2 transition ${showFilters ? 'bg-primary/10 text-primary' : 'hover:bg-secondary'}`} aria-label="Filteri"><Filter className="size-6" /></button></div><div className={`mt-4 rounded-3xl border border-border p-5 ${category.softClass}`}><div className="flex items-start justify-between gap-4"><div><p className="text-xs font-semibold tracking-wide">{category.eyebrow}</p><h1 className="mt-2 text-3xl font-bold text-navy">{category.title}</h1><p className="mt-2 max-w-md text-sm leading-6 text-muted-foreground">{category.description}</p></div><div className="grid size-12 shrink-0 place-items-center rounded-2xl bg-card shadow-sm"><Icon className="size-6" /></div></div><div className="mt-4 flex flex-wrap gap-2">{category.highlights.map((item) => <span key={item} className="rounded-full border border-border bg-card px-3 py-1.5 text-xs font-medium text-navy">{item}</span>)}</div><Link href={category.actionHref} className="mt-5 inline-flex items-center gap-2 rounded-xl bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground transition hover:bg-primary/90">{category.actionLabel}<ArrowRight className="size-4" /></Link></div></header>
+    <section className="space-y-3 px-4"><div className="relative"><Search className="absolute left-3 top-3 size-5 text-muted-foreground" /><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder={`Pretraži: ${category.title.toLocaleLowerCase()}…`} className="w-full rounded-xl border border-border bg-card py-2.5 pl-10 pr-3 text-sm outline-none focus:border-primary" /></div>{showFilters ? <div className="flex flex-wrap gap-2 rounded-2xl border border-border bg-secondary/50 p-3"><button type="button" onClick={() => setNearbyOnly((current) => !current)} className={`rounded-full border px-3 py-1.5 text-xs font-medium ${nearbyOnly ? 'border-primary bg-primary text-primary-foreground' : 'border-border bg-card text-muted-foreground'}`}><MapPin className="mr-1 inline size-3.5" />Do 1.5 km</button><button type="button" onClick={() => setVerifiedOnly((current) => !current)} className={`rounded-full border px-3 py-1.5 text-xs font-medium ${verifiedOnly ? 'border-primary bg-primary text-primary-foreground' : 'border-border bg-card text-muted-foreground'}`}><Sparkles className="mr-1 inline size-3.5" />Verifikovano</button></div> : null}</section>
+    <section className="space-y-3 px-4"><div className="flex items-center justify-between"><h2 className="font-semibold text-navy">Najbolje u blizini</h2><span className="text-sm text-muted-foreground">{visibleBusinesses.length} rezultata</span></div>{visibleBusinesses.length ? visibleBusinesses.map((business) => <BusinessCard key={business.id} business={business} />) : <div className="rounded-2xl border border-dashed border-border bg-card p-6 text-center"><p className="font-semibold text-navy">Nema rezultata za trenutne filtere</p><button type="button" onClick={() => { setQuery(''); setNearbyOnly(false); setVerifiedOnly(false) }} className="mt-2 text-sm font-medium text-primary">Obriši filtere</button></div>}</section>
+  </div>
 }

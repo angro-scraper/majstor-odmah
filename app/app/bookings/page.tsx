@@ -1,78 +1,68 @@
-import { Calendar, Clock } from 'lucide-react'
+'use client'
 
-export const metadata = {
-  title: 'Bookings — balkan.works',
+import Link from 'next/link'
+import { Calendar, Clock, MessageSquare, RotateCcw } from 'lucide-react'
+import { useState } from 'react'
+
+type Booking = {
+  id: number
+  service: string
+  business: string
+  businessId: number
+  date: string
+  time: string
+  status: 'confirmed' | 'pending'
+  price: string
 }
 
+const initialBookings: Booking[] = [
+  { id: 1, service: 'Popravka elektroinstalacija', business: 'Elite Electricians', businessId: 1, date: '20. januar', time: '10:00', status: 'confirmed', price: '14.000 RSD' },
+  { id: 2, service: 'Vodoinstalaterska usluga', business: 'Quick Plumbing Co', businessId: 2, date: '22. januar', time: '14:00', status: 'pending', price: '9.950 RSD' },
+  { id: 3, service: 'Krečenje stana', business: 'Pro Painting Services', businessId: 3, date: '25. januar', time: '09:00', status: 'confirmed', price: '52.500 RSD' },
+]
+
 export default function BookingsPage() {
-  const bookings = [
-    { id: 1, service: 'Electrical Repair', business: 'Elite Electricians', date: 'Jan 20, 2024', time: '10:00 AM', status: 'confirmed', price: '$120' },
-    { id: 2, service: 'Plumbing', business: 'Quick Plumbing Co', date: 'Jan 22, 2024', time: '2:00 PM', status: 'pending', price: '$85' },
-    { id: 3, service: 'Painting', business: 'Pro Painting Services', date: 'Jan 25, 2024', time: '9:00 AM', status: 'confirmed', price: '$450' },
-  ]
+  const [bookings, setBookings] = useState(initialBookings)
+  const [notice, setNotice] = useState('')
+
+  const updateBooking = (id: number, nextStatus: Booking['status'], message: string) => {
+    setBookings((current) => current.map((booking) => booking.id === id ? { ...booking, status: nextStatus } : booking))
+    setNotice(message)
+  }
+
+  const confirmed = bookings.filter((booking) => booking.status === 'confirmed').length
+  const pending = bookings.filter((booking) => booking.status === 'pending').length
 
   return (
-    <div className="px-4 py-6 space-y-6 pb-24">
-      <div>
-        <h1 className="text-3xl font-bold">My Bookings</h1>
-        <p className="text-muted-foreground mt-1">Manage your upcoming appointments</p>
-      </div>
+    <div className="space-y-6 px-4 py-6 pb-24">
+      <header>
+        <h1 className="text-3xl font-bold text-navy">Moje rezervacije</h1>
+        <p className="mt-1 text-muted-foreground">Prati predstojeće usluge i potvrdi termin kada ti odgovara.</p>
+      </header>
 
-      {/* Stats */}
+      {notice ? <div role="status" className="rounded-xl border border-primary/20 bg-primary/5 px-4 py-3 text-sm text-navy">{notice}</div> : null}
+
       <div className="grid grid-cols-3 gap-3">
         {[
-          { label: 'Confirmed', value: '2', color: 'bg-green-500/20 text-green-600' },
-          { label: 'Pending', value: '1', color: 'bg-amber-500/20 text-amber-600' },
-          { label: 'Completed', value: '12', color: 'bg-blue-500/20 text-blue-600' },
-        ].map((stat) => (
-          <div key={stat.label} className={`p-3 rounded-xl border border-border ${stat.color}`}>
-            <p className="text-xs font-medium opacity-75">{stat.label}</p>
-            <p className="text-xl font-bold mt-1">{stat.value}</p>
-          </div>
-        ))}
+          { label: 'Potvrđeno', value: confirmed, color: 'bg-turquoise/10 text-turquoise' },
+          { label: 'Čeka potvrdu', value: pending, color: 'bg-secondary text-primary' },
+          { label: 'Ukupno', value: 12, color: 'bg-primary/10 text-primary' },
+        ].map((stat) => <div key={stat.label} className={`rounded-2xl border border-border p-3 ${stat.color}`}><p className="text-xs font-medium opacity-80">{stat.label}</p><p className="mt-1 text-xl font-bold">{stat.value}</p></div>)}
       </div>
 
-      {/* Bookings List */}
-      <div className="space-y-3">
-        {bookings.map((booking) => (
-          <div key={booking.id} className="p-4 rounded-2xl border border-border bg-card hover:border-primary transition">
-            <div className="flex items-start justify-between mb-3">
-              <div>
-                <h3 className="font-semibold">{booking.service}</h3>
-                <p className="text-sm text-muted-foreground">{booking.business}</p>
-              </div>
-              <span className={`text-xs font-bold px-2.5 py-1 rounded ${
-                booking.status === 'confirmed' ? 'bg-green-500/20 text-green-600' : 'bg-amber-500/20 text-amber-600'
-              }`}>
-                {booking.status.charAt(0).toUpperCase() + booking.status.slice(1)}
-              </span>
+      <section className="space-y-3">
+        {bookings.map((booking) => {
+          const confirmedBooking = booking.status === 'confirmed'
+          return <article key={booking.id} className="rounded-2xl border border-border bg-card p-4 transition hover:border-primary/40">
+            <div className="mb-3 flex items-start justify-between gap-3">
+              <div><h2 className="font-semibold text-navy">{booking.service}</h2><Link href={`/app/business/${booking.businessId}`} className="mt-0.5 inline-block text-sm text-muted-foreground hover:text-primary">{booking.business}</Link></div>
+              <span className={`rounded-full px-2.5 py-1 text-xs font-semibold ${confirmedBooking ? 'bg-turquoise/15 text-turquoise' : 'bg-primary/10 text-primary'}`}>{confirmedBooking ? 'Potvrđeno' : 'Čeka potvrdu'}</span>
             </div>
-
-            <div className="grid grid-cols-2 gap-2 mb-3 text-sm">
-              <div className="flex items-center gap-2 text-muted-foreground">
-                <Calendar className="w-4 h-4" />
-                {booking.date}
-              </div>
-              <div className="flex items-center gap-2 text-muted-foreground">
-                <Clock className="w-4 h-4" />
-                {booking.time}
-              </div>
-            </div>
-
-            <div className="flex items-center justify-between pt-3 border-t border-border">
-              <span className="text-sm font-semibold text-primary">{booking.price}</span>
-              <button className="text-xs px-3 py-1.5 rounded bg-secondary hover:bg-secondary/80 transition">
-                {booking.status === 'confirmed' ? 'Reschedule' : 'Confirm'}
-              </button>
-            </div>
-          </div>
-        ))}
-      </div>
-
-      {/* Empty State Message */}
-      <div className="text-center py-12 text-muted-foreground">
-        <p className="text-sm">This feature is coming soon with real-time booking and calendar integration</p>
-      </div>
+            <div className="grid grid-cols-2 gap-2 text-sm text-muted-foreground"><span className="flex items-center gap-2"><Calendar className="size-4" />{booking.date}</span><span className="flex items-center gap-2"><Clock className="size-4" />{booking.time}</span></div>
+            <div className="mt-4 flex flex-wrap items-center justify-between gap-2 border-t border-border pt-3"><span className="text-sm font-semibold text-primary">{booking.price}</span><div className="flex gap-2">{confirmedBooking ? <button type="button" onClick={() => setNotice('Zahtev za pomeranje termina je pripremljen. Firma će ti uskoro odgovoriti u porukama.')} className="inline-flex items-center gap-1 rounded-lg bg-secondary px-3 py-1.5 text-xs font-medium transition hover:bg-secondary/80"><RotateCcw className="size-3.5" /> Promeni termin</button> : <button type="button" onClick={() => updateBooking(booking.id, 'confirmed', 'Termin je potvrđen i dodat u tvoje rezervacije.')} className="rounded-lg bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground transition hover:bg-primary/90">Potvrdi</button>}<Link href={`/app/messages?business=${booking.businessId}`} className="inline-flex items-center gap-1 rounded-lg border border-border px-3 py-1.5 text-xs font-medium text-navy transition hover:border-primary"><MessageSquare className="size-3.5" /> Poruka</Link></div></div>
+          </article>
+        })}
+      </section>
     </div>
   )
 }
