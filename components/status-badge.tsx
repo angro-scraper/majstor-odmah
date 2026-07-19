@@ -1,5 +1,5 @@
 import { Badge } from '@/components/ui/badge'
-import { CheckCircle, Clock, AlertCircle, XCircle, Eye } from 'lucide-react'
+import { CheckCircle, Clock, XCircle, Eye } from 'lucide-react'
 
 export type StatusType = 'active' | 'pending' | 'completed' | 'cancelled' | 'quoted' | 'verified'
 

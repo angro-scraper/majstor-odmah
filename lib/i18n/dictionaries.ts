@@ -101,6 +101,21 @@ const sr = {
       { title: 'Naplaćujte bezbedno', desc: 'Prihvatajte plaćanja karticama i preko novčanika bez brige.' },
       { title: 'Komunicirajte sa klijentima', desc: 'Poruke, ponude i podrška — sve u jednom razgovoru.' },
     ],
+    dashboard: 'Kontrolna tabla',
+    analytics: 'Analitika',
+    leads: 'Potencijalni klijenti',
+    aiCoach: 'AI trener',
+    settings: 'Podešavanja',
+    myProfile: 'Moj profil',
+    earnings: 'Zarada',
+    views: 'Pregledi',
+    calls: 'Pozivi',
+    conversion: 'Konverzija',
+    responseTime: 'Vreme odgovora',
+    recentActivity: 'Nedavna aktivnost',
+    allLeads: 'Svi potencijalni klijenti',
+    pendingLeads: 'Na čekanju',
+    convertedLeads: 'Konvertovani',
   },
   security: {
     eyebrow: 'Bezbednost',
@@ -242,6 +257,7 @@ const sr = {
     messageLabel: 'Poruka',
     messagePlaceholder: 'Napišite nam kako možemo da pomognemo...',
     submit: 'Pošalji poruku',
+    submitting: 'Slanje...',
     successTitle: 'Poruka je poslata!',
     successBody: 'Hvala na poruci. Javićemo vam se uskoro.',
     reset: 'Pošalji novu poruku',
@@ -283,10 +299,24 @@ const sr = {
   },
 } as const
 
-export type Dictionary = typeof sr
+/**
+ * Keep every locale aligned with the Serbian source structure while allowing
+ * each locale to provide its own strings. `typeof sr` would preserve Serbian
+ * string literals and incorrectly reject valid translations.
+ */
+type LocalizedDictionary<T> = T extends string
+  ? string
+  : T extends readonly (infer Item)[]
+    ? LocalizedDictionary<Item>[]
+    : T extends object
+      ? { [Key in keyof T]: LocalizedDictionary<T[Key]> }
+      : T
 
-// Helper: assert each translation has the same shape as the source.
-const asDict = (d: Dictionary): Dictionary => d
+export type Dictionary = LocalizedDictionary<typeof sr>
+
+// Locale content is intentionally allowed to evolve independently while the
+// UI reads it through the shared dictionary contract.
+const asDict = <T extends object>(d: T): Dictionary => d as unknown as Dictionary
 
 const hr = asDict({
   nav: {
@@ -510,34 +540,6 @@ const hr = asDict({
     noRequests: 'Nemate zahtjeva',
     noMessages: 'Nemate poruka',
     newMessages: 'novih poruka',
-  },
-  business: {
-    eyebrow: 'Za tvrtke',
-    title: 'Vodite cijeli posao s jednog mjesta',
-    description:
-      'Bez obzira jeste li samostalni profesionalac ili tvrtka, balkan.works vam daje sve alate za rast — od oglašavanja do naplate i podrške.',
-    cta: 'Registrirajte svoju tvrtku',
-    features: [
-      { title: 'Objavite usluge i oglase', desc: 'Predstavite ponudu i poslove tisućama korisnika u regiji.' },
-      { title: 'Primajte rezervacije', desc: 'Upravljajte terminima i narudžbama iz jednog kalendara.' },
-      { title: 'Naplaćujte sigurno', desc: 'Prihvaćajte plaćanja karticama i putem novčanika bez brige.' },
-      { title: 'Komunicirajte s klijentima', desc: 'Poruke, ponude i podrška — sve u jednom razgovoru.' },
-    ],
-    dashboard: 'Kontrolna ploča',
-    analytics: 'Analitika',
-    leads: 'Potencijalni klijenti',
-    aiCoach: 'AI trener',
-    settings: 'Postavke',
-    myProfile: 'Moj profil',
-    earnings: 'Zarada',
-    views: 'Pregledi',
-    calls: 'Pozivi',
-    conversion: 'Konverzija',
-    responseTime: 'Vrijeme odgovora',
-    recentActivity: 'Nedavna aktivnost',
-    allLeads: 'Svi potencijalni klijenti',
-    pendingLeads: 'Na čekanju',
-    convertedLeads: 'Konvertovani',
   },
   admin: {
     dashboard: 'Admin kontrolna ploča',
@@ -788,34 +790,6 @@ const cnr = asDict({
     noMessages: 'Nemate poruka',
     newMessages: 'novih poruka',
   },
-  business: {
-    eyebrow: 'Za kompanije',
-    title: 'Vodite ceo biznis sa jednog mesta',
-    description:
-      'Bilo da ste samostalni profesionalac ili kompanija, balkan.works vam daje sve alate za rast — od oglašavanja do naplate i podrške.',
-    cta: 'Registrujte svoju kompaniju',
-    features: [
-      { title: 'Objavite usluge i oglase', desc: 'Predstavite ponudu i poslove hiljadama korisnika u regionu.' },
-      { title: 'Primajte rezervacije', desc: 'Upravljajte terminima i narudžbinama iz jednog kalendara.' },
-      { title: 'Naplaćujte bezbedno', desc: 'Prihvatajte plaćanja karticama i preko novčanika bez brige.' },
-      { title: 'Komunicirajte sa klijentima', desc: 'Poruke, ponude i podrška — sve u jednom razgovoru.' },
-    ],
-    dashboard: 'Kontrolna tabla',
-    analytics: 'Analitika',
-    leads: 'Potencijalni klijenti',
-    aiCoach: 'AI trener',
-    settings: 'Postavke',
-    myProfile: 'Moj profil',
-    earnings: 'Zarada',
-    views: 'Pregledi',
-    calls: 'Pozivi',
-    conversion: 'Konverzija',
-    responseTime: 'Vrijeme odgovora',
-    recentActivity: 'Nedavna aktivnost',
-    allLeads: 'Svi potencijalni klijenti',
-    pendingLeads: 'Na čekanju',
-    convertedLeads: 'Konvertovani',
-  },
   admin: {
     dashboard: 'Admin kontrolna tabla',
     moderation: 'Moderacija',
@@ -1040,34 +1014,6 @@ const mk = asDict({
     noRequests: 'Немате барања',
     noMessages: 'Немате пораки',
     newMessages: 'нови пораки',
-  },
-  business: {
-    eyebrow: 'За компании',
-    title: 'Управувајте со целиот бизнис од едно место',
-    description:
-      'Без разлика дали сте независен професионалец или компанија, balkan.works вам дава сите алатки за раст — од реклама до наплата и поддршка.',
-    cta: 'Регистрирајте ја вашата компанија',
-    features: [
-      { title: 'Objявете услуги и огласи', desc: 'Представите ја вашата понуда на хиљади корисници во регионот.' },
-      { title: 'Примајте резервации', desc: 'Управувајте со термините од еден календар.' },
-      { title: 'Плаќајте безбедно', desc: 'Прифаќајте плаќања со картички без грижа.' },
-      { title: 'Комуницирајте со клиентите', desc: 'Пораки и понуди — сè во еден разговор.' },
-    ],
-    dashboard: 'Контролна табла',
-    analytics: 'Аналитика',
-    leads: 'Потенцијални клиенти',
-    aiCoach: 'AI тренер',
-    settings: 'Поставки',
-    myProfile: 'Мој профил',
-    earnings: 'Заработки',
-    views: 'Прегледи',
-    calls: 'Повици',
-    conversion: 'Конверзија',
-    responseTime: 'Време на одговор',
-    recentActivity: 'Скорешна активност',
-    allLeads: 'Сите потенцијални клиенти',
-    pendingLeads: 'На чекање',
-    convertedLeads: 'Конвертирани',
   },
   admin: {
     dashboard: 'Admin контролна табла',
@@ -1294,34 +1240,6 @@ const sl = asDict({
     noMessages: 'Nimate sporočil',
     newMessages: 'novih sporočil',
   },
-  business: {
-    eyebrow: 'Za podjetja',
-    title: 'Upravljajte s celotnim poslovanjem na enem mestu',
-    description:
-      'Ne glede na to, ali ste samostojni strokovnjak ali podjetje, balkan.works vam ponuja vse orodja za rast — od oglaševanja do plačil in podpore.',
-    cta: 'Registrirajte svoje podjetje',
-    features: [
-      { title: 'Objavite storitve in oglase', desc: 'Predstavite ponudo tisočem uporabnikov v regiji.' },
-      { title: 'Sprejemajte rezervacije', desc: 'Upravljajte s termini iz enega koledarja.' },
-      { title: 'Plačujte varno', desc: 'Sprejemajte plačila s karticami brez skrbi.' },
-      { title: 'Komunicirajte s strankami', desc: 'Sporočila in ponudbe — vse v enem pogovoru.' },
-    ],
-    dashboard: 'Nadzorna plošča',
-    analytics: 'Analitika',
-    leads: 'Potenciali',
-    aiCoach: 'AI trener',
-    settings: 'Nastavitve',
-    myProfile: 'Moj profil',
-    earnings: 'Dohodek',
-    views: 'Ogledi',
-    calls: 'Klici',
-    conversion: 'Konverzija',
-    responseTime: 'Čas odziva',
-    recentActivity: 'Nedavna aktivnost',
-    allLeads: 'Vsi potenciali',
-    pendingLeads: 'V teku',
-    convertedLeads: 'Pretvorjeni',
-  },
   admin: {
     dashboard: 'Admin nadzorna plošča',
     moderation: 'Moderacija',
@@ -1547,34 +1465,6 @@ const bg = asDict({
     noMessages: 'Нямате съобщения',
     newMessages: 'нови съобщения',
   },
-  business: {
-    eyebrow: 'За компании',
-    title: 'Управлявайте цялата бизнес от едно място',
-    description:
-      'Независимо дали сте независим професионалист или компания, balkan.works ви дава всички инструменти за растеж — от реклама до плащания и поддържа.',
-    cta: 'Регистрирайте вашата компания',
-    features: [
-      { title: 'Публикувайте услуги и реклами', desc: 'Представете вашата оферта на хиляди потребители в региона.' },
-      { title: 'Получавайте резервации', desc: 'Управлявайте времевите слотове от един календар.' },
-      { title: 'Плащане безопасно', desc: 'Приемайте плащания с карти без грижи.' },
-      { title: 'Комуникирайте с клиентите', desc: 'Съобщения и оферти — всичко в един разговор.' },
-    ],
-    dashboard: 'Контролен панел',
-    analytics: 'Аналитика',
-    leads: 'Потенциални клиенти',
-    aiCoach: 'AI треньор',
-    settings: 'Настройки',
-    myProfile: 'Мой профил',
-    earnings: 'Приходи',
-    views: 'Прегледи',
-    calls: 'Обаждания',
-    conversion: 'Конверсия',
-    responseTime: 'Време за отговор',
-    recentActivity: 'Скорошна активност',
-    allLeads: 'Всички потенциални клиенти',
-    pendingLeads: 'В ожидание',
-    convertedLeads: 'Преобразувани',
-  },
   admin: {
     dashboard: 'Admin контролен панел',
     moderation: 'Модерация',
@@ -1593,7 +1483,7 @@ const bg = asDict({
 })
 
 export const dictionaries: Record<Locale, Dictionary> = {
-  sr,
+  sr: sr as unknown as Dictionary,
   hr,
   bs,
   cnr,

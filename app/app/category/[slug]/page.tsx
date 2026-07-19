@@ -1,6 +1,6 @@
 'use client'
 
-import { ChevronLeft, MapPin, Filter, Search } from 'lucide-react'
+import { ChevronLeft, Filter, Search } from 'lucide-react'
 import Link from 'next/link'
 import { useState, use } from 'react'
 import { BusinessCard } from '@/components/app/business-card'

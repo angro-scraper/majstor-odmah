@@ -2,7 +2,6 @@
 
 import Link from 'next/link'
 import { Star, MapPin, Clock, CheckCircle, Bookmark } from 'lucide-react'
-import { cn } from '@/lib/utils'
 
 interface BusinessCardProps {
   business: {

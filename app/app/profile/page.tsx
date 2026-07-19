@@ -1,7 +1,6 @@
 'use client'
 
 import { User, Settings, MapPin, Star, Activity, LogOut } from 'lucide-react'
-import Link from 'next/link'
 
 export default function ProfilePage() {
   return (

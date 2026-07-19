@@ -1,12 +1,16 @@
 packages:
+  - "."
   - "apps/*"
   - "services/*"
   - "packages/*"
+overrides:
+  hono: 4.12.25
 allowBuilds:
   '@prisma/client': true
   '@prisma/engines': true
   '@scarf/scarf': false
   bcrypt: true
   esbuild: true
+  msw: false
   prisma: true
   sharp: true

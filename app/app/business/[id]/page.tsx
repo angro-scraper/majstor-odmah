@@ -4,7 +4,7 @@ import { use } from 'react'
 export default function BusinessPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params)
   return (
-    <div className="pb-24">
+    <div className="pb-24" data-business-id={id}>
       {/* Cover Image */}
       <div className="h-48 bg-gradient-to-br from-primary/30 to-secondary/30 border-b border-border" />
 

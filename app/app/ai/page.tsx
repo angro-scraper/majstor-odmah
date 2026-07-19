@@ -1,6 +1,6 @@
 'use client'
 
-import { MessageSquare, Sparkles, Send } from 'lucide-react'
+import { Sparkles, Send } from 'lucide-react'
 import { useState } from 'react'
 
 export default function AIPage() {

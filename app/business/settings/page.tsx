@@ -1,11 +1,8 @@
 'use client'
 
-import { Settings, Bell, Lock, Users, FileText, Trash2 } from 'lucide-react'
-import { useState } from 'react'
+import { Bell, Lock, Users, FileText, Trash2 } from 'lucide-react'
 
 export default function SettingsPage() {
-  const [notifications, setNotifications] = useState(true)
-
   return (
     <div className="space-y-6 max-w-2xl">
       <div>

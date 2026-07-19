@@ -1,6 +1,5 @@
 'use client'
 
-import { Star, MapPin } from 'lucide-react'
 import { BusinessCard } from '@/components/app/business-card'
 
 const RECOMMENDATIONS = [

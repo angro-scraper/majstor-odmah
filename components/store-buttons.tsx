@@ -8,7 +8,7 @@ const DOWNLOAD_ON: Record<Locale, string> = {
   sr: 'Preuzmi na',
   hr: 'Preuzmi na',
   bs: 'Preuzmi na',
-  me: 'Preuzmi na',
+  cnr: 'Preuzmi na',
   mk: 'Преземи на',
   sl: 'Prenesi na',
   bg: 'Изтегли от',

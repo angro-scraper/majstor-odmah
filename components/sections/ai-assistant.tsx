@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { Sparkles, Send, Star, MapPin, Clock, CheckCircle2, ArrowRight } from 'lucide-react'
+import { Sparkles, Send, Star, Clock, CheckCircle2, ArrowRight } from 'lucide-react'
 import { useI18n } from '@/lib/i18n/context'
 
 const PROVIDERS = [

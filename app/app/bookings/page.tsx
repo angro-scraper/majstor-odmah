@@ -1,4 +1,4 @@
-import { Calendar, Clock, User, MapPin, DollarSign, CheckCircle } from 'lucide-react'
+import { Calendar, Clock } from 'lucide-react'
 
 export const metadata = {
   title: 'Bookings — balkan.works',
