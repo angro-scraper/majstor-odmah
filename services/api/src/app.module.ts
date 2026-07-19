@@ -27,9 +27,10 @@ import { RewardsModule } from "./modules/rewards/rewards.module";
 import { ReferralsModule } from "./modules/referrals/referrals.module";
 import { FeedModule } from "./modules/feed/feed.module";
 import { MarketplaceModule } from "./modules/marketplace/marketplace.module";
+import { FinanceModule } from "./modules/finance/finance.module";
 import { SecurityModule } from "./common/security.module";
 
 @Module({
-  imports: [ConfigModule.forRoot({ isGlobal: true }), DatabaseModule, SecurityModule, AuthModule, UsersModule, BusinessesModule, CategoriesModule, LocationsModule, NotificationsModule, SearchModule, ReviewsModule, AdminModule, FavoritesModule, HealthModule, AiModule, OffersModule, DealsModule, AnalyticsModule, OperationsModule, PartnersModule, ComplianceModule, FeaturesModule, FlyersModule, SaveFoodModule, RewardsModule, ReferralsModule, FeedModule, MarketplaceModule, SupportModule],
+  imports: [ConfigModule.forRoot({ isGlobal: true }), DatabaseModule, SecurityModule, AuthModule, UsersModule, BusinessesModule, CategoriesModule, LocationsModule, NotificationsModule, SearchModule, ReviewsModule, AdminModule, FavoritesModule, HealthModule, AiModule, OffersModule, DealsModule, AnalyticsModule, OperationsModule, PartnersModule, ComplianceModule, FeaturesModule, FlyersModule, SaveFoodModule, RewardsModule, ReferralsModule, FeedModule, MarketplaceModule, FinanceModule, SupportModule],
 })
 export class AppModule {}

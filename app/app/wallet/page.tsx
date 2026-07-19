@@ -1,114 +1,61 @@
-import { CreditCard, Send, ArrowDownLeft, ArrowUpRight, Plus } from 'lucide-react'
+import { ArrowDownLeft, ArrowUpRight, BadgeCheck, CreditCard, ReceiptText, ShieldCheck } from 'lucide-react'
 
-export const metadata = {
-  title: 'Wallet — balkan.works',
-}
+export const metadata = { title: 'Novčanik — balkan.works' }
+
+const transactions = [
+  { id: 1, type: 'PAYMENT', business: 'Save Food · Pekara Mlin', amount: '200 RSD', date: 'Danas · 09:42', status: 'Potvrda čeka' },
+  { id: 2, type: 'CASHBACK', business: 'Balkan Cashback', amount: '20 RSD', date: 'Juče · 17:10', status: 'Evidentirano' },
+  { id: 3, type: 'REWARD', business: 'Balkan Rewards', amount: '20 poena', date: '18. jul · 12:28', status: 'Dodeljeno' },
+]
 
 export default function WalletPage() {
-  const transactions = [
-    { id: 1, type: 'payment', business: 'Elite Electricians', amount: '$120', date: 'Jan 18, 2024', status: 'completed' },
-    { id: 2, type: 'refund', business: 'Quick Plumbing', amount: '$45', date: 'Jan 16, 2024', status: 'completed' },
-    { id: 3, type: 'payment', business: 'Pro Painting', amount: '$450', date: 'Jan 14, 2024', status: 'pending' },
-    { id: 4, type: 'payment', business: 'HVAC Experts', amount: '$200', date: 'Jan 12, 2024', status: 'completed' },
-  ]
-
   return (
     <div className="px-4 py-6 space-y-6 pb-24">
-      <div>
-        <h1 className="text-3xl font-bold">Wallet</h1>
-        <p className="text-muted-foreground mt-1">Manage payments and balance</p>
-      </div>
+      <header>
+        <p className="text-xs font-semibold tracking-wide text-primary">BALKAN FINANCE</p>
+        <h1 className="mt-1 text-3xl font-bold">Novčanik</h1>
+        <p className="mt-1 text-muted-foreground">Pregled uplata, povraćaja i pogodnosti.</p>
+      </header>
 
-      {/* Balance Card */}
-      <div className="p-6 rounded-2xl bg-gradient-to-br from-primary to-primary/80 text-primary-foreground border border-primary/50">
-        <div className="flex items-start justify-between mb-8">
+      <section className="rounded-3xl border border-primary/20 bg-gradient-to-br from-primary to-blue-500 p-6 text-primary-foreground shadow-lg shadow-primary/20">
+        <div className="flex items-start justify-between gap-4">
           <div>
-            <p className="text-sm opacity-90">Available Balance</p>
-            <h2 className="text-4xl font-bold mt-2">$1,250.50</h2>
+            <p className="text-sm text-primary-foreground/80">Balkan pogodnosti</p>
+            <h2 className="mt-2 text-4xl font-bold">240 <span className="text-xl">poena</span></h2>
           </div>
-          <CreditCard className="w-8 h-8 opacity-80" />
+          <CreditCard className="h-8 w-8 opacity-80" />
         </div>
-
-        <div className="flex gap-2">
-          <button className="flex-1 px-4 py-2.5 rounded-lg bg-primary-foreground/20 hover:bg-primary-foreground/30 transition text-sm font-semibold flex items-center justify-center gap-2">
-            <Plus className="w-4 h-4" />
-            Add Funds
-          </button>
-          <button className="flex-1 px-4 py-2.5 rounded-lg bg-primary-foreground/20 hover:bg-primary-foreground/30 transition text-sm font-semibold flex items-center justify-center gap-2">
-            <Send className="w-4 h-4" />
-            Withdraw
-          </button>
+        <div className="mt-6 grid grid-cols-2 gap-2">
+          <div className="rounded-xl bg-white/15 px-3 py-2.5"><p className="text-xs text-white/70">Cashback</p><p className="mt-1 font-semibold">20 RSD</p></div>
+          <div className="rounded-xl bg-white/15 px-3 py-2.5"><p className="text-xs text-white/70">Nivo</p><p className="mt-1 font-semibold">Local Hero</p></div>
         </div>
-      </div>
+      </section>
 
-      {/* Payment Methods */}
-      <div className="space-y-3">
-        <h3 className="font-semibold">Payment Methods</h3>
-        {[
-          { type: 'Visa', ending: '4242', default: true },
-          { type: 'Mastercard', ending: '5555', default: false },
-        ].map((method, i) => (
-          <div key={i} className="p-4 rounded-lg border border-border bg-card hover:border-primary transition cursor-pointer">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-6 rounded bg-primary/20 flex items-center justify-center text-xs font-bold">
-                  {method.type.slice(0, 1)}
-                </div>
-                <div>
-                  <p className="text-sm font-medium">{method.type} •••• {method.ending}</p>
-                  {method.default && <p className="text-xs text-primary">Default</p>}
-                </div>
-              </div>
-              <button className="text-xs px-2.5 py-1 rounded border border-border hover:border-primary transition">Edit</button>
+      <section className="rounded-2xl border border-primary/15 bg-primary/5 p-4">
+        <div className="flex gap-3">
+          <ShieldCheck className="h-5 w-5 shrink-0 text-primary" />
+          <div><h2 className="font-semibold">Bezbedna evidencija plaćanja</h2><p className="mt-1 text-sm leading-5 text-muted-foreground">Balkan.works ne čuva broj kartice niti sredstva. Plaćanje se potvrđuje kod licenciranog payment partnera.</p></div>
+        </div>
+      </section>
+
+      <section className="space-y-3">
+        <div className="flex items-center justify-between"><h2 className="font-semibold">Nedavne aktivnosti</h2><button className="text-sm font-semibold text-primary">Sve transakcije</button></div>
+        {transactions.map((tx) => {
+          const positive = tx.type !== 'PAYMENT'
+          return <article key={tx.id} className="flex items-center justify-between rounded-2xl border border-border bg-card p-4">
+            <div className="flex min-w-0 items-center gap-3">
+              <span className={`rounded-xl p-2.5 ${positive ? 'bg-emerald-500/15 text-emerald-600' : 'bg-primary/10 text-primary'}`}>{positive ? <ArrowDownLeft className="h-4 w-4" /> : <ArrowUpRight className="h-4 w-4" />}</span>
+              <div className="min-w-0"><p className="truncate text-sm font-semibold">{tx.business}</p><p className="mt-0.5 text-xs text-muted-foreground">{tx.date} · {tx.status}</p></div>
             </div>
-          </div>
-        ))}
-        <button className="w-full px-4 py-2.5 rounded-lg border border-primary text-primary text-sm font-semibold hover:bg-primary/10 transition">
-          + Add Payment Method
-        </button>
-      </div>
+            <p className={`shrink-0 text-sm font-bold ${positive ? 'text-emerald-600' : ''}`}>{positive ? '+' : '−'}{tx.amount}</p>
+          </article>
+        })}
+      </section>
 
-      {/* Transaction History */}
-      <div className="space-y-3">
-        <h3 className="font-semibold">Recent Transactions</h3>
-        <div className="space-y-2">
-          {transactions.map((tx) => (
-            <div key={tx.id} className="p-4 rounded-lg border border-border bg-card hover:bg-secondary/50 transition">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <div className={`p-2.5 rounded-lg ${tx.type === 'payment' ? 'bg-red-500/20' : 'bg-green-500/20'}`}>
-                    {tx.type === 'payment' ? (
-                      <ArrowUpRight className={`w-4 h-4 ${tx.type === 'payment' ? 'text-red-600' : 'text-green-600'}`} />
-                    ) : (
-                      <ArrowDownLeft className="w-4 h-4 text-green-600" />
-                    )}
-                  </div>
-                  <div>
-                    <p className="text-sm font-medium">{tx.business}</p>
-                    <p className="text-xs text-muted-foreground">{tx.date}</p>
-                  </div>
-                </div>
-                <div className="text-right">
-                  <p className={`text-sm font-semibold ${tx.type === 'payment' ? 'text-red-600' : 'text-green-600'}`}>
-                    {tx.type === 'payment' ? '-' : '+'}{tx.amount}
-                  </p>
-                  <p className={`text-xs ${
-                    tx.status === 'completed' ? 'text-green-600' : 'text-amber-600'
-                  }`}>
-                    {tx.status.charAt(0).toUpperCase() + tx.status.slice(1)}
-                  </p>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Coming Soon */}
-      <div className="p-6 rounded-2xl bg-gradient-to-br from-primary/20 to-secondary/20 border border-primary/30">
-        <h3 className="font-semibold mb-2">Coming Soon: Flexible Payments</h3>
-        <p className="text-sm text-muted-foreground">Pay later options, installment plans, and loyalty rewards</p>
-      </div>
+      <section className="rounded-2xl border border-border bg-card p-4">
+        <div className="flex items-center gap-3"><BadgeCheck className="h-5 w-5 text-primary" /><div><h2 className="font-semibold">Plaćanja uskoro</h2><p className="mt-0.5 text-sm text-muted-foreground">Odaberite uslugu ili Save Food paket, pa platite preko bezbednog partnera.</p></div></div>
+        <button className="mt-4 flex w-full items-center justify-center gap-2 rounded-xl border border-primary py-2.5 text-sm font-semibold text-primary"><ReceiptText className="h-4 w-4" /> Pogledaj rezervacije</button>
+      </section>
     </div>
   )
 }

@@ -11,7 +11,7 @@ async function bootstrap(): Promise<void> {
     .split(",")
     .map((origin) => origin.trim())
     .filter(Boolean);
-  app.enableCors({ origin: allowedOrigins, methods: ["GET", "POST", "PATCH", "PUT", "DELETE", "OPTIONS"], allowedHeaders: ["Authorization", "Content-Type", "X-Partner-Api-Key"] });
+  app.enableCors({ origin: allowedOrigins, methods: ["GET", "POST", "PATCH", "PUT", "DELETE", "OPTIONS"], allowedHeaders: ["Authorization", "Content-Type", "X-Partner-Api-Key", "X-Payment-Webhook-Secret"] });
   app.useGlobalPipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true, transform: true }));
   app.useGlobalFilters(new HttpExceptionFilter());
   const swaggerConfig = new DocumentBuilder()
