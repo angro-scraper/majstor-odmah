@@ -13,9 +13,9 @@ export function HowItWorks() {
     <section id="kako-funkcionise" className="bg-surface">
       <div className="mx-auto max-w-7xl px-4 py-24 sm:px-6 lg:px-8 lg:py-32">
         <SectionHeading
-          eyebrow={t.how.eyebrow}
-          title={t.how.title}
-          description={t.how.description}
+          eyebrow={t.business.eyebrow}
+          title={t.business.title}
+          description={t.business.description}
         />
 
         <div className="relative mt-14 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
@@ -23,7 +23,7 @@ export function HowItWorks() {
             aria-hidden="true"
             className="absolute left-0 right-0 top-7 hidden h-px bg-gradient-to-r from-transparent via-border to-transparent lg:block"
           />
-          {t.how.steps.map((step, i) => {
+          {t.business.features.map((step, i) => {
             const Icon = ICONS[i]
             return (
               <div

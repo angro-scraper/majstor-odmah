@@ -42,7 +42,7 @@ const MODULES: {
     id: 'usluge',
     catKey: 'majstori',
     icon: Wrench,
-    href: '/app/category/home-services',
+    href: '/usluge?tema=majstori',
     items: [
       { title: 'Marko — Električar', meta: 'Novi Sad · Dostupan danas', extra: 'od 1.500 RSD', badge: 'Top' },
       { title: 'Ivan — Vodoinstalater', meta: 'Beograd · Za 2 sata', extra: 'od 2.000 RSD' },
@@ -53,7 +53,7 @@ const MODULES: {
     id: 'dostava',
     catKey: 'dostava',
     icon: UtensilsCrossed,
-    href: '/app/category/food',
+    href: '/usluge?tema=dostava',
     items: [
       { title: 'Burger House', meta: '30–40 min · Besplatna dostava', extra: '4.8', badge: 'Popust' },
       { title: 'Pizza Bar', meta: '25–35 min · Besplatna dostava', extra: '4.7' },
@@ -64,7 +64,7 @@ const MODULES: {
     id: 'putovanja',
     catKey: 'putovanja',
     icon: Plane,
-    href: '/app/category/travel',
+    href: '/usluge?tema=putovanja',
     items: [
       { title: 'Beograd → Istanbul', meta: 'Air Serbia · 20. jun', extra: 'od 128 €', badge: 'Akcija' },
       { title: 'Zagreb → Beč', meta: 'Croatia Airlines · 24. jun', extra: 'od 96 €' },
@@ -75,7 +75,7 @@ const MODULES: {
     id: 'novcanik',
     catKey: 'finansije',
     icon: Wallet,
-    href: '/app/wallet',
+    href: '/usluge?tema=finansije',
     items: [
       { title: 'Plaćanje računa', meta: 'Struja, voda, telefon', extra: 'Bez naknade', badge: 'Novo' },
       { title: 'Transfer novca', meta: 'Trenutno u celom regionu', extra: '0 €' },
@@ -86,7 +86,7 @@ const MODULES: {
     id: 'zdravlje',
     catKey: 'zdravlje',
     icon: HeartPulse,
-    href: '/app/category/health',
+    href: '/usluge?tema=zdravlje',
     items: [
       { title: 'Dr Marko Jovanović', meta: 'Kardiolog · Klinika Beograd', extra: '22. maj 10:30', badge: 'Slobodno' },
       { title: 'Dr Ana Perić', meta: 'Dermatolog · Novi Sad', extra: '23. maj 12:00' },

@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import { Menu, X, Download } from 'lucide-react'
+import { Menu, X, ArrowRight } from 'lucide-react'
 import { Logo } from '@/components/logo'
 import { LanguageSwitcher } from '@/components/language-switcher'
 import { CountrySwitcher } from '@/components/country-switcher'
@@ -51,11 +51,11 @@ export function SiteHeader() {
             {t.cta.signIn}
           </Link>
           <Link
-            href="/preuzmi"
+            href="/registracija"
             className="inline-flex items-center gap-2 rounded-xl bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground shadow-[0_8px_20px_-8px_rgba(37,99,235,0.8)] transition-transform hover:-translate-y-0.5"
           >
-            <Download className="size-4" />
-            {t.cta.download}
+            {t.cta.getStarted}
+            <ArrowRight className="size-4" />
           </Link>
         </div>
 
@@ -101,12 +101,12 @@ export function SiteHeader() {
               {t.cta.signIn}
             </Link>
             <Link
-              href="/preuzmi"
+              href="/registracija"
               onClick={() => setOpen(false)}
               className="inline-flex items-center justify-center gap-2 rounded-xl bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground"
             >
-              <Download className="size-4" />
-              {t.cta.download}
+              {t.cta.getStarted}
+              <ArrowRight className="size-4" />
             </Link>
           </div>
         </nav>

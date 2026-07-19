@@ -1,9 +1,7 @@
 'use client'
 
-import { QrCode } from 'lucide-react'
-import { PhoneFrame } from '@/components/phone-frame'
-import { StoreButtons } from '@/components/store-buttons'
-import { ServicesScreen } from '@/components/app-screens'
+import Link from 'next/link'
+import { ArrowRight, Building2, Handshake, ShieldCheck } from 'lucide-react'
 import { useI18n } from '@/lib/i18n/context'
 
 export function DownloadCta() {
@@ -24,37 +22,42 @@ export function DownloadCta() {
         <div className="relative grid items-center gap-12 lg:grid-cols-2">
           <div className="flex flex-col items-start gap-7 text-primary-foreground">
             <h2 className="text-balance text-3xl font-bold leading-[1.08] tracking-tight sm:text-4xl lg:text-5xl">
-              {t.download.title}
+              {t.business.title}
             </h2>
             <p className="max-w-md text-pretty text-lg leading-relaxed text-primary-foreground/90">
-              {t.download.subtitle}
+              {t.business.description}
             </p>
 
-            <div className="flex flex-wrap items-center gap-5">
-              <div className="flex size-28 items-center justify-center rounded-2xl bg-card p-3">
-                <div className="grid size-full grid-cols-5 grid-rows-5 gap-0.5">
-                  {Array.from({ length: 25 }).map((_, i) => (
-                    <span
-                      key={i}
-                      className={`rounded-[2px] ${[0, 1, 4, 5, 6, 9, 12, 15, 18, 19, 20, 24].includes(i) ? 'bg-navy' : 'bg-transparent'}`}
-                    />
-                  ))}
-                </div>
-              </div>
-              <div className="flex flex-col gap-1 text-sm text-primary-foreground/90">
-                <span className="flex items-center gap-2 font-semibold">
-                  <QrCode className="size-4" /> {t.download.scan}
-                </span>
-              </div>
+            <div className="flex flex-wrap gap-3">
+              <Link
+                href="/registracija"
+                className="inline-flex items-center gap-2 rounded-2xl bg-card px-5 py-3 text-sm font-semibold text-navy transition-transform hover:-translate-y-0.5"
+              >
+                {t.cta.getStarted} <ArrowRight className="size-4" />
+              </Link>
+              <Link
+                href="/partneri/registracija"
+                className="inline-flex items-center gap-2 rounded-2xl border border-white/30 px-5 py-3 text-sm font-semibold text-primary-foreground transition-colors hover:bg-white/10"
+              >
+                {t.business.cta}
+              </Link>
             </div>
-
-            <StoreButtons className="[&_a:last-child]:border-white/20 [&_a:last-child]:bg-white [&_a:last-child]:text-navy" />
           </div>
 
-          <div className="relative mx-auto hidden justify-center lg:flex">
-            <PhoneFrame className="rotate-3">
-              <ServicesScreen />
-            </PhoneFrame>
+          <div className="grid gap-3 sm:grid-cols-3 lg:grid-cols-1">
+            {[
+              [Building2, t.business.features[0].title],
+              [Handshake, t.business.features[1].title],
+              [ShieldCheck, t.business.features[2].title],
+            ].map(([Icon, label]) => {
+              const CardIcon = Icon as typeof Building2
+              return (
+                <div key={String(label)} className="rounded-2xl border border-white/15 bg-white/10 p-4 backdrop-blur-sm">
+                  <CardIcon className="size-5 text-cyan-200" />
+                  <p className="mt-3 text-sm font-semibold text-primary-foreground">{String(label)}</p>
+                </div>
+              )
+            })}
           </div>
         </div>
       </div>

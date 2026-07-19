@@ -36,7 +36,7 @@ export function AiAssistant() {
             ))}
           </ul>
           <Link
-            href="/preuzmi"
+            href="/registracija"
             className="inline-flex items-center gap-2 rounded-2xl bg-primary px-6 py-3.5 text-sm font-semibold text-primary-foreground shadow-float transition-transform hover:-translate-y-0.5"
           >
             {t.cta.getStarted}

@@ -57,7 +57,7 @@ export function SiteFooter() {
         { label: t.footer.product.services, href: '/usluge' },
         { label: t.footer.product.jobs, href: '/poslovi' },
         { label: t.footer.product.business, href: '/za-kompanije' },
-        { label: t.footer.product.download, href: '/preuzmi' },
+        { label: t.cta.getStarted, href: '/registracija' },
       ],
     },
     {

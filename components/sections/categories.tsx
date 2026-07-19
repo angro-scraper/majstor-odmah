@@ -14,17 +14,17 @@ const ACCENT: Record<string, string> = {
 
 const CATEGORY_ROUTES: Record<string, string> = {
   poslovi: '/poslovi',
-  majstori: '/app/category/home-services',
-  kupovina: '/app/deals',
-  dostava: '/app/category/food',
-  putovanja: '/app/category/travel',
-  zdravlje: '/app/category/health',
-  edukacija: '/app/category/education',
-  nekretnine: '/app/category/real-estate',
-  finansije: '/app/wallet',
-  prevoz: '/app/category/auto',
-  dogadjaji: '/app/category/events',
-  ai: '/app/ai',
+  majstori: '/usluge?tema=majstori',
+  kupovina: '/usluge?tema=kupovina',
+  dostava: '/usluge?tema=dostava',
+  putovanja: '/usluge?tema=putovanja',
+  zdravlje: '/usluge?tema=zdravlje',
+  edukacija: '/usluge?tema=edukacija',
+  nekretnine: '/usluge?tema=nekretnine',
+  finansije: '/usluge?tema=finansije',
+  prevoz: '/usluge?tema=prevoz',
+  dogadjaji: '/usluge?tema=dogadjaji',
+  ai: '/usluge?tema=ai',
 }
 
 export function Categories() {
@@ -44,7 +44,7 @@ export function Categories() {
           return (
             <Link
               key={cat.key}
-              href={CATEGORY_ROUTES[cat.key] ?? '/app'}
+              href={CATEGORY_ROUTES[cat.key] ?? '/usluge'}
               className="group flex flex-col items-start gap-3.5 rounded-3xl border border-border bg-card p-6 text-left transition-all duration-300 hover:-translate-y-1 hover:border-primary/40 hover:shadow-card"
             >
               <span
