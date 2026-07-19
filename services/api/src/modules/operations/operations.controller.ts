@@ -20,4 +20,12 @@ export class OperationsController {
   @Get("cities/readiness")
   @UseGuards(AdminGuard)
   async cityReadiness() { return ok(await this.operations.cityReadiness()); }
+
+  @Get("launch/plan")
+  @UseGuards(AdminGuard)
+  async launchPlan() { return ok(this.operations.launchPlan()); }
+
+  @Get("launch/readiness")
+  @UseGuards(AdminGuard)
+  async launchReadiness() { return ok(await this.operations.launchReadiness()); }
 }

@@ -1,6 +1,13 @@
 import { ForbiddenException, Injectable } from "@nestjs/common";
 import { PrismaService } from "@balkanworks/database";
 
+const DEFAULT_LAUNCH_TARGETS = {
+  activeBusinesses: 500,
+  registeredUsers: 50_000,
+  activeOffers: 1_000,
+  verifiedBusinessRate: 60,
+} as const;
+
 @Injectable()
 export class OperationsService {
   constructor(private readonly prisma: PrismaService) {}
@@ -74,5 +81,100 @@ export class OperationsService {
       launchReady: city.businesses >= 100 && city.verified >= 60,
       nextAction: city.businesses < 100 ? "Dovesti još kvalitetnih firmi." : city.verified < 60 ? "Povećati verifikaciju i kvalitet profila." : "Spreman za kontrolisanu lokalnu kampanju.",
     })).sort((a, b) => b.businesses - a.businesses);
+  }
+
+  /**
+   * A launch scorecard for the selected pilot city. This deliberately uses
+   * observed database values and fixed, reviewable gates rather than turning a
+   * marketing target into a claim that the city is live.
+   */
+  async launchReadiness() {
+    const pilotCity = process.env.LAUNCH_PILOT_CITY?.trim() || "Beograd";
+    const targets = this.launchTargets();
+    const city = await this.prisma.city.findFirst({
+      where: { name: { equals: pilotCity, mode: "insensitive" }, deletedAt: null },
+      select: { id: true, name: true, country: { select: { code: true, name: true } } },
+    });
+
+    if (!city) {
+      return {
+        pilotCity: { name: pilotCity, configured: false },
+        targets,
+        status: "BLOCKED",
+        gates: [],
+        nextActions: ["Dodaj pilot grad u lokacijski katalog pre pokretanja lokalne kampanje."],
+        generatedAt: new Date(),
+      };
+    }
+
+    const now = new Date();
+    const [activeBusinesses, verifiedBusinesses, registeredUsers, activeOffers] = await Promise.all([
+      this.prisma.business.count({
+        where: { deletedAt: null, status: "VERIFIED", locations: { some: { cityId: city.id, deletedAt: null } } },
+      }),
+      this.prisma.business.count({
+        where: { deletedAt: null, status: "VERIFIED", verificationStatus: "VERIFIED", locations: { some: { cityId: city.id, deletedAt: null } } },
+      }),
+      this.prisma.user.count({ where: { deletedAt: null, locations: { some: { cityId: city.id } } } }),
+      this.prisma.offer.count({
+        where: {
+          deletedAt: null,
+          status: "ACTIVE",
+          OR: [{ expiresAt: null }, { expiresAt: { gt: now } }],
+          business: { deletedAt: null, locations: { some: { cityId: city.id, deletedAt: null } } },
+        },
+      }),
+    ]);
+    const verifiedBusinessRate = activeBusinesses === 0 ? 0 : Math.round((verifiedBusinesses / activeBusinesses) * 100);
+    const gates = [
+      this.launchGate("active_businesses", "Aktivne firme", activeBusinesses, targets.activeBusinesses, "Prioritetno aktivirati hranu, lokalne usluge i retail profile."),
+      this.launchGate("registered_users", "Registrovani korisnici", registeredUsers, targets.registeredUsers, "Povećati lokalne referral, partner i community kanale tek uz aktuelnu ponudu."),
+      this.launchGate("active_offers", "Aktuelne ponude", activeOffers, targets.activeOffers, "Sa poslovnim timom popuniti ponude koje imaju jasan rok i lokalnu dostupnost."),
+      this.launchGate("verified_business_rate", "Stopa verifikovanih firmi", verifiedBusinessRate, targets.verifiedBusinessRate, "Završiti proveru i kvalitet profila pre većeg plaćenog ili javnog dosega."),
+    ];
+    const blocked = gates.filter((gate) => !gate.met);
+
+    return {
+      pilotCity: { id: city.id, name: city.name, country: city.country },
+      targets,
+      status: blocked.length ? "NOT_READY" : "READY_FOR_PUBLIC_LAUNCH",
+      gates,
+      nextActions: blocked.length ? blocked.map((gate) => gate.nextAction) : ["Pokreni vremenski ograničen javni launch uz dnevno praćenje kvaliteta, podrške i incidenta."],
+      generatedAt: new Date(),
+    };
+  }
+
+  launchPlan() {
+    const pilotCity = process.env.LAUNCH_PILOT_CITY?.trim() || "Beograd";
+    return {
+      pilotCity,
+      targets: this.launchTargets(),
+      businessPackages: [
+        { key: "FREE_STARTER", name: "Free Starter", includes: ["javni profil", "osnovne ponude", "digitalni flajer"], conversionGoal: "brza aktivacija kvalitetne lokalne ponude" },
+        { key: "BUSINESS", name: "Business", includes: ["analitika", "promocije", "kampanje"], conversionGoal: "merljiv rast i redovna aktivnost" },
+        { key: "PREMIUM_PARTNER", name: "Premium Partner", includes: ["istaknuta vidljivost", "AI alati kada su aktivirani", "Opsnestone integracija kada je ugovorena"], conversionGoal: "partnerski rezultat uz odobrene integracije" },
+      ],
+      acquisitionPriorities: ["pekare, restorani i marketi", "servisi, saloni i majstori", "lokalne maloprodajne firme"],
+      growthLoops: ["aktuelne ponude → korisnička akcija → rezultat za firmu", "Save Food → ušteda → preporuka → nova lokalna ponuda", "aktivnost → Balkan Rewards → ponovni povratak"],
+      safeguards: ["Ne objavljivati marketinške tvrdnje pre potvrđene lokalne dostupnosti.", "Status launch-a određuje scorecard, ne broj instaliranih funkcija.", "Ne prikazivati pipeline ili potencijalne ugovore kao prihod ili aktivna partnerstva."],
+    };
+  }
+
+  private launchTargets() {
+    return {
+      activeBusinesses: this.positiveInteger(process.env.LAUNCH_TARGET_ACTIVE_BUSINESSES, DEFAULT_LAUNCH_TARGETS.activeBusinesses),
+      registeredUsers: this.positiveInteger(process.env.LAUNCH_TARGET_REGISTERED_USERS, DEFAULT_LAUNCH_TARGETS.registeredUsers),
+      activeOffers: this.positiveInteger(process.env.LAUNCH_TARGET_ACTIVE_OFFERS, DEFAULT_LAUNCH_TARGETS.activeOffers),
+      verifiedBusinessRate: this.positiveInteger(process.env.LAUNCH_TARGET_VERIFIED_BUSINESS_RATE, DEFAULT_LAUNCH_TARGETS.verifiedBusinessRate),
+    };
+  }
+
+  private launchGate(key: string, label: string, current: number, target: number, nextAction: string) {
+    return { key, label, current, target, unit: key === "verified_business_rate" ? "percent" : "count", met: current >= target, nextAction };
+  }
+
+  private positiveInteger(value: string | undefined, fallback: number) {
+    const parsed = Number(value);
+    return Number.isInteger(parsed) && parsed > 0 ? parsed : fallback;
   }
 }

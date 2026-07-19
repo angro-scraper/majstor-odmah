@@ -75,6 +75,8 @@ Admin-only operational views:
 
 - `GET /operations/daily-brief` — daily platform activity, moderation queues and priorities.
 - `GET /operations/cities/readiness` — supply/verification density and city launch readiness.
+- `GET /operations/launch/plan` — approved pilot configuration, launch packages, growth loops and safeguards.
+- `GET /operations/launch/readiness` — observed pilot-city go/no-go scorecard; it never treats an unmet target as a live launch.
 - `GET /operations/businesses/:id/onboarding` — owner-only onboarding steps, completion and next action.
 
 ## Partner API ecosystem
