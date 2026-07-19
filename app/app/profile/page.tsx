@@ -11,7 +11,7 @@ export default function ProfilePage() {
           <h1 className="text-3xl font-bold">Profil</h1>
           <p className="text-muted-foreground mt-1">Upravljaj svojim nalogom</p>
         </div>
-        <Link href="/app/rewards" className="p-3 rounded-full bg-secondary border border-border hover:border-primary transition" aria-label="Balkan Rewards">
+        <Link href="/app/settings" className="p-3 rounded-full bg-secondary border border-border hover:border-primary transition" aria-label="Podešavanja profila">
           <Settings className="w-5 h-5" />
         </Link>
       </div>
@@ -74,10 +74,10 @@ export default function ProfilePage() {
       </div>
 
       {/* Logout */}
-      <button className="w-full flex items-center justify-center gap-2 p-3 rounded-xl border border-destructive/50 text-destructive hover:bg-destructive/10 transition">
+      <Link href="/" className="w-full flex items-center justify-center gap-2 p-3 rounded-xl border border-destructive/50 text-destructive hover:bg-destructive/10 transition">
         <LogOut className="w-5 h-5" />
         Odjavi se
-      </button>
+      </Link>
     </div>
   )
 }

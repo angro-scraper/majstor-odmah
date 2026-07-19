@@ -3,7 +3,6 @@
 import Link from 'next/link'
 import { Shield, Users, AlertCircle, CheckCircle, Settings, LogOut, Menu } from 'lucide-react'
 import { useState } from 'react'
-import { ThemeToggle } from '@/components/theme-toggle'
 
 export default function AdminLayout({
   children,
@@ -48,10 +47,10 @@ export default function AdminLayout({
         </nav>
 
         <div className="absolute bottom-4 left-4 right-4 space-y-2">
-          <button className="w-full flex items-center justify-center gap-2 px-4 py-2 rounded-lg border border-destructive/50 text-destructive text-sm font-medium hover:bg-destructive/10 transition">
+          <Link href="/" className="w-full flex items-center justify-center gap-2 px-4 py-2 rounded-lg border border-destructive/50 text-destructive text-sm font-medium hover:bg-destructive/10 transition">
             <LogOut className="w-4 h-4" />
             Odjavi se
-          </button>
+          </Link>
         </div>
       </aside>
 
@@ -71,9 +70,7 @@ export default function AdminLayout({
             Administracija
           </div>
 
-          <div className="flex items-center gap-4">
-            <ThemeToggle />
-          </div>
+          <Link href="/app" className="text-sm font-semibold text-primary hover:underline">Otvori aplikaciju</Link>
         </div>
 
         {/* Page Content */}

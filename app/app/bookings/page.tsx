@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { Calendar, Clock, MessageSquare, RotateCcw } from 'lucide-react'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 type Booking = {
   id: number
@@ -24,6 +24,10 @@ const initialBookings: Booking[] = [
 export default function BookingsPage() {
   const [bookings, setBookings] = useState(initialBookings)
   const [notice, setNotice] = useState('')
+
+  useEffect(() => {
+    if (new URLSearchParams(window.location.search).get('package')) setNotice('Paket je rezervisan. Potvrdu i kod za preuzimanje dobijaš u porukama.')
+  }, [])
 
   const updateBooking = (id: number, nextStatus: Booking['status'], message: string) => {
     setBookings((current) => current.map((booking) => booking.id === id ? { ...booking, status: nextStatus } : booking))

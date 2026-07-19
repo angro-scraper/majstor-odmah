@@ -26,7 +26,7 @@ export default function SaveFoodPage() {
             <div className="flex items-start justify-between gap-3"><div><p className="text-xs font-medium text-muted-foreground">{item.business}</p><h2 className="mt-1 font-semibold text-navy">{item.title}</h2></div><span className="rounded-full bg-turquoise/10 px-2.5 py-1 text-xs font-semibold text-turquoise">{item.remaining}</span></div>
             <div className="mt-3 flex items-end gap-2"><span className="text-xl font-bold text-primary">{item.price}</span><span className="pb-0.5 text-sm text-muted-foreground line-through">{item.original}</span></div>
             <div className="mt-4 space-y-1.5 text-xs text-muted-foreground"><p className="inline-flex items-center gap-1"><MapPin className="size-3.5" />{item.distance}</p><p className="flex items-center gap-1"><Clock3 className="size-3.5" />{item.pickup}</p></div>
-            <Link href={`/app/business/${item.id}`} className="mt-4 inline-flex w-full items-center justify-center gap-1 rounded-xl bg-primary px-3 py-2.5 text-sm font-semibold text-primary-foreground">Rezerviši paket <ArrowRight className="size-4" /></Link>
+            <Link href={`/app/bookings?package=${item.id}`} className="mt-4 inline-flex w-full items-center justify-center gap-1 rounded-xl bg-primary px-3 py-2.5 text-sm font-semibold text-primary-foreground">Rezerviši paket <ArrowRight className="size-4" /></Link>
           </article>
         ))}
       </section>
