@@ -278,6 +278,11 @@ enum ReportStatus {
   DISMISSED
 }
 
+enum AdminScopeLevel {
+  COUNTRY
+  CITY
+}
+
 // Finance is an accounting and payment-provider integration layer. It does not
 // store card details or hold customer funds.
 enum WalletStatus {
@@ -373,6 +378,7 @@ model User {
   wallet        Wallet?
   customerPayments Payment[] @relation("customer_payments")
   invoices      Invoice[] @relation("invoice_customer")
+  adminScopes   AdminScope[] @relation("admin_scope_user")
   createdAt     DateTime       @default(now()) @map("created_at")
   updatedAt     DateTime       @updatedAt @map("updated_at")
   deletedAt     DateTime?      @map("deleted_at")
@@ -418,15 +424,20 @@ model Profile {
 }
 
 model Country {
-  id        String    @id @default(uuid()) @db.Uuid
-  code      String    @unique
-  name      String
-  currency  String?
-  cities    City[]
-  profiles  Profile[]
-  createdAt DateTime  @default(now()) @map("created_at")
-  updatedAt DateTime  @updatedAt @map("updated_at")
-  deletedAt DateTime? @map("deleted_at")
+  id              String       @id @default(uuid()) @db.Uuid
+  code            String       @unique @db.VarChar(2)
+  name            String
+  currency        String?      @db.VarChar(3)
+  defaultLanguage String       @default("sr") @map("default_language") @db.VarChar(10)
+  timezone        String       @default("Europe/Belgrade") @db.VarChar(64)
+  isActive        Boolean      @default(true) @map("is_active")
+  cities          City[]
+  profiles        Profile[]
+  translations    Translation[]
+  adminScopes     AdminScope[]
+  createdAt       DateTime     @default(now()) @map("created_at")
+  updatedAt       DateTime     @updatedAt @map("updated_at")
+  deletedAt       DateTime?    @map("deleted_at")
 
   @@map("countries")
 }
@@ -441,6 +452,7 @@ model City {
   profiles  Profile[]
   locations BusinessLocation[]
   userLocations UserLocation[]
+  adminScopes   AdminScope[]
   createdAt DateTime           @default(now()) @map("created_at")
   updatedAt DateTime           @updatedAt @map("updated_at")
   deletedAt DateTime?          @map("deleted_at")
@@ -1030,6 +1042,52 @@ model AuditLog {
   deletedAt   DateTime? @map("deleted_at")
 
   @@map("audit_logs")
+}
+
+model Currency {
+  id           String   @id @default(uuid()) @db.Uuid
+  code         String   @unique @db.VarChar(3)
+  symbol       String   @db.VarChar(8)
+  exchangeRate Decimal  @default(1) @map("exchange_rate") @db.Decimal(18, 6)
+  isActive     Boolean  @default(true) @map("is_active")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  @@map("currencies")
+}
+
+model Translation {
+  id        String   @id @default(uuid()) @db.Uuid
+  key       String   @db.VarChar(160)
+  language  String   @db.VarChar(10)
+  value     String
+  countryId String?  @map("country_id") @db.Uuid
+  country   Country? @relation(fields: [countryId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@unique([key, language, countryId])
+  @@index([language, countryId])
+  @@map("translations")
+}
+
+model AdminScope {
+  id          String          @id @default(uuid()) @db.Uuid
+  userId      String          @map("user_id") @db.Uuid
+  level       AdminScopeLevel
+  countryId   String?         @map("country_id") @db.Uuid
+  cityId      String?         @map("city_id") @db.Uuid
+  assignedById String?        @map("assigned_by_id") @db.Uuid
+  user        User            @relation("admin_scope_user", fields: [userId], references: [id], onDelete: Cascade)
+  country     Country?        @relation(fields: [countryId], references: [id], onDelete: Cascade)
+  city        City?           @relation(fields: [cityId], references: [id], onDelete: Cascade)
+  createdAt   DateTime        @default(now()) @map("created_at")
+  updatedAt   DateTime        @updatedAt @map("updated_at")
+
+  @@index([userId, level])
+  @@index([countryId, level])
+  @@index([cityId, level])
+  @@map("admin_scopes")
 }
 
 // Stores only the recommendation decision, never the user's prompt or private profile data.

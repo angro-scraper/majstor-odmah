@@ -29,7 +29,28 @@ async function main() {
   await Promise.all(roles.map((name) => prisma.role.upsert({ where: { name }, create: { name }, update: {} })));
   await Promise.all(permissions.map((name) => prisma.permission.upsert({ where: { name }, create: { name }, update: {} })));
 
-  const serbia = await prisma.country.upsert({ where: { code: "RS" }, create: { code: "RS", name: "Serbia", currency: "RSD" }, update: { name: "Serbia", currency: "RSD" } });
+  const regionalCountries = [
+    { code: "RS", name: "Serbia", currency: "RSD", defaultLanguage: "sr", timezone: "Europe/Belgrade", cities: [["Belgrade", 44.7866, 20.4489], ["Novi Sad", 45.2671, 19.8335]] },
+    { code: "HR", name: "Croatia", currency: "EUR", defaultLanguage: "hr", timezone: "Europe/Zagreb", cities: [["Zagreb", 45.815, 15.9819]] },
+    { code: "BA", name: "Bosnia and Herzegovina", currency: "BAM", defaultLanguage: "bs", timezone: "Europe/Sarajevo", cities: [["Sarajevo", 43.8563, 18.4131]] },
+    { code: "ME", name: "Montenegro", currency: "EUR", defaultLanguage: "cnr", timezone: "Europe/Podgorica", cities: [["Podgorica", 42.4304, 19.2594]] },
+    { code: "SI", name: "Slovenia", currency: "EUR", defaultLanguage: "sl", timezone: "Europe/Ljubljana", cities: [["Ljubljana", 46.0569, 14.5058]] },
+    { code: "MK", name: "North Macedonia", currency: "MKD", defaultLanguage: "mk", timezone: "Europe/Skopje", cities: [["Skopje", 41.9981, 21.4254]] },
+    { code: "AL", name: "Albania", currency: "ALL", defaultLanguage: "sq", timezone: "Europe/Tirane", cities: [["Tirana", 41.3275, 19.8187]] },
+  ];
+  const countries = await Promise.all(regionalCountries.map(({ cities, ...country }) => prisma.country.upsert({
+    where: { code: country.code },
+    create: country,
+    update: country,
+  })));
+  await Promise.all(regionalCountries.flatMap((country) => country.cities.map(([name, latitude, longitude]) => {
+    const parent = countries.find((item) => item.code === country.code);
+    return prisma.city.upsert({ where: { countryId_name: { countryId: parent.id, name } }, create: { countryId: parent.id, name, latitude, longitude }, update: { latitude, longitude } });
+  })));
+  await Promise.all([
+    ["RSD", "дин."], ["EUR", "€"], ["BAM", "KM"], ["MKD", "ден"], ["ALL", "L"],
+  ].map(([code, symbol]) => prisma.currency.upsert({ where: { code }, create: { code, symbol }, update: { symbol, isActive: true } })));
+  const serbia = countries.find((country) => country.code === "RS");
   const belgrade = await prisma.city.upsert({ where: { countryId_name: { countryId: serbia.id, name: "Belgrade" } }, create: { countryId: serbia.id, name: "Belgrade", latitude: 44.7866, longitude: 20.4489 }, update: {} });
   const noviSad = await prisma.city.upsert({ where: { countryId_name: { countryId: serbia.id, name: "Novi Sad" } }, create: { countryId: serbia.id, name: "Novi Sad", latitude: 45.2671, longitude: 19.8335 }, update: {} });
 

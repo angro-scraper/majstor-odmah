@@ -11,6 +11,8 @@ const DOWNLOAD_ON: Record<Locale, string> = {
   cnr: 'Preuzmi na',
   mk: 'Преземи на',
   sl: 'Prenesi na',
+  sq: 'Shkarko në',
+  en: 'Download on',
   bg: 'Изтегли от',
 }
 

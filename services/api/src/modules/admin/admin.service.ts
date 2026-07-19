@@ -1,6 +1,7 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
+import { ForbiddenException, Injectable, NotFoundException } from "@nestjs/common";
 import { PrismaService } from "@balkanworks/database";
-import { IsEnum } from "class-validator";
+import { AdminScopeLevel } from "@prisma/client";
+import { IsEnum, IsOptional, IsUUID } from "class-validator";
 
 export class ModerationStatusDto {
   @IsEnum(["VERIFIED", "BLOCKED"] as const) status!: "VERIFIED" | "BLOCKED";
@@ -8,6 +9,13 @@ export class ModerationStatusDto {
 
 export class ReviewModerationDto {
   @IsEnum(["APPROVED", "REJECTED"] as const) status!: "APPROVED" | "REJECTED";
+}
+
+export class AssignAdminScopeDto {
+  @IsUUID() userId!: string;
+  @IsEnum(AdminScopeLevel) level!: AdminScopeLevel;
+  @IsOptional() @IsUUID() countryId?: string;
+  @IsOptional() @IsUUID() cityId?: string;
 }
 
 @Injectable()
@@ -22,6 +30,85 @@ export class AdminService {
       this.prisma.review.count({ where: { deletedAt: null, status: "PENDING" } }),
     ]);
     return { users, businesses, pendingBusinesses, pendingReviews };
+  }
+
+  async regionalOverview() {
+    const countries = await this.prisma.country.findMany({
+      where: { deletedAt: null },
+      select: {
+        id: true,
+        code: true,
+        name: true,
+        currency: true,
+        isActive: true,
+        _count: { select: { cities: { where: { deletedAt: null } } } },
+      },
+      orderBy: { name: "asc" },
+    });
+
+    const businessLocations = await this.prisma.businessLocation.findMany({
+      where: { deletedAt: null, city: { country: { deletedAt: null } } },
+      select: { city: { select: { countryId: true } } },
+    });
+    const businessCountByCountry = businessLocations.reduce<Record<string, number>>((counts, location) => {
+      counts[location.city.countryId] = (counts[location.city.countryId] ?? 0) + 1;
+      return counts;
+    }, {});
+
+    return countries.map((country) => ({
+      ...country,
+      cities: country._count.cities,
+      businesses: businessCountByCountry[country.id] ?? 0,
+      _count: undefined,
+    }));
+  }
+
+  async listAdminScopes(userId?: string) {
+    return this.prisma.adminScope.findMany({
+      where: userId ? { userId } : {},
+      include: {
+        user: { select: { id: true, email: true, profile: { select: { firstName: true, lastName: true } } } },
+        country: { select: { id: true, code: true, name: true } },
+        city: { select: { id: true, name: true, country: { select: { code: true, name: true } } } },
+      },
+      orderBy: { createdAt: "desc" },
+    });
+  }
+
+  async assignAdminScope(input: AssignAdminScopeDto, actorUserId: string) {
+    await this.assertSuperAdmin(actorUserId);
+    if (input.level === AdminScopeLevel.COUNTRY && !input.countryId) {
+      throw new NotFoundException("COUNTRY_SCOPE_REQUIRES_COUNTRY");
+    }
+    if (input.level === AdminScopeLevel.CITY && !input.cityId) {
+      throw new NotFoundException("CITY_SCOPE_REQUIRES_CITY");
+    }
+    if (input.countryId) {
+      const country = await this.prisma.country.findFirst({ where: { id: input.countryId, deletedAt: null, isActive: true } });
+      if (!country) throw new NotFoundException("COUNTRY_NOT_FOUND");
+    }
+    if (input.cityId) {
+      const city = await this.prisma.city.findFirst({ where: { id: input.cityId, deletedAt: null } });
+      if (!city) throw new NotFoundException("CITY_NOT_FOUND");
+      if (input.countryId && city.countryId !== input.countryId) throw new NotFoundException("CITY_COUNTRY_MISMATCH");
+    }
+
+    const scope = await this.prisma.adminScope.create({
+      data: {
+        userId: input.userId,
+        level: input.level,
+        countryId: input.countryId,
+        cityId: input.cityId,
+        assignedById: actorUserId,
+      },
+    });
+    await this.prisma.auditLog.create({ data: { actorUserId, action: "ADMIN_SCOPE_ASSIGNED", resourceType: "admin_scope", resourceId: scope.id } });
+    return scope;
+  }
+
+  private async assertSuperAdmin(userId: string) {
+    const user = await this.prisma.user.findUnique({ where: { id: userId }, include: { roles: { include: { role: true } } } });
+    if (!user?.roles.some(({ role }) => role.name === "SUPER_ADMIN")) throw new ForbiddenException("SUPER_ADMIN_PERMISSION_REQUIRED");
   }
 
   async listUsers(limit: number) {

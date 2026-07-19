@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { Menu, X, Download } from 'lucide-react'
 import { Logo } from '@/components/logo'
 import { LanguageSwitcher } from '@/components/language-switcher'
+import { CountrySwitcher } from '@/components/country-switcher'
 import { useI18n } from '@/lib/i18n/context'
 import { cn } from '@/lib/utils'
 
@@ -41,6 +42,7 @@ export function SiteHeader() {
         </nav>
 
         <div className="hidden items-center gap-2 lg:flex">
+          <CountrySwitcher />
           <LanguageSwitcher />
           <Link
             href="/preuzmi"
@@ -58,6 +60,7 @@ export function SiteHeader() {
         </div>
 
         <div className="flex items-center gap-2 lg:hidden">
+          <CountrySwitcher />
           <LanguageSwitcher />
           <button
             type="button"

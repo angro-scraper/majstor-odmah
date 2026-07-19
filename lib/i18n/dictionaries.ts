@@ -1489,5 +1489,10 @@ export const dictionaries: Record<Locale, Dictionary> = {
   cnr,
   mk,
   sl,
+  // The regional catalog can select these locales now. Full editorial strings
+  // intentionally fall back to the source dictionary until translated content
+  // is published through the Translation API.
+  sq: sr as unknown as Dictionary,
+  en: sr as unknown as Dictionary,
   bg,
 }

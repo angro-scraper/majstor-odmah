@@ -8,4 +8,9 @@ export class SearchController {
 
   @Get()
   async businesses(@Query() query: SearchBusinessesDto) { return ok(await this.search.businesses(query), "Search completed"); }
+
+  @Get("regional")
+  async regionalBusinesses(@Query() query: SearchBusinessesDto) {
+    return ok(await this.search.businesses(query), "Regional search completed");
+  }
 }

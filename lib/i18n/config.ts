@@ -1,4 +1,4 @@
-export const LOCALES = ['sr', 'hr', 'bs', 'cnr', 'mk', 'sl', 'bg'] as const
+export const LOCALES = ['sr', 'hr', 'bs', 'cnr', 'mk', 'sl', 'sq', 'en', 'bg'] as const
 
 export type Locale = (typeof LOCALES)[number]
 
@@ -11,6 +11,8 @@ export const LOCALE_META: Record<Locale, { label: string; native: string; short:
   cnr: { label: 'Crnogorski', native: 'Crnogorski', short: 'ME' },
   mk: { label: 'Makedonski', native: 'Македонски', short: 'MK' },
   sl: { label: 'Slovenački', native: 'Slovenščina', short: 'SI' },
+  sq: { label: 'Albanski', native: 'Shqip', short: 'AL' },
+  en: { label: 'Engleski', native: 'English', short: 'EN' },
   bg: { label: 'Bugarski', native: 'Български', short: 'BG' },
 }
 
