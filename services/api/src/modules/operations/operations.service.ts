@@ -160,6 +160,56 @@ export class OperationsService {
     };
   }
 
+  /**
+   * Directional company roadmap exposed to authorized operators. Each phase is
+   * intentionally labelled as a target, not product availability or traction.
+   * Feature flags and launch/security gates remain the authority for release.
+   */
+  globalRoadmap() {
+    return {
+      vision: "Digitalni operativni sistem Balkana za ljude, firme i lokalne zajednice.",
+      sharedPlatformRules: [
+        "Svaki modul koristi Balkan ID, Business sistem, dozvole, analitiku i feature flag lifecycle.",
+        "AI koristi samo dozvoljene podatke i ne izvršava finansijske ili trajne akcije bez potvrde.",
+        "Novi moduli ulaze kroz verzionisani API, bez direktnog pristupa privatnim podacima drugih modula.",
+      ],
+      phases: [
+        {
+          key: "FOUNDATION", horizon: "0–12 meseci", objective: "Dokazati jedan pouzdan lokalni ekosistem.",
+          modules: ["Balkan ID", "Business Profiles", "Deals", "Digital Flyers", "Save Food", "Rewards", "Notifications"],
+          directionalTargets: { users: 50_000, businesses: 1_000, offers: 100_000 },
+          releaseGate: "Pilot scorecard, bezbednost, podrška, kvalitet lokalne ponude i zadržavanje korisnika.",
+        },
+        {
+          key: "MARKET_EXPANSION", horizon: "12–24 meseca", objective: "Ponoviti dokazani city playbook kroz više gradova.",
+          modules: ["Marketplace", "Services", "Jobs", "Events", "Business subscriptions", "Business analytics"],
+          directionalTargets: { users: 500_000, businesses: 10_000 },
+          releaseGate: "Ponavljiv lokalni onboarding, merljiva business vrednost, moderation i podrška po gradu.",
+        },
+        {
+          key: "REGIONAL_PLATFORM", horizon: "2–3 godine", objective: "Uspostaviti lokalizovanu regionalnu mrežu.",
+          modules: ["više jezika", "country/city administracija", "regionalni partneri"],
+          directionalTargets: { users: 5_000_000, businesses: 100_000 },
+          releaseGate: "Lokalizacija, compliance, regionalne operacije i kvalitet mreže za svaku državu.",
+        },
+        {
+          key: "SUPER_APP", horizon: "3–5 godina", objective: "Povezati proverene daily-life, business i finance slojeve.",
+          modules: ["Opsnestone", "CRM", "Analytics", "Travel", "Events", "Health", "provider-backed payments"],
+          directionalTargets: { users: 10_000_000, businesses: 500_000 },
+          releaseGate: "Izmerena vrednost, regulativa, provider partneri, tenant izolacija i operativna spremnost.",
+        },
+        {
+          key: "DIGITAL_INFRASTRUCTURE", horizon: "5+ godina", objective: "Omogućiti partnerima da grade proverene usluge na platformi.",
+          modules: ["Partner API", "integracije", "anonimizovana tržišna inteligencija", "enterprise ugovori"],
+          directionalTargets: {},
+          releaseGate: "API sigurnost, ugovori, data governance, SLA i dokazani partner outcomes.",
+        },
+      ],
+      businessModel: ["pretplate firmi", "naknade za transakcije gde je dozvoljeno", "označene promocije", "premium AI alati", "enterprise ugovori"],
+      disclaimer: "Rokovi i brojčani ciljevi su planiranje, ne javna prognoza niti dokaz postojećeg korišćenja.",
+    };
+  }
+
   private launchTargets() {
     return {
       activeBusinesses: this.positiveInteger(process.env.LAUNCH_TARGET_ACTIVE_BUSINESSES, DEFAULT_LAUNCH_TARGETS.activeBusinesses),

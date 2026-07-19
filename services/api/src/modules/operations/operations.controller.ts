@@ -28,4 +28,8 @@ export class OperationsController {
   @Get("launch/readiness")
   @UseGuards(AdminGuard)
   async launchReadiness() { return ok(await this.operations.launchReadiness()); }
+
+  @Get("global-roadmap")
+  @UseGuards(AdminGuard)
+  async globalRoadmap() { return ok(this.operations.globalRoadmap()); }
 }

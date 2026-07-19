@@ -38,4 +38,12 @@ describe("OperationsService launch scorecard", () => {
     expect(plan.businessPackages).toHaveLength(3);
     expect(plan.safeguards).toContain("Ne prikazivati pipeline ili potencijalne ugovore kao prihod ili aktivna partnerstva.");
   });
+
+  it("keeps the company roadmap directional and gated instead of treating targets as releases", () => {
+    const roadmap = service.globalRoadmap();
+
+    expect(roadmap.phases).toHaveLength(5);
+    expect(roadmap.phases[0]).toMatchObject({ key: "FOUNDATION", directionalTargets: { users: 50_000, businesses: 1_000, offers: 100_000 } });
+    expect(roadmap.disclaimer).toContain("planiranje");
+  });
 });

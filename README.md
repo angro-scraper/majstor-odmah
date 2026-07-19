@@ -306,6 +306,8 @@ The platform-level onboarding, verification, quality, moderation, support, monit
 
 The configured pilot-city launch gates, acquisition workflow, business packages and expansion guardrails are in [launch-growth-sprint.md](docs/launch-growth-sprint.md). Investor-facing evidence rules and the launch data-room outline are in [investor-launch-readiness.md](docs/investor-launch-readiness.md).
 
+The cross-company phases, shared-platform rules and release gates are in [global-roadmap-sprint.md](docs/global-roadmap-sprint.md).
+
 ## Financial model
 
 The cost, revenue, unit-economics, scenario and financial-control framework is in [BALKAN_WORKS_FINANCIAL_MODEL.md](docs/BALKAN_WORKS_FINANCIAL_MODEL.md).
