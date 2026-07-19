@@ -33,6 +33,8 @@ export default function AdminLayout({
             { label: 'Verifikacija', href: '/admin/verification', icon: CheckCircle },
             { label: 'Korisnici', href: '/admin/users', icon: Users },
             { label: 'Firme', href: '/admin/businesses', icon: Shield },
+            { label: 'Partneri', href: '/admin/partneri', icon: Users },
+            { label: 'Reklame', href: '/admin/reklame', icon: AlertCircle },
             { label: 'Podešavanja', href: '/admin/settings', icon: Settings },
           ].map((item) => (
             <Link

@@ -35,6 +35,7 @@ export default function BusinessLayout({
             { label: 'Ponude', href: '/business/offers', icon: Tags },
             { label: 'Poruke', href: '/business/messages', icon: MessageSquare },
             { label: 'AI savetnik', href: '/business/ai-coach', icon: BarChart3 },
+            { label: 'Rast i naplata', href: '/business/monetizacija', icon: Tags },
             { label: 'Podešavanja', href: '/business/settings', icon: Settings },
           ].map((item) => (
             <Link

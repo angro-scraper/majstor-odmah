@@ -84,7 +84,7 @@ export default function ZaKompanijePage() {
                   ))}
                 </ul>
                 <Link
-                  href="/kontakt"
+                  href={plan.name === 'Enterprise' ? '/partneri/registracija?plan=partner' : plan.name === 'Biznis' ? '/partneri/registracija?plan=biznis' : '/registracija'}
                   className={`mt-auto inline-flex items-center justify-center gap-2 rounded-2xl px-5 py-3 text-sm font-semibold transition-transform hover:-translate-y-0.5 ${
                     plan.highlight
                       ? 'bg-primary text-primary-foreground shadow-float'
@@ -97,6 +97,7 @@ export default function ZaKompanijePage() {
               </div>
             ))}
           </div>
+          <div className="mx-auto mt-8 max-w-3xl rounded-3xl border border-primary/15 bg-primary/5 p-6 text-center"><h3 className="text-xl font-bold text-navy">Partner program za lance, gradove i tehnološke kompanije</h3><p className="mt-2 text-muted-foreground">Integracije, lokalne kampanje, sponzorisane pozicije i merljivi rezultati na jednom mestu.</p><Link href="/partneri/registracija" className="mt-4 inline-flex items-center gap-2 rounded-xl bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground">Postani partner <ArrowRight className="size-4" /></Link></div>
         </div>
       </section>
     </PageShell>
