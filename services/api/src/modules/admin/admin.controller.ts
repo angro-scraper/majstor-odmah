@@ -9,6 +9,8 @@ export class AdminController {
   constructor(private readonly admin: AdminService) {}
 
   @Get("overview") async overview() { return ok(await this.admin.overview()); }
+  @Get("security/overview") async securityOverview() { return ok(await this.admin.securityOverview()); }
+  @Get("security/events") async securityEvents(@Query("limit") limit?: string) { return ok(await this.admin.securityEvents(Number(limit) || 50)); }
   @Get("regional/overview") async regionalOverview() { return ok(await this.admin.regionalOverview()); }
   @Get("regional/scopes") async regionalScopes(@Query("userId") userId?: string) { return ok(await this.admin.listAdminScopes(userId)); }
   @Post("regional/scopes") async assignRegionalScope(@Body() input: AssignAdminScopeDto, @CurrentUser() user: AuthenticatedUser) { return ok(await this.admin.assignAdminScope(input, user.id)); }

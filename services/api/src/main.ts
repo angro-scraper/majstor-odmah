@@ -3,15 +3,19 @@ import { NestFactory } from "@nestjs/core";
 import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
 import { AppModule } from "./app.module";
 import { HttpExceptionFilter } from "./common/http-exception.filter";
+import { createOperationalMiddleware } from "./common/operations.middleware";
 
 async function bootstrap(): Promise<void> {
   const app = await NestFactory.create(AppModule);
+  app.enableShutdownHooks();
+  app.getHttpAdapter().getInstance().set?.("trust proxy", 1);
   app.setGlobalPrefix("api/v1");
   const allowedOrigins = (process.env.WEB_ORIGIN ?? "http://localhost:3000,https://balkan.works,https://www.balkan.works")
     .split(",")
     .map((origin) => origin.trim())
     .filter(Boolean);
   app.enableCors({ origin: allowedOrigins, methods: ["GET", "POST", "PATCH", "PUT", "DELETE", "OPTIONS"], allowedHeaders: ["Authorization", "Content-Type", "X-Partner-Api-Key", "X-Payment-Webhook-Secret"] });
+  app.use(createOperationalMiddleware());
   app.useGlobalPipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true, transform: true }));
   app.useGlobalFilters(new HttpExceptionFilter());
   const swaggerConfig = new DocumentBuilder()

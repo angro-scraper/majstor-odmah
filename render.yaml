@@ -23,7 +23,7 @@ services:
     # Free-tier services do not support Render pre-deploy commands.  Run the
     # idempotent Prisma migration immediately before the API starts instead.
     startCommand: pnpm --filter @balkanworks/database prisma:deploy && pnpm --filter @balkanworks/api start
-    healthCheckPath: /api/v1/health
+    healthCheckPath: /api/v1/health/ready
     autoDeploy: true
     envVars:
       - key: NODE_ENV

@@ -20,13 +20,16 @@ export class AuthService {
     const customerRole = await this.prisma.role.upsert({ where: { name: "CUSTOMER" }, create: { name: "CUSTOMER" }, update: {} });
     const user = await this.prisma.user.create({ data: { email, phone: input.phone, userType: UserType.CONSUMER, passwordHash: await bcrypt.hash(input.password, 12), roles: { create: { roleId: customerRole.id } }, profile: { create: { firstName: input.firstName.trim(), lastName: input.lastName.trim() } } } });
     await this.referrals.completeRegistration(input.referralCode, user.id, user.email);
-    return this.createSession(user.id, user.email);
+    return this.createSession(user.id, user.email, "AUTH_REGISTERED");
   }
 
   async login(input: LoginDto) {
     const user = await this.prisma.user.findUnique({ where: { email: input.email.trim().toLowerCase() } });
-    if (!user || user.status === "BLOCKED" || !(await bcrypt.compare(input.password, user.passwordHash))) throw new UnauthorizedException("INVALID_CREDENTIALS");
-    return this.createSession(user.id, user.email);
+    if (!user || user.status === "BLOCKED" || !(await bcrypt.compare(input.password, user.passwordHash))) {
+      await this.prisma.auditLog.create({ data: { action: "AUTH_LOGIN_FAILED", resourceType: "auth" } });
+      throw new UnauthorizedException("INVALID_CREDENTIALS");
+    }
+    return this.createSession(user.id, user.email, "AUTH_LOGIN_SUCCEEDED");
   }
 
   async refresh(refreshToken: string) {
@@ -53,7 +56,7 @@ export class AuthService {
     });
     if (!session || session.user.status === "BLOCKED" || session.user.deletedAt) throw new UnauthorizedException("INVALID_REFRESH_TOKEN");
     await this.prisma.authSession.update({ where: { id: session.id }, data: { revokedAt: new Date() } });
-    return this.createSession(session.userId, session.user.email);
+    return this.createSession(session.userId, session.user.email, "AUTH_TOKEN_REFRESHED");
   }
 
   async logout(refreshToken: string) {
@@ -65,7 +68,7 @@ export class AuthService {
     return ok({ logged_out: true }, "Session revoked");
   }
 
-  private async createSession(userId: string, email: string) {
+  private async createSession(userId: string, email: string, auditAction: "AUTH_REGISTERED" | "AUTH_LOGIN_SUCCEEDED" | "AUTH_TOKEN_REFRESHED") {
     const secret = process.env.JWT_ACCESS_SECRET ?? process.env.JWT_SECRET;
     if (!secret) throw new UnauthorizedException("JWT_NOT_CONFIGURED");
     const accessToken = await this.jwt.signAsync({ sub: userId, email }, { secret, expiresIn: "15m" });
@@ -73,6 +76,7 @@ export class AuthService {
     await this.prisma.$transaction([
       this.prisma.user.update({ where: { id: userId }, data: { lastLoginAt: new Date() } }),
       this.prisma.authSession.create({ data: { userId, refreshToken: this.hashRefreshToken(refreshToken), expiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000) } }),
+      this.prisma.auditLog.create({ data: { actorUserId: userId, action: auditAction, resourceType: "auth_session" } }),
     ]);
     return ok({ access_token: accessToken, refresh_token: refreshToken, user_id: userId });
   }

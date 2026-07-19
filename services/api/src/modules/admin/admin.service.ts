@@ -32,6 +32,35 @@ export class AdminService {
     return { users, businesses, pendingBusinesses, pendingReviews };
   }
 
+  /** A non-sensitive operational view for the protected Admin Security Center. */
+  async securityOverview() {
+    const since = new Date(Date.now() - 24 * 60 * 60 * 1000);
+    const [failedLogins, successfulLogins, financialRiskFlags, blockedUsers, activeSessions, openDataRequests] = await Promise.all([
+      this.prisma.auditLog.count({ where: { action: "AUTH_LOGIN_FAILED", createdAt: { gte: since } } }),
+      this.prisma.auditLog.count({ where: { action: "AUTH_LOGIN_SUCCEEDED", createdAt: { gte: since } } }),
+      this.prisma.auditLog.count({ where: { action: "FINANCIAL_RISK_FLAGGED", createdAt: { gte: since } } }),
+      this.prisma.user.count({ where: { status: "BLOCKED", deletedAt: null } }),
+      this.prisma.authSession.count({ where: { revokedAt: null, expiresAt: { gt: new Date() } } }),
+      this.prisma.dataSubjectRequest.count({ where: { status: { in: ["PENDING", "IN_REVIEW"] } } }),
+    ]);
+    return {
+      periodHours: 24,
+      authentication: { failedLogins, successfulLogins, activeSessions },
+      risk: { financialRiskFlags, blockedUsers },
+      compliance: { openDataRequests },
+      escalation: { runbook: "docs/global-operations-security.md#incident-response", severity: failedLogins > 50 || financialRiskFlags > 0 ? "REVIEW" : "NORMAL" },
+    };
+  }
+
+  async securityEvents(limit = 50) {
+    const actions = ["AUTH_LOGIN_FAILED", "AUTH_LOGIN_SUCCEEDED", "AUTH_TOKEN_REFRESHED", "FINANCIAL_RISK_FLAGGED", "DATA_EXPORT_GENERATED", "ADMIN_SCOPE_ASSIGNED"];
+    return this.prisma.auditLog.findMany({
+      where: { action: { in: actions } },
+      select: { id: true, action: true, resourceType: true, resourceId: true, createdAt: true, actor: { select: { id: true, email: true } } },
+      orderBy: { createdAt: "desc" }, take: Math.min(Math.max(limit, 1), 100),
+    });
+  }
+
   async regionalOverview() {
     const countries = await this.prisma.country.findMany({
       where: { deletedAt: null },

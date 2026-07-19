@@ -68,6 +68,14 @@ No secret belongs in source control. MVP flags keep Wallet, Marketplace and AI d
 
 In Render, create or sync the Blueprint from this repository, then set `NEXT_PUBLIC_API_URL` on `balkanworks-web` to the public URL of `balkanworks-api` plus `/api/v1`. Connect the custom domain to `balkanworks-web` after the first successful deployment. The legacy Render service is intentionally not deleted by this repository change; archive or remove it in Render only after confirming the new site and domain work correctly.
 
+## Operations and security
+
+The API has separate liveness (`/api/v1/health`) and database-readiness
+(`/api/v1/health/ready`) probes, safe rate limiting, request correlation IDs,
+structured request logs and admin-only security centre endpoints. The provider
+configuration, backup/restore proof, incident workflow, alert thresholds and
+release checklist are in [global-operations-security.md](docs/global-operations-security.md).
+
 ## AI Search MVP
 
 `POST /api/v1/ai/search` accepts a natural-language query and optional `cityId` / `categoryId`. It returns a transparent intent summary and searches only approved businesses from the existing search index; it does not invent business information or call an external model.

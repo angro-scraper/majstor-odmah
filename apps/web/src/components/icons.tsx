@@ -47,6 +47,12 @@ const paths: Record<IconName, ReactNode> = {
   phone: <path d="M7.2 3.7 9.6 7 8 8.8c1 2.2 2.8 4 5 5l1.8-1.6 3.3 2.4-1.2 3.8c-.3.8-1.1 1.3-1.9 1.1C8.3 18.1 5.9 15.7 4.5 9c-.2-.8.3-1.6 1.1-1.9l1.6-3.4Z"/>,
 };
 
-export function Icon({ name, size = 20, strokeWidth = 1.9, className = "", ...props }: SVGProps<SVGSVGElement> & { name: IconName; size?: number; strokeWidth?: number }) {
+type IconProps = Omit<SVGProps<SVGSVGElement>, "children" | "height" | "ref" | "strokeWidth" | "width"> & {
+  name: IconName;
+  size?: number;
+  strokeWidth?: number;
+};
+
+export function Icon({ name, size = 20, strokeWidth = 1.9, className = "", ...props }: IconProps) {
   return <svg className={`icon ${className}`} width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={strokeWidth} strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" {...props}>{paths[name]}</svg>;
 }
