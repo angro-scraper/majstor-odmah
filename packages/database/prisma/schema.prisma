@@ -283,6 +283,17 @@ enum AdminScopeLevel {
   CITY
 }
 
+enum SuperAppModuleKey {
+  HEALTH
+  AUTO
+  TRAVEL
+  REAL_ESTATE
+  EDUCATION
+  EVENTS
+  COMMUNITY
+  BALKAN_CARD
+}
+
 // Finance is an accounting and payment-provider integration layer. It does not
 // store card details or hold customer funds.
 enum WalletStatus {
@@ -379,6 +390,15 @@ model User {
   customerPayments Payment[] @relation("customer_payments")
   invoices      Invoice[] @relation("invoice_customer")
   adminScopes   AdminScope[] @relation("admin_scope_user")
+  healthProfile HealthProfile?
+  healthReminders HealthReminder[]
+  vehicles Vehicle[]
+  communityGroups CommunityGroup[] @relation("community_group_creator")
+  communityMemberships CommunityMembership[]
+  communityPosts CommunityPost[]
+  membershipCard MembershipCard?
+  modulePreferences UserModulePreference[]
+  propertyListings PropertyListing[]
   createdAt     DateTime       @default(now()) @map("created_at")
   updatedAt     DateTime       @updatedAt @map("updated_at")
   deletedAt     DateTime?      @map("deleted_at")
@@ -453,6 +473,10 @@ model City {
   locations BusinessLocation[]
   userLocations UserLocation[]
   adminScopes   AdminScope[]
+  localEvents   LocalEvent[]
+  communityGroups CommunityGroup[]
+  travelExperiences TravelExperience[]
+  propertyListings PropertyListing[]
   createdAt DateTime           @default(now()) @map("created_at")
   updatedAt DateTime           @updatedAt @map("updated_at")
   deletedAt DateTime?          @map("deleted_at")
@@ -560,6 +584,9 @@ model Business {
   businessTransactions BusinessTransaction[]
   cashbackRules CashbackRule[]
   invoices Invoice[]
+  localEvents LocalEvent[]
+  travelExperiences TravelExperience[]
+  educationCourses EducationCourse[]
   createdAt   DateTime           @default(now()) @map("created_at")
   updatedAt   DateTime           @updatedAt @map("updated_at")
   deletedAt   DateTime?          @map("deleted_at")
@@ -1088,6 +1115,211 @@ model AdminScope {
   @@index([countryId, level])
   @@index([cityId, level])
   @@map("admin_scopes")
+}
+
+/// Optional health preferences and reminders only. No diagnostic or clinical data is stored.
+model HealthProfile {
+  id        String   @id @default(uuid()) @db.Uuid
+  userId    String   @unique @map("user_id") @db.Uuid
+  bloodType String?  @map("blood_type") @db.VarChar(8)
+  allergies Json     @default("[]")
+  notes     String?
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  reminders HealthReminder[]
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("health_profiles")
+}
+
+model HealthReminder {
+  id          String         @id @default(uuid()) @db.Uuid
+  userId      String         @map("user_id") @db.Uuid
+  profileId   String?        @map("profile_id") @db.Uuid
+  title       String
+  reminderAt  DateTime       @map("reminder_at")
+  completedAt DateTime?      @map("completed_at")
+  user        User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  profile     HealthProfile? @relation(fields: [profileId], references: [id], onDelete: SetNull)
+  createdAt   DateTime       @default(now()) @map("created_at")
+  updatedAt   DateTime       @updatedAt @map("updated_at")
+
+  @@index([userId, reminderAt])
+  @@map("health_reminders")
+}
+
+model Vehicle {
+  id           String   @id @default(uuid()) @db.Uuid
+  userId       String   @map("user_id") @db.Uuid
+  make         String
+  model        String
+  year         Int?
+  registration String?
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  reminders    VehicleReminder[]
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  @@index([userId])
+  @@map("vehicles")
+}
+
+model VehicleReminder {
+  id          String   @id @default(uuid()) @db.Uuid
+  vehicleId   String   @map("vehicle_id") @db.Uuid
+  kind        String   @db.VarChar(32)
+  dueAt       DateTime @map("due_at")
+  completedAt DateTime? @map("completed_at")
+  vehicle     Vehicle  @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  @@index([vehicleId, dueAt])
+  @@map("vehicle_reminders")
+}
+
+model LocalEvent {
+  id          String    @id @default(uuid()) @db.Uuid
+  businessId  String?   @map("business_id") @db.Uuid
+  cityId      String    @map("city_id") @db.Uuid
+  title       String
+  category    String
+  description String?
+  startsAt    DateTime  @map("starts_at")
+  endsAt      DateTime? @map("ends_at")
+  address     String?
+  organizer   String?
+  business    Business? @relation(fields: [businessId], references: [id], onDelete: SetNull)
+  city        City      @relation(fields: [cityId], references: [id], onDelete: Cascade)
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+  deletedAt   DateTime? @map("deleted_at")
+
+  @@index([cityId, startsAt])
+  @@map("local_events")
+}
+
+model CommunityGroup {
+  id          String   @id @default(uuid()) @db.Uuid
+  creatorId   String   @map("creator_id") @db.Uuid
+  cityId      String?  @map("city_id") @db.Uuid
+  name        String
+  description String?
+  isPublic    Boolean  @default(true) @map("is_public")
+  creator     User     @relation("community_group_creator", fields: [creatorId], references: [id], onDelete: Cascade)
+  city        City?    @relation(fields: [cityId], references: [id], onDelete: SetNull)
+  memberships CommunityMembership[]
+  posts       CommunityPost[]
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+  deletedAt   DateTime? @map("deleted_at")
+
+  @@index([cityId, isPublic])
+  @@map("community_groups")
+}
+
+model CommunityMembership {
+  userId    String         @map("user_id") @db.Uuid
+  groupId   String         @map("group_id") @db.Uuid
+  user      User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  group     CommunityGroup @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  createdAt DateTime       @default(now()) @map("created_at")
+
+  @@id([userId, groupId])
+  @@map("community_memberships")
+}
+
+model CommunityPost {
+  id        String         @id @default(uuid()) @db.Uuid
+  groupId   String         @map("group_id") @db.Uuid
+  authorId  String         @map("author_id") @db.Uuid
+  body      String
+  group     CommunityGroup @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  author    User           @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  createdAt DateTime       @default(now()) @map("created_at")
+  updatedAt DateTime       @updatedAt @map("updated_at")
+  deletedAt DateTime?      @map("deleted_at")
+
+  @@index([groupId, createdAt])
+  @@map("community_posts")
+}
+
+model MembershipCard {
+  id         String   @id @default(uuid()) @db.Uuid
+  userId     String   @unique @map("user_id") @db.Uuid
+  level      String   @default("EXPLORER") @db.VarChar(32)
+  benefits   Json     @default("[]")
+  validUntil DateTime? @map("valid_until")
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
+
+  @@map("membership_cards")
+}
+
+model UserModulePreference {
+  userId    String            @map("user_id") @db.Uuid
+  module    SuperAppModuleKey
+  score     Float             @default(0)
+  enabled   Boolean           @default(true)
+  user      User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  updatedAt DateTime          @updatedAt @map("updated_at")
+
+  @@id([userId, module])
+  @@map("user_module_preferences")
+}
+
+model TravelExperience {
+  id          String    @id @default(uuid()) @db.Uuid
+  businessId  String?   @map("business_id") @db.Uuid
+  cityId      String    @map("city_id") @db.Uuid
+  title       String
+  description String?
+  category    String
+  startsAt    DateTime?
+  business    Business? @relation(fields: [businessId], references: [id], onDelete: SetNull)
+  city        City      @relation(fields: [cityId], references: [id], onDelete: Cascade)
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+  deletedAt   DateTime? @map("deleted_at")
+
+  @@index([cityId, category])
+  @@map("travel_experiences")
+}
+
+model PropertyListing {
+  id          String    @id @default(uuid()) @db.Uuid
+  ownerId     String    @map("owner_id") @db.Uuid
+  cityId      String    @map("city_id") @db.Uuid
+  title       String
+  description String?
+  price       Decimal?  @db.Decimal(14, 2)
+  currency    String    @default("EUR") @db.VarChar(3)
+  listingType String    @map("listing_type") @db.VarChar(32)
+  owner       User      @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  city        City      @relation(fields: [cityId], references: [id], onDelete: Cascade)
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+  deletedAt   DateTime? @map("deleted_at")
+
+  @@index([cityId, listingType])
+  @@map("property_listings")
+}
+
+model EducationCourse {
+  id          String    @id @default(uuid()) @db.Uuid
+  businessId  String?   @map("business_id") @db.Uuid
+  title       String
+  description String?
+  language    String?   @db.VarChar(10)
+  category    String
+  business    Business? @relation(fields: [businessId], references: [id], onDelete: SetNull)
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+  deletedAt   DateTime? @map("deleted_at")
+
+  @@index([category])
+  @@map("education_courses")
 }
 
 // Stores only the recommendation decision, never the user's prompt or private profile data.

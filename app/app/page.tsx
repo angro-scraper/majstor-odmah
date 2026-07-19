@@ -5,6 +5,7 @@ import { RecommendationsSection } from '@/components/app/home/recommendations'
 import { NearbyBusinesses } from '@/components/app/home/nearby-businesses'
 import { TrendingSection } from '@/components/app/home/trending'
 import { OffersCarousel } from '@/components/app/home/offers'
+import { SuperAppModules } from '@/components/app/home/super-app-modules'
 import Link from 'next/link'
 import { Calendar, FileText, Wallet, MessageSquare } from 'lucide-react'
 
@@ -18,6 +19,7 @@ export default function HomePage() {
     <div className="space-y-6 pt-6">
       <WelcomeHeader />
       <AISearch />
+      <SuperAppModules />
       <CategoriesGrid />
       
       {/* Quick Access to New Features */}

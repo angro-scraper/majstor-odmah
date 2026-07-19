@@ -29,8 +29,9 @@ import { FeedModule } from "./modules/feed/feed.module";
 import { MarketplaceModule } from "./modules/marketplace/marketplace.module";
 import { FinanceModule } from "./modules/finance/finance.module";
 import { SecurityModule } from "./common/security.module";
+import { EcosystemModule } from "./modules/ecosystem/ecosystem.module";
 
 @Module({
-  imports: [ConfigModule.forRoot({ isGlobal: true }), DatabaseModule, SecurityModule, AuthModule, UsersModule, BusinessesModule, CategoriesModule, LocationsModule, NotificationsModule, SearchModule, ReviewsModule, AdminModule, FavoritesModule, HealthModule, AiModule, OffersModule, DealsModule, AnalyticsModule, OperationsModule, PartnersModule, ComplianceModule, FeaturesModule, FlyersModule, SaveFoodModule, RewardsModule, ReferralsModule, FeedModule, MarketplaceModule, FinanceModule, SupportModule],
+  imports: [ConfigModule.forRoot({ isGlobal: true }), DatabaseModule, SecurityModule, AuthModule, UsersModule, BusinessesModule, CategoriesModule, LocationsModule, NotificationsModule, SearchModule, ReviewsModule, AdminModule, FavoritesModule, HealthModule, AiModule, OffersModule, DealsModule, AnalyticsModule, OperationsModule, PartnersModule, ComplianceModule, FeaturesModule, FlyersModule, SaveFoodModule, RewardsModule, ReferralsModule, FeedModule, MarketplaceModule, FinanceModule, SupportModule, EcosystemModule],
 })
 export class AppModule {}

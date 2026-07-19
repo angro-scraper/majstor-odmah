@@ -123,6 +123,15 @@ async function main() {
   await ensureLocation(restaurant.id, noviSad.id, "Bulevar oslobođenja 20, Novi Sad");
   await ensureService(autoService.id, "Redovni servis", "Osnovni pregled i održavanje vozila.");
   await ensureService(restaurant.id, "Porodični ručak", "Dnevni meni za porodice.");
+  const events = [
+    { cityId: belgrade.id, businessId: restaurant.id, title: "Ukusi Dunava", category: "FOOD", description: "Lokalni ukusi i muzika na obali reke.", startsAt: new Date("2026-08-01T18:00:00.000Z"), organizer: "Restoran Dunav" },
+    { cityId: noviSad.id, title: "Novi Sad Weekend", category: "COMMUNITY", description: "Otvoreni lokalni događaj za celu zajednicu.", startsAt: new Date("2026-08-08T10:00:00.000Z"), organizer: "Balkan.works" },
+  ];
+  await Promise.all(events.map(async (event) => {
+    const existing = await prisma.localEvent.findFirst({ where: { cityId: event.cityId, title: event.title, deletedAt: null } });
+    if (!existing) await prisma.localEvent.create({ data: event });
+  }));
+  await prisma.membershipCard.upsert({ where: { userId: customer.id }, create: { userId: customer.id, level: "EXPLORER", benefits: ["Lokalne pogodnosti", "Balkan Rewards status"] }, update: {} });
 
   console.info("Seed complete. Development accounts use password BalkanworksDev123! and must never be used outside local development.");
 }
