@@ -1,5 +1,6 @@
 import { Users, Building2, AlertTriangle, CheckCircle, TrendingUp } from 'lucide-react'
 import { AnalyticsCard } from '@/components/business/analytics-card'
+import Link from 'next/link'
 
 export const metadata = {
   title: 'Admin Dashboard — balkan.works',
@@ -61,21 +62,22 @@ export default function AdminDashboard() {
       {/* Quick Actions */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {[
-          { title: 'Review Pending Reports', count: 24, color: 'from-red-500/20 to-orange-500/20' },
-          { title: 'Verify Businesses', count: 18, color: 'from-blue-500/20 to-cyan-500/20' },
-          { title: 'Suspended Users', count: 3, color: 'from-yellow-500/20 to-amber-500/20' },
-          { title: 'Fake Review Reports', count: 8, color: 'from-purple-500/20 to-pink-500/20' },
-          { title: 'Support Tickets', count: 42, color: 'from-green-500/20 to-emerald-500/20' },
-          { title: 'System Alerts', count: 2, color: 'from-indigo-500/20 to-blue-500/20' },
+          { title: 'Review Pending Reports', count: 24, color: 'from-red-500/20 to-orange-500/20', href: '/admin/moderation' },
+          { title: 'Verify Businesses', count: 18, color: 'from-blue-500/20 to-cyan-500/20', href: '/admin/verification' },
+          { title: 'Suspended Users', count: 3, color: 'from-yellow-500/20 to-amber-500/20', href: '/admin/users' },
+          { title: 'Fake Review Reports', count: 8, color: 'from-purple-500/20 to-pink-500/20', href: '/admin/moderation' },
+          { title: 'Support Tickets', count: 42, color: 'from-green-500/20 to-emerald-500/20', href: '/admin/settings' },
+          { title: 'System Alerts', count: 2, color: 'from-indigo-500/20 to-blue-500/20', href: '/admin/settings' },
         ].map((action) => (
-          <div
+          <Link
             key={action.title}
+            href={action.href}
             className={`p-6 rounded-2xl bg-gradient-to-br ${action.color} border border-border hover:border-primary transition cursor-pointer`}
           >
             <p className="text-sm text-muted-foreground mb-2">{action.title}</p>
             <p className="text-3xl font-bold">{action.count}</p>
             <p className="text-xs text-primary mt-3">View details →</p>
-          </div>
+          </Link>
         ))}
       </div>
 

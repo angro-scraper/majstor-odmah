@@ -1,5 +1,6 @@
-import { Star, MapPin, Clock, Phone, MessageSquare, Globe, Bookmark, Share2, CheckCircle } from 'lucide-react'
+import { Star, MapPin, Clock, CheckCircle } from 'lucide-react'
 import { use } from 'react'
+import { BusinessProfileActions } from '@/components/app/business-profile-actions'
 
 export default function BusinessPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params)
@@ -10,29 +11,11 @@ export default function BusinessPage({ params }: { params: Promise<{ id: string 
 
       <div className="px-4 py-6 space-y-6">
         {/* Header */}
-        <div className="flex items-start justify-between gap-4">
-          <div className="flex-1">
-            <div className="flex items-center gap-2 mb-2">
-              <h1 className="text-2xl font-bold">Elite Electricians</h1>
-              <CheckCircle className="w-5 h-5 text-primary fill-primary/20" />
-            </div>
-            <p className="text-sm text-muted-foreground mb-3">Electrical Services</p>
-            
-            <div className="flex items-center gap-3">
-              <div className="flex items-center gap-1">
-                <Star className="w-4 h-4 fill-amber-400 text-amber-400" />
-                <span className="font-semibold">4.9</span>
-                <span className="text-sm text-muted-foreground">(234 reviews)</span>
-              </div>
-              <div className="flex items-center gap-1 text-sm text-muted-foreground">
-                <MapPin className="w-4 h-4" />
-                0.5 km away
-              </div>
-            </div>
-          </div>
-          <button className="p-3 rounded-lg bg-secondary border border-border hover:border-primary transition">
-            <Bookmark className="w-5 h-5" />
-          </button>
+        <BusinessProfileActions businessId={id} businessName="Elite Electricians" />
+        <div className="flex items-center gap-3">
+          <CheckCircle className="w-5 h-5 text-primary fill-primary/20" />
+          <div className="flex items-center gap-1"><Star className="w-4 h-4 fill-amber-400 text-amber-400" /><span className="font-semibold">4.9</span><span className="text-sm text-muted-foreground">(234 reviews)</span></div>
+          <div className="flex items-center gap-1 text-sm text-muted-foreground"><MapPin className="w-4 h-4" />0.5 km away</div>
         </div>
 
         {/* Trust Indicators */}
@@ -47,29 +30,6 @@ export default function BusinessPage({ params }: { params: Promise<{ id: string 
               <p className="text-xs text-muted-foreground mt-1">{item.label}</p>
             </div>
           ))}
-        </div>
-
-        {/* Action Buttons */}
-        <div className="grid grid-cols-2 gap-3">
-          <button className="flex items-center justify-center gap-2 px-4 py-3 rounded-lg bg-primary text-primary-foreground font-semibold hover:bg-primary/90 transition">
-            <Phone className="w-5 h-5" />
-            Call
-          </button>
-          <button className="flex items-center justify-center gap-2 px-4 py-3 rounded-lg border border-border bg-card hover:border-primary transition">
-            <MessageSquare className="w-5 h-5" />
-            Message
-          </button>
-        </div>
-
-        <div className="grid grid-cols-2 gap-3">
-          <button className="flex items-center justify-center gap-2 px-4 py-3 rounded-lg border border-border bg-card hover:border-primary transition">
-            <Globe className="w-5 h-5" />
-            Website
-          </button>
-          <button className="flex items-center justify-center gap-2 px-4 py-3 rounded-lg border border-border bg-card hover:border-primary transition">
-            <Share2 className="w-5 h-5" />
-            Share
-          </button>
         </div>
 
         {/* About */}

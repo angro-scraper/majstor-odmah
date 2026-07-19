@@ -1,7 +1,10 @@
 import Link from 'next/link'
-import { CalendarDays, HeartPulse, CarFront, Plane, House, GraduationCap, UsersRound, CreditCard } from 'lucide-react'
+import { CalendarDays, HeartPulse, CarFront, Plane, House, GraduationCap, UsersRound, CreditCard, BadgePercent, Leaf, Gift } from 'lucide-react'
 
 const modules = [
+  { name: 'Ponude', description: 'Akcije i digitalni flajeri', href: '/app/deals', icon: BadgePercent, color: 'bg-primary/10 text-primary', active: true },
+  { name: 'Sačuvaj hranu', description: 'Dobre cene, manje otpada', href: '/app/save-food', icon: Leaf, color: 'bg-emerald-500/10 text-emerald-600', active: true },
+  { name: 'Nagrade', description: 'Poeni i lokalne pogodnosti', href: '/app/rewards', icon: Gift, color: 'bg-cyan-500/10 text-cyan-600', active: true },
   { name: 'Događaji', description: 'Šta se dešava u tvom gradu', href: '/app/category/events', icon: CalendarDays, color: 'bg-violet-500/10 text-violet-600', active: true },
   { name: 'Zajednica', description: 'Lokalne preporuke i grupe', href: '/app/discover', icon: UsersRound, color: 'bg-sky-500/10 text-sky-600', active: true },
   { name: 'Balkan Card', description: 'Pogodnosti i tvoj status', href: '/app/profile', icon: CreditCard, color: 'bg-primary/10 text-primary', active: true },

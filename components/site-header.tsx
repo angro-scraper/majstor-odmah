@@ -45,7 +45,7 @@ export function SiteHeader() {
           <CountrySwitcher />
           <LanguageSwitcher />
           <Link
-            href="/preuzmi"
+            href="/app"
             className="rounded-lg px-3 py-2 text-sm font-semibold text-navy transition-colors hover:text-primary"
           >
             {t.cta.signIn}
@@ -94,7 +94,7 @@ export function SiteHeader() {
           ))}
           <div className="mt-2 flex flex-col gap-2 border-t border-border pt-3">
             <Link
-              href="/preuzmi"
+              href="/app"
               onClick={() => setOpen(false)}
               className="rounded-xl border border-border px-4 py-2.5 text-center text-sm font-semibold text-navy"
             >

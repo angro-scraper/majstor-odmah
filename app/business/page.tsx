@@ -2,6 +2,7 @@ import { Eye, Phone, MessageSquare, TrendingUp, Star, Zap } from 'lucide-react'
 import { AnalyticsCard } from '@/components/business/analytics-card'
 import { LeadsChart } from '@/components/business/leads-chart'
 import { RecentActivity } from '@/components/business/recent-activity'
+import Link from 'next/link'
 
 export const metadata = {
   title: 'Dashboard — balkan.works Business',
@@ -70,9 +71,9 @@ export default function BusinessDashboard() {
             Optimize Your Profile
           </h3>
           <p className="text-sm text-muted-foreground mb-4">Complete your business profile to attract more customers</p>
-          <button className="px-4 py-2 rounded-lg bg-primary text-primary-foreground text-sm font-semibold hover:bg-primary/90 transition">
+          <Link href="/business/settings" className="inline-flex px-4 py-2 rounded-lg bg-primary text-primary-foreground text-sm font-semibold hover:bg-primary/90 transition">
             Optimize Now
-          </button>
+          </Link>
         </div>
 
         <div className="p-6 rounded-2xl bg-gradient-to-br from-amber-500/10 to-orange-500/10 border border-amber-500/30">
@@ -81,9 +82,9 @@ export default function BusinessDashboard() {
             Growth Tips
           </h3>
           <p className="text-sm text-muted-foreground mb-4">Get AI-powered suggestions to grow your business</p>
-          <button className="px-4 py-2 rounded-lg border border-amber-500/50 text-amber-600 text-sm font-semibold hover:bg-amber-500/10 transition">
+          <Link href="/business/ai-coach" className="inline-flex px-4 py-2 rounded-lg border border-amber-500/50 text-amber-600 text-sm font-semibold hover:bg-amber-500/10 transition">
             View Tips
-          </button>
+          </Link>
         </div>
       </div>
     </div>

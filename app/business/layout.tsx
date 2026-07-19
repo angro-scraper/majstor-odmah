@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { BarChart3, Settings, LogOut, Menu } from 'lucide-react'
+import { BarChart3, Settings, LogOut, Menu, MessageSquare, Tags } from 'lucide-react'
 import { useState } from 'react'
 import { ThemeToggle } from '@/components/theme-toggle'
 
@@ -33,7 +33,8 @@ export default function BusinessLayout({
             { label: 'Dashboard', href: '/business', icon: BarChart3 },
             { label: 'Analytics', href: '/business/analytics', icon: BarChart3 },
             { label: 'Leads', href: '/business/leads', icon: BarChart3 },
-            { label: 'Messages', href: '/business/messages', icon: BarChart3 },
+            { label: 'Ponude', href: '/business/offers', icon: Tags },
+            { label: 'Messages', href: '/business/messages', icon: MessageSquare },
             { label: 'AI Coach', href: '/business/ai-coach', icon: BarChart3 },
             { label: 'Settings', href: '/business/settings', icon: Settings },
           ].map((item) => (

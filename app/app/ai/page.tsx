@@ -33,7 +33,7 @@ export default function AIPage() {
       if (!response.ok || !payload.success) throw new Error(payload?.error?.message || 'AI trenutno nije dostupan.')
       const data = payload.data
       const recommendations: Recommendation[] = data.recommendations ?? (data.results ?? []).slice(0, 5).map((business: { id: string; name: string; description?: string; slug?: string }) => ({
-        entityId: business.id, title: business.name, subtitle: business.description || 'Lokalna firma', reason: 'Podudaranje sa zahtevom i javnim poslovnim profilom.', actionUrl: `/businesses/${business.slug || business.id}`,
+        entityId: business.id, title: business.name, subtitle: business.description || 'Lokalna firma', reason: 'Podudaranje sa zahtevom i javnim poslovnim profilom.', actionUrl: `/app/business/${business.id}`,
       }))
       setMessages((current) => [...current, { id: Date.now() + 1, sender: 'ai', text: data.answer || data.explanation || 'Evo rezultata iz javnih poslovnih profila.', recommendations }])
     } catch (error) {

@@ -2,6 +2,7 @@
 
 import Link from 'next/link'
 import { Star, MapPin, Clock, CheckCircle, Bookmark } from 'lucide-react'
+import { useState } from 'react'
 
 interface BusinessCardProps {
   business: {
@@ -17,11 +18,12 @@ interface BusinessCardProps {
 }
 
 export function BusinessCard({ business }: BusinessCardProps) {
+  const [saved, setSaved] = useState(false)
+
   return (
-    <Link href={`/app/business/${business.id}`}>
-      <div className="p-4 rounded-2xl border border-border bg-card hover:border-primary hover:shadow-lg transition-all cursor-pointer">
+    <article className="p-4 rounded-2xl border border-border bg-card hover:border-primary hover:shadow-lg transition-all">
         <div className="flex items-start justify-between mb-3">
-          <div className="flex-1">
+          <Link href={`/app/business/${business.id}`} className="flex-1 min-w-0">
             <div className="flex items-center gap-2">
               <h3 className="font-semibold text-foreground">{business.name}</h3>
               {business.verified && (
@@ -29,13 +31,20 @@ export function BusinessCard({ business }: BusinessCardProps) {
               )}
             </div>
             <p className="text-xs text-muted-foreground mt-0.5">{business.category}</p>
-          </div>
-          <button className="p-2 hover:bg-secondary rounded-lg transition">
-            <Bookmark className="w-5 h-5 text-muted-foreground" />
+          </Link>
+          <button
+            type="button"
+            onClick={() => setSaved((current) => !current)}
+            aria-label={saved ? `Ukloni ${business.name} iz sačuvanog` : `Sačuvaj ${business.name}`}
+            aria-pressed={saved}
+            className="p-2 hover:bg-secondary rounded-lg transition"
+          >
+            <Bookmark className={`w-5 h-5 ${saved ? 'fill-primary text-primary' : 'text-muted-foreground'}`} />
           </button>
         </div>
 
-        <div className="grid grid-cols-2 gap-2 mb-3">
+        <Link href={`/app/business/${business.id}`} className="block">
+          <div className="grid grid-cols-2 gap-2 mb-3">
           <div className="flex items-center gap-1">
             <Star className="w-4 h-4 fill-amber-400 text-amber-400" />
             <span className="text-sm font-semibold">{business.rating}</span>
@@ -45,15 +54,15 @@ export function BusinessCard({ business }: BusinessCardProps) {
             <MapPin className="w-4 h-4" />
             {business.distance}
           </div>
-        </div>
-
-        {business.responseTime && (
-          <div className="flex items-center gap-1.5 text-xs text-muted-foreground bg-secondary/50 px-2.5 py-1.5 rounded-lg w-fit">
-            <Clock className="w-3.5 h-3.5" />
-            {business.responseTime}
           </div>
-        )}
-      </div>
-    </Link>
+
+          {business.responseTime && (
+            <div className="flex items-center gap-1.5 text-xs text-muted-foreground bg-secondary/50 px-2.5 py-1.5 rounded-lg w-fit">
+              <Clock className="w-3.5 h-3.5" />
+              {business.responseTime}
+            </div>
+          )}
+        </Link>
+    </article>
   )
 }

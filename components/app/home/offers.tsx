@@ -1,5 +1,4 @@
-'use client'
-
+import Link from 'next/link'
 import { Sparkles } from 'lucide-react'
 
 export function OffersCarousel() {
@@ -11,8 +10,9 @@ export function OffersCarousel() {
       </h2>
       <div className="flex gap-3 overflow-x-auto pb-2 -mx-4 px-4 snap-x">
         {[1, 2, 3].map((i) => (
-          <div
+          <Link
             key={i}
+            href="/app/deals"
             className="flex-shrink-0 w-64 p-4 rounded-2xl bg-gradient-to-br from-primary/20 to-secondary/20 border border-primary/30 snap-start cursor-pointer hover:border-primary transition"
           >
             <div className="flex items-start justify-between mb-2">
@@ -21,10 +21,10 @@ export function OffersCarousel() {
             </div>
             <h3 className="font-semibold text-sm mb-1">Special Offer #{i}</h3>
             <p className="text-xs text-muted-foreground mb-3">Valid until tomorrow</p>
-            <button className="w-full px-3 py-2 rounded-lg bg-primary text-primary-foreground text-xs font-semibold hover:bg-primary/90 transition">
-              Claim Offer
-            </button>
-          </div>
+            <span className="block w-full px-3 py-2 rounded-lg bg-primary text-center text-primary-foreground text-xs font-semibold hover:bg-primary/90 transition">
+              Pogledaj ponude
+            </span>
+          </Link>
         ))}
       </div>
     </div>
