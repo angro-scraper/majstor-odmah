@@ -1,4 +1,5 @@
 import { ArrowDownLeft, ArrowUpRight, BadgeCheck, CreditCard, ReceiptText, ShieldCheck } from 'lucide-react'
+import Link from 'next/link'
 
 export const metadata = { title: 'Novčanik — balkan.works' }
 
@@ -39,7 +40,7 @@ export default function WalletPage() {
       </section>
 
       <section className="space-y-3">
-        <div className="flex items-center justify-between"><h2 className="font-semibold">Nedavne aktivnosti</h2><button className="text-sm font-semibold text-primary">Sve transakcije</button></div>
+        <div className="flex items-center justify-between"><h2 className="font-semibold">Nedavne aktivnosti</h2><Link href="/app/rewards" className="text-sm font-semibold text-primary">Nagrade i poeni</Link></div>
         {transactions.map((tx) => {
           const positive = tx.type !== 'PAYMENT'
           return <article key={tx.id} className="flex items-center justify-between rounded-2xl border border-border bg-card p-4">
@@ -54,7 +55,7 @@ export default function WalletPage() {
 
       <section className="rounded-2xl border border-border bg-card p-4">
         <div className="flex items-center gap-3"><BadgeCheck className="h-5 w-5 text-primary" /><div><h2 className="font-semibold">Plaćanja uskoro</h2><p className="mt-0.5 text-sm text-muted-foreground">Odaberite uslugu ili Save Food paket, pa platite preko bezbednog partnera.</p></div></div>
-        <button className="mt-4 flex w-full items-center justify-center gap-2 rounded-xl border border-primary py-2.5 text-sm font-semibold text-primary"><ReceiptText className="h-4 w-4" /> Pogledaj rezervacije</button>
+        <Link href="/app/bookings" className="mt-4 flex w-full items-center justify-center gap-2 rounded-xl border border-primary py-2.5 text-sm font-semibold text-primary"><ReceiptText className="h-4 w-4" /> Pogledaj rezervacije</Link>
       </section>
     </div>
   )

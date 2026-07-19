@@ -14,14 +14,18 @@ export function BusinessProfileActions({ businessId, businessName }: BusinessPro
   const [copied, setCopied] = useState(false)
 
   const shareProfile = async () => {
-    const url = window.location.href
-    if (navigator.share) {
-      await navigator.share({ title: businessName, text: `Pogledaj ${businessName} na balkan.works`, url })
-      return
+    try {
+      const url = window.location.href
+      if (navigator.share) {
+        await navigator.share({ title: businessName, text: `Pogledaj ${businessName} na balkan.works`, url })
+        return
+      }
+      await navigator.clipboard.writeText(url)
+      setCopied(true)
+      window.setTimeout(() => setCopied(false), 1800)
+    } catch {
+      // Deljenje može biti otkazano iz sistemskog dijaloga; profil ostaje nepromenjen.
     }
-    await navigator.clipboard.writeText(url)
-    setCopied(true)
-    window.setTimeout(() => setCopied(false), 1800)
   }
 
   return (

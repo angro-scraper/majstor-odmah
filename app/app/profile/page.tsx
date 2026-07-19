@@ -1,6 +1,7 @@
 'use client'
 
 import { User, Settings, MapPin, Star, Activity, LogOut } from 'lucide-react'
+import Link from 'next/link'
 
 export default function ProfilePage() {
   return (
@@ -10,10 +11,14 @@ export default function ProfilePage() {
           <h1 className="text-3xl font-bold">Profile</h1>
           <p className="text-muted-foreground mt-1">Manage your account</p>
         </div>
-        <button className="p-3 rounded-full bg-secondary border border-border hover:border-primary transition">
+        <Link href="/app/rewards" className="p-3 rounded-full bg-secondary border border-border hover:border-primary transition" aria-label="Balkan Rewards">
           <Settings className="w-5 h-5" />
-        </button>
+        </Link>
       </div>
+
+      <Link href="/app/rewards" className="flex items-center justify-between rounded-2xl border border-primary/15 bg-primary/5 p-4 transition hover:border-primary/40">
+        <div><p className="text-xs font-semibold uppercase tracking-wide text-primary">Balkan Rewards</p><p className="mt-1 font-semibold text-navy">Explorer · 280 poena</p><p className="mt-1 text-sm text-muted-foreground">Otvori nagrade i lokalne pogodnosti.</p></div><span className="text-primary">→</span>
+      </Link>
 
       {/* User Card */}
       <div className="p-6 rounded-2xl bg-gradient-to-br from-primary/10 to-secondary/10 border border-border">
@@ -50,19 +55,20 @@ export default function ProfilePage() {
       {/* Menu */}
       <div className="space-y-2">
         {[
-          { label: 'Saved Places', icon: MapPin },
-          { label: 'Booking History', icon: Activity },
-          { label: 'Settings', icon: Settings },
+          { label: 'Saved Places', icon: MapPin, href: '/app/saved' },
+          { label: 'Booking History', icon: Activity, href: '/app/bookings' },
+          { label: 'Rewards & benefits', icon: Settings, href: '/app/rewards' },
         ].map((item) => {
           const Icon = item.icon
           return (
-            <button
+            <Link
               key={item.label}
+              href={item.href}
               className="w-full flex items-center gap-3 p-3 rounded-xl bg-secondary/50 border border-border hover:border-primary transition text-left"
             >
               <Icon className="w-5 h-5 text-primary" />
               <span className="font-medium text-sm">{item.label}</span>
-            </button>
+            </Link>
           )
         })}
       </div>
