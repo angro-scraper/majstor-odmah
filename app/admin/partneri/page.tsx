@@ -1,10 +1,11 @@
 'use client'
 
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Building2, CheckCircle2, Clock3, Mail, ShieldCheck, XCircle, type LucideIcon } from 'lucide-react'
 
 type Status = 'NA_CEKANJU' | 'ODOBREN' | 'ODBIJEN'
 type Partner = { id: string; name: string; type: string; contact: string; plan: string; submitted: string; status: Status }
+type StoredPartner = { id: string; name: string; type: string; plan: string; status: Status; submittedAt: string; contact?: string }
 
 const initialPartners: Partner[] = [
   { id: 'PRT-10482', name: 'Pekara Dunav', type: 'Lokalna firma', contact: 'Milica Petrović', plan: 'Biznis', submitted: 'Danas, 09:42', status: 'NA_CEKANJU' },
@@ -20,10 +21,26 @@ export default function AdminPartneriPage() {
   const [partners, setPartners] = useState(initialPartners)
   const [filter, setFilter] = useState<'SVE' | Status>('NA_CEKANJU')
   const [message, setMessage] = useState('')
+  useEffect(() => {
+    const stored = window.localStorage.getItem('balkanworks-partner-application')
+    if (!stored) return
+    try {
+      const application = JSON.parse(stored) as StoredPartner
+      if (!application.id || !application.name) return
+      setPartners((items) => items.some((item) => item.id === application.id) ? items : [{ id: application.id, name: application.name, type: application.type, contact: application.contact || 'Nije navedeno', plan: application.plan, submitted: application.submittedAt, status: application.status || 'NA_CEKANJU' }, ...items])
+    } catch { /* Neispravna lokalna prijava se ignoriše. */ }
+  }, [])
   const filtered = useMemo(() => filter === 'SVE' ? partners : partners.filter((partner) => partner.status === filter), [filter, partners])
   const update = (id: string, status: Status) => {
     const partner = partners.find((item) => item.id === id)
     setPartners((items) => items.map((item) => item.id === id ? { ...item, status } : item))
+    const stored = window.localStorage.getItem('balkanworks-partner-application')
+    if (stored) {
+      try {
+        const application = JSON.parse(stored) as StoredPartner
+        if (application.id === id) window.localStorage.setItem('balkanworks-partner-application', JSON.stringify({ ...application, status }))
+      } catch { /* Lokalni status ostaje nepromenjen ako zapis nije validan. */ }
+    }
     setMessage(`${partner?.name ?? 'Partner'} je ${status === 'ODOBREN' ? 'odobren' : 'odbijen'}.`)
   }
   const pending = partners.filter((partner) => partner.status === 'NA_CEKANJU').length

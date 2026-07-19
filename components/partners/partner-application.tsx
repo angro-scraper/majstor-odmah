@@ -32,7 +32,7 @@ export function PartnerApplication() {
     const email = String(form.get('email') ?? '').trim()
     if (!name || !/^\S+@\S+\.\S+$/.test(email)) return setError('Unesi naziv partnera i ispravnu email adresu.')
     setSubmitting(true)
-    window.localStorage.setItem('balkanworks-partner-application', JSON.stringify({ id: `PRT-${Date.now().toString().slice(-6)}`, name, email, phone: String(form.get('phone') ?? ''), country: String(form.get('country') ?? ''), type, plan, status: 'NA_CEKANJU', submittedAt: new Date().toLocaleDateString('sr-Latn-RS') }))
+    window.localStorage.setItem('balkanworks-partner-application', JSON.stringify({ id: `PRT-${Date.now().toString().slice(-6)}`, name, contact: String(form.get('contact') ?? ''), email, phone: String(form.get('phone') ?? ''), country: String(form.get('country') ?? ''), type, plan, status: 'NA_CEKANJU', submittedAt: new Date().toLocaleDateString('sr-Latn-RS') }))
     window.setTimeout(() => router.push('/partneri/status'), 400)
   }
 
