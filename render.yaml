@@ -6,7 +6,7 @@ services:
     # The public site is the v0 Next.js application at the repository root.
     # The modular API remains deployed as the separate balkanworks-api service.
     buildCommand: pnpm install --frozen-lockfile --prod=false && pnpm build
-    startCommand: pnpm start -- --hostname 0.0.0.0 --port $PORT
+    startCommand: pnpm exec next start --hostname 0.0.0.0 --port $PORT
     healthCheckPath: /
     autoDeploy: true
     envVars:
