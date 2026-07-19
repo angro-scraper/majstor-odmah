@@ -4,7 +4,7 @@ import { SiteHeader } from '@/components/site-header'
 import { SiteFooter } from '@/components/site-footer'
 import { useI18n } from '@/lib/i18n/context'
 
-type PageKey = 'services' | 'jobs' | 'business' | 'about' | 'contact' | 'download'
+type PageKey = 'services' | 'jobs' | 'business' | 'about' | 'contact' | 'download' | 'platform' | 'users' | 'partners'
 
 export function PageShell({
   pageKey,
@@ -13,7 +13,9 @@ export function PageShell({
   pageKey: PageKey
   children: React.ReactNode
 }) {
-  const { t } = useI18n()
+  const { t, locale } = useI18n()
+  const partnerLabel = { sr: 'Partneri', hr: 'Partneri', bs: 'Partneri', cnr: 'Partneri', mk: 'Партнери', sl: 'Partnerji', sq: 'Partnerë', en: 'Partners', bg: 'Партньори' }[locale]
+  const platformLabel = { sr: 'Platforma', hr: 'Platforma', bs: 'Platforma', cnr: 'Platforma', mk: 'Платформа', sl: 'Platforma', sq: 'Platforma', en: 'Platform', bg: 'Платформа' }[locale]
 
   const eyebrows: Record<PageKey, string> = {
     services: t.nav.services,
@@ -22,11 +24,20 @@ export function PageShell({
     about: t.nav.about,
     contact: t.nav.contact,
     download: t.cta.download,
+    platform: platformLabel,
+    users: t.nav.forUsers,
+    partners: partnerLabel,
   }
 
+  const pageCopy = {
+    platform: { title: t.categories.title, subtitle: t.categories.description },
+    users: { title: t.nav.forUsers, subtitle: t.categories.description },
+    partners: { title: partnerLabel, subtitle: t.trust.label },
+  }
+  const fallback = pageCopy[pageKey as keyof typeof pageCopy]
   const eyebrow = eyebrows[pageKey]
-  const title = t.pages[pageKey].title
-  const description = t.pages[pageKey].subtitle
+  const title = fallback?.title ?? t.pages[pageKey as keyof typeof t.pages].title
+  const description = fallback?.subtitle ?? t.pages[pageKey as keyof typeof t.pages].subtitle
 
   return (
     <div className="flex min-h-screen flex-col">

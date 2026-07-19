@@ -12,6 +12,7 @@ import { Security } from '@/components/sections/security'
 import { Coverage } from '@/components/sections/coverage'
 import { Testimonials } from '@/components/sections/testimonials'
 import { DownloadCta } from '@/components/sections/download-cta'
+import { PlatformOverview } from '@/components/platform-overview'
 
 export default function Page() {
   return (
@@ -20,6 +21,7 @@ export default function Page() {
       <main className="flex-1">
         <Hero />
         <TrustBar />
+        <PlatformOverview />
         <Categories />
         <HowItWorks />
         <StatsBand />

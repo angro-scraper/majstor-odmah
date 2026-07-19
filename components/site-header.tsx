@@ -11,14 +11,16 @@ import { cn } from '@/lib/utils'
 
 export function SiteHeader() {
   const [open, setOpen] = useState(false)
-  const { t } = useI18n()
+  const { t, locale } = useI18n()
+  const platformLabel = { sr: 'Platforma', hr: 'Platforma', bs: 'Platforma', cnr: 'Platforma', mk: 'Платформа', sl: 'Platforma', sq: 'Platforma', en: 'Platform', bg: 'Платформа' }[locale]
+  const partnerLabel = { sr: 'Partneri', hr: 'Partneri', bs: 'Partneri', cnr: 'Partneri', mk: 'Партнери', sl: 'Partnerji', sq: 'Partnerë', en: 'Partners', bg: 'Партньори' }[locale]
 
   const navLinks = [
-    { label: t.nav.home, href: '/' },
+    { label: platformLabel, href: '/platforma' },
     { label: t.nav.services, href: '/usluge' },
-    { label: t.nav.forUsers, href: '/#kako-funkcionise' },
+    { label: t.nav.forUsers, href: '/za-korisnike' },
     { label: t.nav.forCompanies, href: '/za-kompanije' },
-    { label: t.nav.about, href: '/o-nama' },
+    { label: partnerLabel, href: '/partneri' },
     { label: t.nav.contact, href: '/kontakt' },
   ]
 
