@@ -1,80 +1,30 @@
-import { Sparkles, TrendingUp, Star, AlertCircle, CheckCircle } from 'lucide-react'
+'use client'
+
+import { LoaderCircle, ShieldCheck, Sparkles } from 'lucide-react'
+import { useState } from 'react'
+
+type Insight = { area: string; priority: string; suggestion: string }
+const apiUrl = (process.env.NEXT_PUBLIC_API_URL || '/api/v1').replace(/\/$/, '')
 
 export default function AICoachPage() {
-  return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold flex items-center gap-2">
-          <Sparkles className="w-8 h-8 text-primary" />
-          AI Business Coach
-        </h1>
-        <p className="text-muted-foreground mt-1">AI-powered insights to grow your business</p>
-      </div>
+  const [businessId, setBusinessId] = useState('')
+  const [insights, setInsights] = useState<Insight[]>([])
+  const [message, setMessage] = useState('Unesite ID svoje firme da biste dobili analizu javnog profila i aktivnosti.')
+  const [loading, setLoading] = useState(false)
 
-      {/* Featured Insights */}
-      <div className="space-y-4">
-        {[
-          {
-            icon: TrendingUp,
-            title: 'Increase Your Prices',
-            description: 'Based on your 4.8 rating and 98% quality score, you can safely increase prices by 10-15%',
-            action: 'Learn More',
-            color: 'from-green-500/20 to-emerald-500/20 border-green-500/30',
-          },
-          {
-            icon: Star,
-            title: 'Profile Optimization',
-            description: 'Add 3 more service categories to attract 25% more leads',
-            action: 'Optimize',
-            color: 'from-blue-500/20 to-cyan-500/20 border-blue-500/30',
-          },
-          {
-            icon: AlertCircle,
-            title: 'Response Time Alert',
-            description: 'Your average response time is 2.1 hours. Improve to 1 hour to get 40% more conversions',
-            action: 'Set Reminder',
-            color: 'from-amber-500/20 to-orange-500/20 border-amber-500/30',
-          },
-        ].map((insight, i) => {
-          const Icon = insight.icon
-          return (
-            <div key={i} className={`p-6 rounded-2xl bg-gradient-to-br ${insight.color} border`}>
-              <div className="flex items-start gap-4">
-                <Icon className="w-6 h-6 mt-1 text-primary flex-shrink-0" />
-                <div className="flex-1">
-                  <h3 className="font-semibold mb-1">{insight.title}</h3>
-                  <p className="text-sm text-muted-foreground mb-3">{insight.description}</p>
-                  <button className="px-4 py-2 rounded-lg bg-primary text-primary-foreground text-sm font-semibold hover:bg-primary/90 transition">
-                    {insight.action}
-                  </button>
-                </div>
-              </div>
-            </div>
-          )
-        })}
-      </div>
+  const analyze = async () => {
+    if (!businessId.trim() || loading) return
+    setLoading(true)
+    try {
+      const token = window.localStorage.getItem('access_token')
+      if (!token) throw new Error('Prijavite se kao vlasnik firme da biste koristili AI Coach.')
+      const response = await fetch(`${apiUrl}/business/ai/analyze`, { method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` }, body: JSON.stringify({ businessId: businessId.trim() }) })
+      const payload = await response.json()
+      if (!response.ok || !payload.success) throw new Error(payload?.error?.message || 'Analiza trenutno nije dostupna.')
+      setInsights(payload.data.suggestions || [])
+      setMessage(payload.data.suggestions?.length ? 'Predlozi su zasnovani na podacima tvog javnog profila i poslednjih 30 dana aktivnosti.' : 'Profil je trenutno dobro popunjen. Nastavi da ažuriraš ponude i informacije.')
+    } catch (error) { setMessage(error instanceof Error ? error.message : 'Došlo je do greške pri analizi.') } finally { setLoading(false) }
+  }
 
-      {/* Recommendations */}
-      <div className="p-6 rounded-2xl border border-border bg-card">
-        <h2 className="text-lg font-semibold mb-4">Recommendations</h2>
-        <div className="space-y-3">
-          {[
-            { tip: 'Add video gallery to your profile - this increases bookings by 35%', status: 'pending' },
-            { tip: 'Set up appointment slots - reduces response overhead by 60%', status: 'pending' },
-            { tip: 'Enable online booking - 45% of customers prefer this', status: 'active' },
-            { tip: 'Collect more reviews - you need 10 more for premium badge', status: 'pending' },
-          ].map((rec, i) => (
-            <div key={i} className="flex items-center gap-3 p-3 rounded-lg bg-secondary/50">
-              {rec.status === 'active' ? (
-                <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0" />
-              ) : (
-                <AlertCircle className="w-5 h-5 text-amber-600 flex-shrink-0" />
-              )}
-              <p className="text-sm">{rec.tip}</p>
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
-  )
+  return <div className="space-y-6"><div><h1 className="text-3xl font-bold flex items-center gap-2"><Sparkles className="w-8 h-8 text-primary" />Balkan AI za firme</h1><p className="text-muted-foreground mt-1">Jasni predlozi za vidljivost, ponude i profil — bez automatskih izmena.</p></div><div className="rounded-2xl border border-primary/15 bg-primary/5 p-4 flex gap-3 text-sm text-muted-foreground"><ShieldCheck className="h-5 w-5 shrink-0 text-primary" />AI ne objavljuje kampanje, ne menja podatke i ne pokreće finansijske radnje. Svaka akcija ostaje pod kontrolom vlasnika firme.</div><div className="rounded-2xl border border-border bg-card p-5"><label htmlFor="business-id" className="font-semibold">Analiziraj firmu</label><div className="mt-3 flex gap-3"><input id="business-id" value={businessId} onChange={(event) => setBusinessId(event.target.value)} placeholder="ID firme" className="min-w-0 flex-1 rounded-xl border border-border bg-background px-4 py-3 text-sm" /><button onClick={analyze} disabled={loading} className="rounded-xl bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground disabled:opacity-60">{loading ? <LoaderCircle className="h-4 w-4 animate-spin" /> : 'Pokreni analizu'}</button></div></div><div className="rounded-2xl border border-border bg-card p-5"><h2 className="font-semibold">AI uvid</h2><p className="mt-2 text-sm text-muted-foreground">{message}</p>{insights.length ? <div className="mt-4 space-y-3">{insights.map((insight, index) => <div key={`${insight.area}-${index}`} className="rounded-xl bg-secondary/60 p-4"><span className="text-xs font-semibold uppercase text-primary">{insight.area} · {insight.priority}</span><p className="mt-1 text-sm">{insight.suggestion}</p></div>)}</div> : null}</div></div>
 }

@@ -347,6 +347,7 @@ model User {
   favorites     Favorite[]
   reviews       Review[]
   events        Event[]
+  recommendationEvents RecommendationEvent[]
   searches      SearchQuery[]
   consents      UserConsent[]
   dataRequests  DataSubjectRequest[]
@@ -1029,6 +1030,25 @@ model AuditLog {
   deletedAt   DateTime? @map("deleted_at")
 
   @@map("audit_logs")
+}
+
+// Stores only the recommendation decision, never the user's prompt or private profile data.
+// It makes ranking measurable while keeping the AI layer auditable and privacy-conscious.
+model RecommendationEvent {
+  id         String   @id @default(uuid()) @db.Uuid
+  userId     String?  @map("user_id") @db.Uuid
+  entityType String   @map("entity_type")
+  entityId   String   @map("entity_id")
+  score      Float
+  reason     String?  @db.VarChar(500)
+  surface    String   @default("AI")
+  metadata   Json     @default("{}")
+  user       User?    @relation(fields: [userId], references: [id])
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  @@index([userId, createdAt])
+  @@index([entityType, entityId, createdAt])
+  @@map("recommendation_events")
 }
 
 model Wallet {
