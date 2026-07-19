@@ -3,7 +3,14 @@ import { PrismaService } from "@balkanworks/database";
 import { AiIntent, AiRecommendation } from "./ai.types";
 import { SearchService } from "../search/search.service";
 
-type RecommendationInput = { query: string; cityId?: string; categoryId?: string; surface: "AI_CHAT" | "AI_SEARCH" | "HOME" };
+type RecommendationInput = {
+  query: string;
+  cityId?: string;
+  categoryId?: string;
+  surface: "AI_CHAT" | "AI_SEARCH" | "HOME";
+  /** Bounded aggregate signal, never a prompt or user profile value. */
+  personalizationBoost?: number;
+};
 
 @Injectable()
 export class AiRecommendationsService {
@@ -32,33 +39,52 @@ export class AiRecommendationsService {
     const recommendations: AiRecommendation[] = [
       ...businesses.slice(0, 5).map((business, index) => ({
         entityType: "business" as const, entityId: business.id, title: business.name,
-        subtitle: business.category?.name ?? "Lokalna firma", score: this.score(0.94, index, intent),
+        subtitle: business.category?.name ?? "Lokalna firma", score: this.score(0.94, index, intent, input.personalizationBoost),
         reason: this.businessReason(intent), actionUrl: `/businesses/${business.slug ?? business.id}`,
       })),
       ...offers.map((offer, index) => ({
         entityType: "offer" as const, entityId: offer.id, title: offer.title,
         subtitle: `${offer.business.name} · ${offer.discountPrice ?? offer.price ?? "Ponuda"} ${offer.currency}`,
-        score: this.score(0.86, index, intent), reason: intent.budget === "value" ? "Aktivna ponuda koja odgovara traženju povoljnije opcije." : "Aktivna lokalna ponuda.", actionUrl: `/app/deals/${offer.id}`,
+        score: this.score(0.86, index, intent, input.personalizationBoost), reason: intent.budget === "value" ? "Aktivna ponuda koja odgovara traženju povoljnije opcije." : "Aktivna lokalna ponuda.", actionUrl: `/app/deals/${offer.id}`,
       })),
       ...foodPackages.map((item, index) => ({
         entityType: "save_food_package" as const, entityId: item.id, title: item.title,
         subtitle: `${item.business.name} · ${item.pickupPrice} ${item.currency}`,
-        score: this.score(0.9, index, intent), reason: "Dostupan Save Food paket sa važećim vremenom preuzimanja.", actionUrl: `/app/save-food/${item.id}`,
+        score: this.score(0.9, index, intent, input.personalizationBoost), reason: "Dostupan Save Food paket sa važećim vremenom preuzimanja.", actionUrl: `/app/save-food/${item.id}`,
       })),
     ].sort((a, b) => b.score - a.score).slice(0, 8);
 
     if (userId && recommendations.length) {
       await this.prisma.recommendationEvent.createMany({
-        data: recommendations.map(({ entityType, entityId, score, reason }) => ({ userId, entityType, entityId, score, reason, surface: input.surface, metadata: { intent: intent.needs, urgency: intent.urgency } })),
+        data: recommendations.map(({ entityType, entityId, score, reason }) => ({ userId, entityType, entityId, score, reason, surface: input.surface, metadata: { version: "v2", intent: intent.needs, urgency: intent.urgency, personalized: Boolean(input.personalizationBoost) } })),
       });
     }
     return recommendations;
   }
 
   async forUser(userId: string) {
-    const interests = await this.prisma.userInterest.findMany({ where: { userId }, include: { category: true }, orderBy: { score: "desc" }, take: 3 });
-    const query = interests.map(({ category }) => category.name).join(" ") || "lokalne ponude";
-    return this.discover({ query, surface: "HOME" }, { type: "business_discovery", needs: interests.length ? ["personalizovana preporuka"] : ["lokalna usluga"], urgency: "normal", budget: "standard", confidence: interests.length ? "medium" : "low" }, userId);
+    const since = new Date();
+    since.setDate(since.getDate() - 30);
+    const [interests, events] = await Promise.all([
+      this.prisma.userInterest.findMany({ where: { userId }, include: { category: true }, orderBy: { score: "desc" }, take: 3 }),
+      this.prisma.event.findMany({ where: { userId, createdAt: { gte: since }, deletedAt: null }, select: { eventType: true }, take: 250 }),
+    ]);
+    const eventCounts = events.reduce<Record<string, number>>((counts, event) => {
+      counts[event.eventType] = (counts[event.eventType] ?? 0) + 1;
+      return counts;
+    }, {});
+    const behaviorTerms = [
+      (eventCounts.SAVE_FOOD_RESERVED ?? 0) + (eventCounts.SAVE_FOOD_PICKED_UP ?? 0) > 0 ? "hrana" : null,
+      (eventCounts.DEAL_VIEWED ?? 0) + (eventCounts.OFFER_SAVED ?? 0) > 1 ? "ponude" : null,
+      (eventCounts.SERVICE_REQUEST_CREATED ?? 0) + (eventCounts.BOOKING_CREATED ?? 0) > 0 ? "usluge" : null,
+    ].filter(Boolean) as string[];
+    const query = [...interests.map(({ category }) => category.name), ...behaviorTerms].join(" ") || "lokalne ponude";
+    const personalizationBoost = Math.min(0.06, interests.length * 0.01 + behaviorTerms.length * 0.01);
+    return this.discover(
+      { query, surface: "HOME", personalizationBoost },
+      { type: "business_discovery", needs: interests.length || behaviorTerms.length ? ["personalizovana preporuka"] : ["lokalna usluga"], urgency: "normal", budget: behaviorTerms.includes("ponude") ? "value" : "standard", confidence: interests.length + behaviorTerms.length >= 2 ? "high" : interests.length ? "medium" : "low" },
+      userId,
+    );
   }
 
   private async primaryCity(userId: string) {
@@ -66,9 +92,9 @@ export class AiRecommendationsService {
     return location?.cityId;
   }
 
-  private score(base: number, position: number, intent: AiIntent) {
+  private score(base: number, position: number, intent: AiIntent, personalizationBoost = 0) {
     const urgencyBoost = intent.urgency === "urgent" ? 0.02 : 0;
-    return Math.max(0.5, Number((base + urgencyBoost - position * 0.04).toFixed(2)));
+    return Math.min(0.99, Math.max(0.5, Number((base + urgencyBoost + personalizationBoost - position * 0.04).toFixed(2))));
   }
 
   private businessReason(intent: AiIntent) {
