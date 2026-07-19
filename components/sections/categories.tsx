@@ -1,6 +1,7 @@
 'use client'
 
 import { CATEGORIES } from '@/lib/site'
+import Link from 'next/link'
 import { SectionHeading } from '@/components/section-heading'
 import { cn } from '@/lib/utils'
 import { useI18n } from '@/lib/i18n/context'
@@ -9,6 +10,21 @@ const ACCENT: Record<string, string> = {
   blue: 'bg-secondary text-primary',
   cyan: 'bg-accent text-cyan-accent',
   teal: 'bg-[#e6faf5] text-turquoise',
+}
+
+const CATEGORY_ROUTES: Record<string, string> = {
+  poslovi: '/poslovi',
+  majstori: '/app/category/home-services',
+  kupovina: '/app/deals',
+  dostava: '/app/category/food',
+  putovanja: '/app/category/travel',
+  zdravlje: '/app/category/health',
+  edukacija: '/app/category/education',
+  nekretnine: '/app/category/real-estate',
+  finansije: '/app/wallet',
+  prevoz: '/app/category/auto',
+  dogadjaji: '/app/category/events',
+  ai: '/app/ai',
 }
 
 export function Categories() {
@@ -26,9 +42,9 @@ export function Categories() {
         {CATEGORIES.map((cat) => {
           const item = t.categoryItems[cat.key as keyof typeof t.categoryItems]
           return (
-            <button
+            <Link
               key={cat.key}
-              type="button"
+              href={CATEGORY_ROUTES[cat.key] ?? '/app'}
               className="group flex flex-col items-start gap-3.5 rounded-3xl border border-border bg-card p-6 text-left transition-all duration-300 hover:-translate-y-1 hover:border-primary/40 hover:shadow-card"
             >
               <span
@@ -43,7 +59,7 @@ export function Categories() {
               <span className="text-sm leading-relaxed text-muted-foreground">
                 {item.description}
               </span>
-            </button>
+            </Link>
           )
         })}
       </div>

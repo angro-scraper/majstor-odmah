@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import Link from 'next/link'
 import {
   Briefcase,
   Wrench,
@@ -23,12 +24,14 @@ const MODULES: {
   id: string
   catKey: string
   icon: typeof Briefcase
+  href: string
   items: Item[]
 }[] = [
   {
     id: 'poslovi',
     catKey: 'poslovi',
     icon: Briefcase,
+    href: '/poslovi',
     items: [
       { title: 'Front-end Developer', meta: 'Remote · Puno radno vreme', extra: '2.000 – 3.000 €', badge: 'Novo' },
       { title: 'Marketing Specijalista', meta: 'Beograd · Hibridno', extra: '1.200 – 1.800 €' },
@@ -39,6 +42,7 @@ const MODULES: {
     id: 'usluge',
     catKey: 'majstori',
     icon: Wrench,
+    href: '/app/category/home-services',
     items: [
       { title: 'Marko — Električar', meta: 'Novi Sad · Dostupan danas', extra: 'od 1.500 RSD', badge: 'Top' },
       { title: 'Ivan — Vodoinstalater', meta: 'Beograd · Za 2 sata', extra: 'od 2.000 RSD' },
@@ -49,6 +53,7 @@ const MODULES: {
     id: 'dostava',
     catKey: 'dostava',
     icon: UtensilsCrossed,
+    href: '/app/category/food',
     items: [
       { title: 'Burger House', meta: '30–40 min · Besplatna dostava', extra: '4.8', badge: 'Popust' },
       { title: 'Pizza Bar', meta: '25–35 min · Besplatna dostava', extra: '4.7' },
@@ -59,6 +64,7 @@ const MODULES: {
     id: 'putovanja',
     catKey: 'putovanja',
     icon: Plane,
+    href: '/app/category/travel',
     items: [
       { title: 'Beograd → Istanbul', meta: 'Air Serbia · 20. jun', extra: 'od 128 €', badge: 'Akcija' },
       { title: 'Zagreb → Beč', meta: 'Croatia Airlines · 24. jun', extra: 'od 96 €' },
@@ -69,6 +75,7 @@ const MODULES: {
     id: 'novcanik',
     catKey: 'finansije',
     icon: Wallet,
+    href: '/app/wallet',
     items: [
       { title: 'Plaćanje računa', meta: 'Struja, voda, telefon', extra: 'Bez naknade', badge: 'Novo' },
       { title: 'Transfer novca', meta: 'Trenutno u celom regionu', extra: '0 €' },
@@ -79,6 +86,7 @@ const MODULES: {
     id: 'zdravlje',
     catKey: 'zdravlje',
     icon: HeartPulse,
+    href: '/app/category/health',
     items: [
       { title: 'Dr Marko Jovanović', meta: 'Kardiolog · Klinika Beograd', extra: '22. maj 10:30', badge: 'Slobodno' },
       { title: 'Dr Ana Perić', meta: 'Dermatolog · Novi Sad', extra: '23. maj 12:00' },
@@ -127,15 +135,16 @@ export function FeaturedServices() {
       <div className="mt-10 rounded-[1.75rem] border border-border bg-gradient-to-br from-surface to-secondary/40 p-5 sm:p-10">
         <div className="flex items-center justify-between">
           <h3 className="text-lg font-semibold text-navy">{currentLabel}</h3>
-          <span className="inline-flex items-center gap-1 text-sm font-semibold text-primary">
+          <Link href={current.href} className="inline-flex items-center gap-1 text-sm font-semibold text-primary hover:text-navy">
             {t.cta.showAll} <ArrowUpRight className="size-4" />
-          </span>
+          </Link>
         </div>
 
         <div className="mt-5 grid gap-3 md:grid-cols-3">
           {current.items.map((item) => (
-            <div
+            <Link
               key={item.title}
+              href={current.href}
               className="flex flex-col gap-3 rounded-2xl border border-border bg-card p-4 transition-all hover:-translate-y-1 hover:shadow-card"
             >
               <div className="flex items-start justify-between">
@@ -165,7 +174,7 @@ export function FeaturedServices() {
                   )}
                 </span>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
       </div>
