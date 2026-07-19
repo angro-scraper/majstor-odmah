@@ -3,8 +3,8 @@ import { ArrowRight, Compass, MapPin, Sparkles } from 'lucide-react'
 import { BusinessCard } from '@/components/app/business-card'
 
 const localBusinesses = [
-  { id: 2, name: 'Quick Plumbing Co', rating: 4.8, reviews: 189, distance: '1.2 km', category: 'Vodoinstalater', verified: true, responseTime: '< 2 sata' },
-  { id: 3, name: 'Pro Painting Services', rating: 4.7, reviews: 156, distance: '2.1 km', category: 'Majstori za dom', verified: false, responseTime: 'Danas' },
+  { id: 2, name: 'Brzi Vodoinstalateri', rating: 4.8, reviews: 189, distance: '1.2 km', category: 'Vodoinstalater', verified: true, responseTime: '< 2 sata' },
+  { id: 3, name: 'Pro Krečenje', rating: 4.7, reviews: 156, distance: '2.1 km', category: 'Majstori za dom', verified: false, responseTime: 'Danas' },
 ]
 
 export const metadata = { title: 'Otkrij — balkan.works' }

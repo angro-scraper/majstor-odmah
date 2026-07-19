@@ -4,10 +4,10 @@ import { Search, Eye, AlertTriangle, Trash2 } from 'lucide-react'
 import { useState } from 'react'
 
 const businesses = [
-  { id: 1, name: 'Elite Electricians', owner: 'Marko Marković', category: 'Electrical', verified: true, rating: 4.9, views: 2481 },
-  { id: 2, name: 'Quick Plumbing', owner: 'Ana Nikolić', category: 'Plumbing', verified: true, rating: 4.8, views: 1840 },
-  { id: 3, name: 'Fast Fixes', owner: 'Unknown', category: 'General', verified: false, rating: 2.1, views: 340 },
-  { id: 4, name: 'Pro Painting', owner: 'Dejan Stojanović', category: 'Painting', verified: true, rating: 4.7, views: 1250 },
+  { id: 1, name: 'Elite Električari', owner: 'Marko Marković', category: 'Električarske usluge', verified: true, rating: 4.9, views: 2481 },
+  { id: 2, name: 'Brzi Vodoinstalateri', owner: 'Ana Nikolić', category: 'Vodoinstalaterske usluge', verified: true, rating: 4.8, views: 1840 },
+  { id: 3, name: 'Brza Rešenja', owner: 'Nije navedeno', category: 'Opšte usluge', verified: false, rating: 2.1, views: 340 },
+  { id: 4, name: 'Pro Krečenje', owner: 'Dejan Stojanović', category: 'Krečenje', verified: true, rating: 4.7, views: 1250 },
 ]
 
 export default function BusinessesPage() {
@@ -25,17 +25,17 @@ export default function BusinessesPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-bold">Business Management</h1>
-        <p className="text-muted-foreground mt-1">Manage platform businesses</p>
+        <h1 className="text-3xl font-bold">Upravljanje firmama</h1>
+        <p className="text-muted-foreground mt-1">Pregled i upravljanje firmama na platformi</p>
       </div>
 
       {/* Stats */}
       <div className="grid grid-cols-4 gap-4">
         {[
-          { label: 'Total Businesses', value: '3,241' },
-          { label: 'Verified', value: '2,940' },
-          { label: 'Pending', value: '18' },
-          { label: 'Flagged', value: '8' },
+          { label: 'Ukupno firmi', value: '3.241' },
+          { label: 'Verifikovano', value: '2.940' },
+          { label: 'Na čekanju', value: '18' },
+          { label: 'Označeno', value: '8' },
         ].map((stat) => (
           <div key={stat.label} className="p-4 rounded-xl border border-border bg-card">
             <p className="text-sm text-muted-foreground">{stat.label}</p>
@@ -50,7 +50,7 @@ export default function BusinessesPage() {
           <Search className="absolute left-3 top-3 w-5 h-5 text-muted-foreground" />
           <input
             type="text"
-            placeholder="Search businesses..."
+            placeholder="Pretraži firme..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className="w-full pl-10 pr-4 py-2.5 rounded-lg border border-border bg-card text-sm placeholder:text-muted-foreground focus:outline-none focus:border-primary"
@@ -61,10 +61,10 @@ export default function BusinessesPage() {
           onChange={(e) => setFilter(e.target.value)}
           className="px-4 py-2.5 rounded-lg border border-border bg-card text-sm focus:outline-none focus:border-primary"
         >
-          <option value="all">All</option>
-          <option value="verified">Verified</option>
-          <option value="unverified">Unverified</option>
-          <option value="flagged">Flagged</option>
+          <option value="all">Sve firme</option>
+          <option value="verified">Verifikovane</option>
+          <option value="unverified">Neverifikovane</option>
+          <option value="flagged">Označene</option>
         </select>
       </div>
 
@@ -73,13 +73,13 @@ export default function BusinessesPage() {
         <table className="w-full">
           <thead className="bg-secondary/50 border-b border-border">
             <tr>
-              <th className="px-6 py-3 text-left text-sm font-semibold">Business</th>
-              <th className="px-6 py-3 text-left text-sm font-semibold">Owner</th>
-              <th className="px-6 py-3 text-left text-sm font-semibold">Category</th>
-              <th className="px-6 py-3 text-left text-sm font-semibold">Verified</th>
-              <th className="px-6 py-3 text-left text-sm font-semibold">Rating</th>
-              <th className="px-6 py-3 text-left text-sm font-semibold">Views</th>
-              <th className="px-6 py-3 text-left text-sm font-semibold">Actions</th>
+              <th className="px-6 py-3 text-left text-sm font-semibold">Firma</th>
+              <th className="px-6 py-3 text-left text-sm font-semibold">Vlasnik</th>
+              <th className="px-6 py-3 text-left text-sm font-semibold">Kategorija</th>
+              <th className="px-6 py-3 text-left text-sm font-semibold">Verifikacija</th>
+              <th className="px-6 py-3 text-left text-sm font-semibold">Ocena</th>
+              <th className="px-6 py-3 text-left text-sm font-semibold">Pregledi</th>
+              <th className="px-6 py-3 text-left text-sm font-semibold">Akcije</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-border">
@@ -94,7 +94,7 @@ export default function BusinessesPage() {
                       ? 'bg-green-500/20 text-green-600'
                       : 'bg-amber-500/20 text-amber-600'
                   }`}>
-                    {business.verified ? 'Verified' : 'Pending'}
+                    {business.verified ? 'Verifikovano' : 'Na čekanju'}
                   </span>
                 </td>
                 <td className="px-6 py-4 text-sm font-medium">{business.rating}</td>

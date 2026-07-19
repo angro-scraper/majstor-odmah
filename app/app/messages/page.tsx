@@ -5,9 +5,9 @@ import { useSearchParams } from 'next/navigation'
 import { FormEvent, Suspense, useMemo, useState } from 'react'
 
 const conversations = [
-  { id: 1, name: 'Elite Electricians', avatar: 'E', lastMessage: 'Termin je potvrđen za sutra', time: 'Pre 2 min', unread: 2 },
-  { id: 2, name: 'Quick Plumbing Co', avatar: 'Q', lastMessage: 'Hvala na recenziji!', time: 'Pre 1 h', unread: 0 },
-  { id: 3, name: 'Pro Painting Services', avatar: 'P', lastMessage: 'Možemo pomoći sa terminom', time: 'Juče', unread: 0 },
+  { id: 1, name: 'Elite Električari', avatar: 'E', lastMessage: 'Termin je potvrđen za sutra', time: 'Pre 2 min', unread: 2 },
+  { id: 2, name: 'Brzi Vodoinstalateri', avatar: 'B', lastMessage: 'Hvala na recenziji!', time: 'Pre 1 h', unread: 0 },
+  { id: 3, name: 'Pro Krečenje', avatar: 'P', lastMessage: 'Možemo pomoći sa terminom', time: 'Juče', unread: 0 },
 ]
 
 type ChatMessage = { id: number; sender: 'them' | 'me'; text: string; time: string }

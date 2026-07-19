@@ -23,18 +23,18 @@ export default function AdminLayout({
         <div className="p-6 border-b border-border">
           <Link href="/admin" className="flex items-center gap-2 font-bold text-lg">
             <Shield className="w-6 h-6 text-destructive" />
-            Admin Panel
+            Administratorski panel
           </Link>
         </div>
 
         <nav className="p-4 space-y-2">
           {[
-            { label: 'Dashboard', href: '/admin', icon: Shield },
-            { label: 'Moderation', href: '/admin/moderation', icon: AlertCircle },
-            { label: 'Verification', href: '/admin/verification', icon: CheckCircle },
-            { label: 'Users', href: '/admin/users', icon: Users },
-            { label: 'Businesses', href: '/admin/businesses', icon: Shield },
-            { label: 'Settings', href: '/admin/settings', icon: Settings },
+            { label: 'Kontrolna tabla', href: '/admin', icon: Shield },
+            { label: 'Moderacija', href: '/admin/moderation', icon: AlertCircle },
+            { label: 'Verifikacija', href: '/admin/verification', icon: CheckCircle },
+            { label: 'Korisnici', href: '/admin/users', icon: Users },
+            { label: 'Firme', href: '/admin/businesses', icon: Shield },
+            { label: 'Podešavanja', href: '/admin/settings', icon: Settings },
           ].map((item) => (
             <Link
               key={item.href}
@@ -50,7 +50,7 @@ export default function AdminLayout({
         <div className="absolute bottom-4 left-4 right-4 space-y-2">
           <button className="w-full flex items-center justify-center gap-2 px-4 py-2 rounded-lg border border-destructive/50 text-destructive text-sm font-medium hover:bg-destructive/10 transition">
             <LogOut className="w-4 h-4" />
-            Log Out
+            Odjavi se
           </button>
         </div>
       </aside>
@@ -68,7 +68,7 @@ export default function AdminLayout({
 
           <div className="md:hidden text-lg font-bold flex items-center gap-2">
             <Shield className="w-5 h-5 text-destructive" />
-            Admin
+            Administracija
           </div>
 
           <div className="flex items-center gap-4">

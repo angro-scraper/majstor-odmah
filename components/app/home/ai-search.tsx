@@ -17,12 +17,12 @@ export function AISearch() {
     <div className="px-4 space-y-3">
       <div className="flex items-center gap-2 px-3 py-2 text-xs font-semibold text-primary bg-primary/10 rounded-full w-fit">
         <Sparkles className="w-3 h-3" />
-        AI-Powered Search
+        AI pretraga
       </div>
       <div className="flex gap-2">
         <input
           type="text"
-          placeholder="I need an electrician today..."
+          placeholder="Treba mi električar danas…"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           onKeyDown={(event) => {
@@ -40,7 +40,7 @@ export function AISearch() {
         </button>
       </div>
       <div className="flex gap-2 flex-wrap">
-        {['Electrician', 'Plumber', 'Today', 'Nearby'].map((tag) => (
+        {['Električar', 'Vodoinstalater', 'Danas', 'U blizini'].map((tag) => (
           <button
             key={tag}
             onClick={() => {

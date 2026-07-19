@@ -1,16 +1,16 @@
 import { Phone, MessageSquare, Star, CheckCircle } from 'lucide-react'
 
 const activities = [
-  { id: 1, type: 'call', text: 'Phone call from John', time: '2 hours ago', icon: Phone },
-  { id: 2, type: 'message', text: 'New message from Sarah', time: '1 day ago', icon: MessageSquare },
-  { id: 3, type: 'review', text: '5-star review received', time: '2 days ago', icon: Star },
-  { id: 4, type: 'conversion', text: 'Lead converted to booking', time: '3 days ago', icon: CheckCircle },
+  { id: 1, type: 'call', text: 'Poziv od Jovana', time: 'Pre 2 sata', icon: Phone },
+  { id: 2, type: 'message', text: 'Nova poruka od Sare', time: 'Pre 1 dana', icon: MessageSquare },
+  { id: 3, type: 'review', text: 'Primljena recenzija sa 5 zvezdica', time: 'Pre 2 dana', icon: Star },
+  { id: 4, type: 'conversion', text: 'Upit je pretvoren u rezervaciju', time: 'Pre 3 dana', icon: CheckCircle },
 ]
 
 export function RecentActivity() {
   return (
     <div className="p-6 rounded-2xl border border-border bg-card">
-      <h2 className="text-lg font-semibold mb-4">Recent Activity</h2>
+      <h2 className="text-lg font-semibold mb-4">Nedavna aktivnost</h2>
       <div className="space-y-4">
         {activities.map((activity) => {
           const Icon = activity.icon

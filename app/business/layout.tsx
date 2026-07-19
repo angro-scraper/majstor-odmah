@@ -24,19 +24,19 @@ export default function BusinessLayout({
           <Link href="/business" className="flex items-center gap-2 font-bold text-lg">
             <BarChart3 className="w-6 h-6 text-primary" />
             balkan.works
-            <span className="text-xs bg-primary/20 text-primary px-2 py-1 rounded">Business</span>
+            <span className="text-xs bg-primary/20 text-primary px-2 py-1 rounded">Biznis</span>
           </Link>
         </div>
 
         <nav className="p-4 space-y-2">
           {[
-            { label: 'Dashboard', href: '/business', icon: BarChart3 },
-            { label: 'Analytics', href: '/business/analytics', icon: BarChart3 },
-            { label: 'Leads', href: '/business/leads', icon: BarChart3 },
+            { label: 'Kontrolna tabla', href: '/business', icon: BarChart3 },
+            { label: 'Analitika', href: '/business/analytics', icon: BarChart3 },
+            { label: 'Upiti', href: '/business/leads', icon: BarChart3 },
             { label: 'Ponude', href: '/business/offers', icon: Tags },
-            { label: 'Messages', href: '/business/messages', icon: MessageSquare },
-            { label: 'AI Coach', href: '/business/ai-coach', icon: BarChart3 },
-            { label: 'Settings', href: '/business/settings', icon: Settings },
+            { label: 'Poruke', href: '/business/messages', icon: MessageSquare },
+            { label: 'AI savetnik', href: '/business/ai-coach', icon: BarChart3 },
+            { label: 'Podešavanja', href: '/business/settings', icon: Settings },
           ].map((item) => (
             <Link
               key={item.href}
@@ -52,7 +52,7 @@ export default function BusinessLayout({
         <div className="absolute bottom-4 left-4 right-4 space-y-2">
           <button className="w-full flex items-center justify-center gap-2 px-4 py-2 rounded-lg border border-destructive/50 text-destructive text-sm font-medium hover:bg-destructive/10 transition">
             <LogOut className="w-4 h-4" />
-            Log Out
+            Odjavi se
           </button>
         </div>
       </aside>

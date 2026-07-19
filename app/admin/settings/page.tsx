@@ -4,19 +4,19 @@ export default function AdminSettingsPage() {
   return (
     <div className="space-y-6 max-w-2xl">
       <div>
-        <h1 className="text-3xl font-bold">Admin Settings</h1>
-        <p className="text-muted-foreground mt-1">Manage system configuration</p>
+        <h1 className="text-3xl font-bold">Administratorska podešavanja</h1>
+        <p className="text-muted-foreground mt-1">Upravljanje konfiguracijom sistema</p>
       </div>
 
       {/* System Settings */}
       <div className="p-6 rounded-2xl border border-border bg-card">
         <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
           <Settings className="w-5 h-5" />
-          System Configuration
+          Konfiguracija sistema
         </h2>
         <div className="space-y-4">
           <div>
-            <label className="block text-sm font-medium mb-2">Max Upload Size (MB)</label>
+            <label className="block text-sm font-medium mb-2">Najveća veličina otpremanja (MB)</label>
             <input
               type="number"
               defaultValue="50"
@@ -24,7 +24,7 @@ export default function AdminSettingsPage() {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium mb-2">Commission Rate (%)</label>
+            <label className="block text-sm font-medium mb-2">Stopa provizije (%)</label>
             <input
               type="number"
               defaultValue="5"
@@ -33,7 +33,7 @@ export default function AdminSettingsPage() {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium mb-2">Auto-Expire Reports (Days)</label>
+            <label className="block text-sm font-medium mb-2">Automatsko zatvaranje prijava (dani)</label>
             <input
               type="number"
               defaultValue="30"
@@ -47,14 +47,14 @@ export default function AdminSettingsPage() {
       <div className="p-6 rounded-2xl border border-border bg-card">
         <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
           <Lock className="w-5 h-5" />
-          Security
+          Bezbednost
         </h2>
         <div className="space-y-3">
           {[
-            'Enable 2FA for admins',
-            'Require email verification',
-            'Enable API rate limiting',
-            'Log all admin actions',
+            'Uključi dvofaktorsku prijavu za administratore',
+            'Zahtevaj potvrdu imejl adrese',
+            'Uključi ograničavanje API zahteva',
+            'Beleži sve administratorske radnje',
           ].map((setting) => (
             <div key={setting} className="flex items-center justify-between p-3 rounded-lg bg-secondary/50">
               <span className="text-sm font-medium">{setting}</span>
@@ -68,14 +68,14 @@ export default function AdminSettingsPage() {
       <div className="p-6 rounded-2xl border border-border bg-card">
         <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
           <Bell className="w-5 h-5" />
-          Notifications
+          Obaveštenja
         </h2>
         <div className="space-y-3">
           {[
-            { label: 'Alert on new reports', checked: true },
-            { label: 'Daily summary email', checked: true },
-            { label: 'Alert on suspicious activity', checked: true },
-            { label: 'System alerts', checked: true },
+            { label: 'Upozorenje za nove prijave', checked: true },
+            { label: 'Dnevni pregled na imejl', checked: true },
+            { label: 'Upozorenje za sumnjivu aktivnost', checked: true },
+            { label: 'Sistemska upozorenja', checked: true },
           ].map((notif) => (
             <div key={notif.label} className="flex items-center justify-between p-3 rounded-lg bg-secondary/50">
               <span className="text-sm font-medium">{notif.label}</span>
@@ -89,13 +89,13 @@ export default function AdminSettingsPage() {
       <div className="p-6 rounded-2xl border border-border bg-card">
         <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
           <Users className="w-5 h-5" />
-          Admin Users
+          Administratori
         </h2>
         <div className="space-y-3">
           {[
-            { name: 'System Admin', role: 'Super Admin', email: 'admin@balkan.works' },
-            { name: 'Moderation Team', role: 'Moderator', email: 'mods@balkan.works' },
-            { name: 'Support Team', role: 'Support', email: 'support@balkan.works' },
+            { name: 'Sistemski administrator', role: 'Glavni administrator', email: 'admin@balkan.works' },
+            { name: 'Tim za moderaciju', role: 'Moderator', email: 'moderacija@balkan.works' },
+            { name: 'Tim za podršku', role: 'Podrška', email: 'podrska@balkan.works' },
           ].map((user, i) => (
             <div key={i} className="p-3 rounded-lg bg-secondary/50 flex items-center justify-between">
               <div>
@@ -111,10 +111,10 @@ export default function AdminSettingsPage() {
       {/* Actions */}
       <div className="flex gap-3">
         <button className="px-6 py-2.5 rounded-lg bg-primary text-primary-foreground text-sm font-semibold hover:bg-primary/90 transition">
-          Save Changes
+          Sačuvaj izmene
         </button>
         <button className="px-6 py-2.5 rounded-lg border border-border bg-card text-sm font-semibold hover:border-primary transition">
-          Reset to Defaults
+          Vrati podrazumevano
         </button>
       </div>
     </div>

@@ -5,11 +5,11 @@ import { Search, Filter, Phone, MessageSquare } from 'lucide-react'
 import { useState } from 'react'
 
 const leads = [
-  { id: 1, name: 'Marko Jeremić', service: 'Electrical Repair', date: 'Jan 15', status: 'new', rating: 'Not rated' },
-  { id: 2, name: 'Ana Nikolić', service: 'Plumbing', date: 'Jan 14', status: 'contacted', rating: 'Not rated' },
-  { id: 3, name: 'Dejan Stojanović', service: 'HVAC', date: 'Jan 12', status: 'converted', rating: '5 stars' },
-  { id: 4, name: 'Jelena Marić', service: 'Electrical Repair', date: 'Jan 10', status: 'new', rating: 'Not rated' },
-  { id: 5, name: 'Nebojša Pavlović', service: 'Painting', date: 'Jan 9', status: 'converted', rating: '4 stars' },
+  { id: 1, name: 'Marko Jeremić', service: 'Popravka elektroinstalacija', date: '15. jan', status: 'new', rating: 'Nije ocenjen' },
+  { id: 2, name: 'Ana Nikolić', service: 'Vodoinstalaterske usluge', date: '14. jan', status: 'contacted', rating: 'Nije ocenjen' },
+  { id: 3, name: 'Dejan Stojanović', service: 'Klima i ventilacija', date: '12. jan', status: 'converted', rating: '5 zvezdica' },
+  { id: 4, name: 'Jelena Marić', service: 'Popravka elektroinstalacija', date: '10. jan', status: 'new', rating: 'Nije ocenjen' },
+  { id: 5, name: 'Nebojša Pavlović', service: 'Krečenje', date: '9. jan', status: 'converted', rating: '4 zvezdice' },
 ]
 
 export default function LeadsPage() {
@@ -25,16 +25,16 @@ export default function LeadsPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-bold">Leads Management</h1>
-        <p className="text-muted-foreground mt-1">Manage and track all your inquiries</p>
+        <h1 className="text-3xl font-bold">Upravljanje upitima</h1>
+        <p className="text-muted-foreground mt-1">Pratite i organizujte sve upite kupaca</p>
       </div>
 
       {/* Stats */}
       <div className="grid grid-cols-3 gap-4">
         {[
-          { label: 'New Leads', value: '12', color: 'bg-blue-500/10 text-blue-600' },
-          { label: 'Contacted', value: '24', color: 'bg-amber-500/10 text-amber-600' },
-          { label: 'Converted', value: '8', color: 'bg-green-500/10 text-green-600' },
+          { label: 'Novi upiti', value: '12', color: 'bg-blue-500/10 text-blue-600' },
+          { label: 'Kontaktirani', value: '24', color: 'bg-amber-500/10 text-amber-600' },
+          { label: 'Pretvoreni', value: '8', color: 'bg-green-500/10 text-green-600' },
         ].map((stat) => (
           <div key={stat.label} className={`p-4 rounded-xl border border-border ${stat.color}`}>
             <p className="text-sm font-medium opacity-75">{stat.label}</p>
@@ -49,7 +49,7 @@ export default function LeadsPage() {
           <Search className="absolute left-3 top-3 w-5 h-5 text-muted-foreground" />
           <input
             type="text"
-            placeholder="Search leads..."
+            placeholder="Pretraži upite..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className="w-full pl-10 pr-4 py-2.5 rounded-lg border border-border bg-card text-sm placeholder:text-muted-foreground focus:outline-none focus:border-primary"
@@ -57,17 +57,17 @@ export default function LeadsPage() {
         </div>
         <button className="px-4 py-2.5 rounded-lg border border-border bg-card hover:border-primary transition flex items-center gap-2">
           <Filter className="w-5 h-5" />
-          Filter
+          Filtriraj
         </button>
       </div>
 
       {/* Tabs */}
       <Tabs defaultValue="all" value={filter} onValueChange={setFilter}>
         <TabsList>
-          <TabsTrigger value="all">All Leads ({leads.length})</TabsTrigger>
-          <TabsTrigger value="new">New ({leads.filter(l => l.status === 'new').length})</TabsTrigger>
-          <TabsTrigger value="contacted">Contacted ({leads.filter(l => l.status === 'contacted').length})</TabsTrigger>
-          <TabsTrigger value="converted">Converted ({leads.filter(l => l.status === 'converted').length})</TabsTrigger>
+          <TabsTrigger value="all">Svi upiti ({leads.length})</TabsTrigger>
+          <TabsTrigger value="new">Novi ({leads.filter(l => l.status === 'new').length})</TabsTrigger>
+          <TabsTrigger value="contacted">Kontaktirani ({leads.filter(l => l.status === 'contacted').length})</TabsTrigger>
+          <TabsTrigger value="converted">Pretvoreni ({leads.filter(l => l.status === 'converted').length})</TabsTrigger>
         </TabsList>
 
         <TabsContent value={filter} className="mt-6">
@@ -75,12 +75,12 @@ export default function LeadsPage() {
             <table className="w-full">
               <thead className="bg-secondary/50 border-b border-border">
                 <tr>
-                  <th className="px-6 py-3 text-left text-sm font-semibold">Name</th>
-                  <th className="px-6 py-3 text-left text-sm font-semibold">Service</th>
-                  <th className="px-6 py-3 text-left text-sm font-semibold">Date</th>
+                  <th className="px-6 py-3 text-left text-sm font-semibold">Ime</th>
+                  <th className="px-6 py-3 text-left text-sm font-semibold">Usluga</th>
+                  <th className="px-6 py-3 text-left text-sm font-semibold">Datum</th>
                   <th className="px-6 py-3 text-left text-sm font-semibold">Status</th>
-                  <th className="px-6 py-3 text-left text-sm font-semibold">Rating</th>
-                  <th className="px-6 py-3 text-left text-sm font-semibold">Actions</th>
+                  <th className="px-6 py-3 text-left text-sm font-semibold">Ocena</th>
+                  <th className="px-6 py-3 text-left text-sm font-semibold">Akcije</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-border">
@@ -95,7 +95,7 @@ export default function LeadsPage() {
                         lead.status === 'contacted' ? 'bg-amber-500/20 text-amber-600' :
                         'bg-green-500/20 text-green-600'
                       }`}>
-                        {lead.status.charAt(0).toUpperCase() + lead.status.slice(1)}
+                        {{ new: 'Novi', contacted: 'Kontaktiran', converted: 'Pretvoren' }[lead.status]}
                       </span>
                     </td>
                     <td className="px-6 py-4 text-sm text-muted-foreground">{lead.rating}</td>

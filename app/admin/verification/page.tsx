@@ -6,29 +6,29 @@ import { useState } from 'react'
 const pendingBusinesses = [
   {
     id: 1,
-    name: 'Elite Electricians',
+    name: 'Elite Električari',
     owner: 'Marko Marković',
-    category: 'Electrical Services',
+    category: 'Električarske usluge',
     documents: { license: '✓', insurance: '✓', id: '✗', address: '✗' },
-    submittedDate: '2 days ago',
+    submittedDate: 'pre 2 dana',
     progress: 50,
   },
   {
     id: 2,
-    name: 'Quick Plumbing',
+    name: 'Brzi Vodoinstalateri',
     owner: 'Ana Nikolić',
-    category: 'Plumbing',
+    category: 'Vodoinstalaterske usluge',
     documents: { license: '✓', insurance: '✓', id: '✓', address: '✓' },
-    submittedDate: '1 day ago',
+    submittedDate: 'pre 1 dana',
     progress: 100,
   },
   {
     id: 3,
-    name: 'Pro Painting',
+    name: 'Pro Krečenje',
     owner: 'Dejan Stojanović',
-    category: 'Painting Services',
+    category: 'Krečenje',
     documents: { license: '✓', insurance: '✗', id: '✗', address: '✓' },
-    submittedDate: '3 days ago',
+    submittedDate: 'pre 3 dana',
     progress: 50,
   },
 ]
@@ -41,17 +41,17 @@ export default function VerificationPage() {
       <div>
         <h1 className="text-3xl font-bold flex items-center gap-2">
           <CheckCircle className="w-8 h-8 text-primary" />
-          Business Verification
+          Verifikacija firmi
         </h1>
-        <p className="text-muted-foreground mt-1">Review and approve business applications</p>
+        <p className="text-muted-foreground mt-1">Pregledajte i odobravajte prijave firmi</p>
       </div>
 
       {/* Stats */}
       <div className="grid grid-cols-3 gap-4">
         {[
-          { label: 'Pending', value: '18', color: 'bg-blue-500/20 text-blue-600' },
-          { label: 'Approved', value: '2,940', color: 'bg-green-500/20 text-green-600' },
-          { label: 'Rejected', value: '24', color: 'bg-red-500/20 text-red-600' },
+          { label: 'Na čekanju', value: '18', color: 'bg-blue-500/20 text-blue-600' },
+          { label: 'Odobreno', value: '2.940', color: 'bg-green-500/20 text-green-600' },
+          { label: 'Odbijeno', value: '24', color: 'bg-red-500/20 text-red-600' },
         ].map((stat) => (
           <div key={stat.label} className={`p-4 rounded-xl border border-border ${stat.color}`}>
             <p className="text-sm font-medium opacity-75">{stat.label}</p>
@@ -74,7 +74,7 @@ export default function VerificationPage() {
               <div className="flex items-start justify-between mb-3">
                 <div>
                   <h3 className="text-lg font-semibold">{business.name}</h3>
-                  <p className="text-sm text-muted-foreground">{business.category} • Owner: {business.owner}</p>
+                  <p className="text-sm text-muted-foreground">{business.category} • Vlasnik: {business.owner}</p>
                 </div>
                 <span className="text-xs text-muted-foreground">{business.submittedDate}</span>
               </div>
@@ -109,7 +109,7 @@ export default function VerificationPage() {
             {expandedId === business.id && (
               <div className="mt-6 pt-6 border-t border-border space-y-4">
                 <div className="bg-secondary/50 p-4 rounded-lg">
-                  <h4 className="font-semibold text-sm mb-2">Required Documents</h4>
+                  <h4 className="font-semibold text-sm mb-2">Potrebna dokumenta</h4>
                   <ul className="space-y-2 text-sm text-muted-foreground">
                     {Object.entries(business.documents).map(([doc, status]) => (
                       <li key={doc} className="flex items-center gap-2">
@@ -118,7 +118,7 @@ export default function VerificationPage() {
                         ) : (
                           <X className="w-4 h-4 text-red-600" />
                         )}
-                        <span className="capitalize">{doc} Verification</span>
+                        <span className="capitalize">Provera: {({ license: 'licenca', insurance: 'osiguranje', id: 'identitet', address: 'adresa' }[doc] ?? doc)}</span>
                       </li>
                     ))}
                   </ul>
@@ -129,22 +129,22 @@ export default function VerificationPage() {
                     <>
                       <button className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-green-500/20 text-green-600 border border-green-500/50 hover:bg-green-500/30 transition text-sm font-semibold">
                         <CheckCircle className="w-4 h-4" />
-                        Approve Business
+                        Odobri firmu
                       </button>
                       <button className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg border border-border bg-secondary hover:bg-secondary/80 transition text-sm font-semibold">
                         <Eye className="w-4 h-4" />
-                        Inspect More
+                        Pogledaj detaljnije
                       </button>
                     </>
                   ) : (
                     <>
                       <button className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg border border-border bg-secondary hover:bg-secondary/80 transition text-sm font-semibold">
                         <Download className="w-4 h-4" />
-                        Request Documents
+                        Zatraži dokumenta
                       </button>
                       <button className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg border border-red-500/50 bg-red-500/10 hover:bg-red-500/20 transition text-sm font-semibold text-red-600">
                         <X className="w-4 h-4" />
-                        Reject
+                        Odbij
                       </button>
                     </>
                   )}

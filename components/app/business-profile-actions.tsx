@@ -33,7 +33,7 @@ export function BusinessProfileActions({ businessId, businessName }: BusinessPro
       <div className="flex items-start justify-between gap-4">
         <div className="flex-1">
           <div className="flex items-center gap-2 mb-2"><h1 className="text-2xl font-bold">{businessName}</h1></div>
-          <p className="text-sm text-muted-foreground mb-3">Electrical Services</p>
+          <p className="text-sm text-muted-foreground mb-3">Električarske usluge</p>
         </div>
         <button type="button" onClick={() => setSaved((current) => !current)} aria-label={saved ? 'Ukloni iz sačuvanog' : 'Sačuvaj firmu'} aria-pressed={saved} className="p-3 rounded-lg bg-secondary border border-border hover:border-primary transition"><Bookmark className={`w-5 h-5 ${saved ? 'fill-primary text-primary' : ''}`} /></button>
       </div>

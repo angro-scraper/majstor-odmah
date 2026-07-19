@@ -7,7 +7,7 @@ const monthlyData = [
   { month: 'Feb', views: 3210, calls: 340, conversions: 32 },
   { month: 'Mar', views: 2290, calls: 290, conversions: 23 },
   { month: 'Apr', views: 2000, calls: 280, conversions: 22 },
-  { month: 'May', views: 2181, calls: 280, conversions: 29 },
+  { month: 'Maj', views: 2181, calls: 280, conversions: 29 },
   { month: 'Jun', views: 2500, calls: 340, conversions: 35 },
 ]
 
@@ -15,17 +15,17 @@ export default function AnalyticsPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-bold">Analytics</h1>
-        <p className="text-muted-foreground mt-1">Detailed insights into your business performance</p>
+        <h1 className="text-3xl font-bold">Analitika</h1>
+        <p className="text-muted-foreground mt-1">Detaljan uvid u rezultate vaše firme</p>
       </div>
 
       {/* KPIs */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         {[
-          { label: 'Total Views', value: '15,482', change: '+23.5%' },
-          { label: 'Total Calls', value: '1,842', change: '+12.1%' },
-          { label: 'Conversion Rate', value: '8.4%', change: '+2.3%' },
-          { label: 'Avg. Response Time', value: '2.1h', change: '-15%' },
+          { label: 'Ukupno pregleda', value: '15.482', change: '+23,5%' },
+          { label: 'Ukupno poziva', value: '1.842', change: '+12,1%' },
+          { label: 'Stopa konverzije', value: '8,4%', change: '+2,3%' },
+          { label: 'Prosečno vreme odgovora', value: '2,1 h', change: '-15%' },
         ].map((kpi) => (
           <div key={kpi.label} className="p-4 rounded-xl border border-border bg-card">
             <p className="text-xs text-muted-foreground font-semibold uppercase">{kpi.label}</p>
@@ -38,7 +38,7 @@ export default function AnalyticsPage() {
       {/* Charts */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div className="p-6 rounded-2xl border border-border bg-card">
-          <h2 className="text-lg font-semibold mb-4">Performance Trend</h2>
+          <h2 className="text-lg font-semibold mb-4">Trend rezultata</h2>
           <ResponsiveContainer width="100%" height={300}>
             <LineChart data={monthlyData}>
               <CartesianGrid strokeDasharray="3 3" stroke="rgba(0,0,0,0.1)" />
@@ -53,7 +53,7 @@ export default function AnalyticsPage() {
         </div>
 
         <div className="p-6 rounded-2xl border border-border bg-card">
-          <h2 className="text-lg font-semibold mb-4">Conversions by Month</h2>
+          <h2 className="text-lg font-semibold mb-4">Konverzije po mesecima</h2>
           <ResponsiveContainer width="100%" height={300}>
             <BarChart data={monthlyData}>
               <CartesianGrid strokeDasharray="3 3" stroke="rgba(0,0,0,0.1)" />
@@ -68,19 +68,19 @@ export default function AnalyticsPage() {
 
       {/* Top Performing Services */}
       <div className="p-6 rounded-2xl border border-border bg-card">
-        <h2 className="text-lg font-semibold mb-4">Top Services</h2>
+        <h2 className="text-lg font-semibold mb-4">Najuspešnije usluge</h2>
         <div className="space-y-3">
           {[
-            { service: 'Electrical Repairs', views: 1240, calls: 124, rate: '9.8%' },
-            { service: 'Plumbing', views: 980, calls: 95, rate: '8.2%' },
-            { service: 'HVAC Installation', views: 750, calls: 72, rate: '7.5%' },
-            { service: 'Painting Services', views: 640, calls: 58, rate: '6.8%' },
+            { service: 'Popravke elektroinstalacija', views: 1240, calls: 124, rate: '9,8%' },
+            { service: 'Vodoinstalaterske usluge', views: 980, calls: 95, rate: '8,2%' },
+            { service: 'Ugradnja klima sistema', views: 750, calls: 72, rate: '7,5%' },
+            { service: 'Krečenje', views: 640, calls: 58, rate: '6,8%' },
           ].map((service) => (
             <div key={service.service} className="flex items-center justify-between p-3 rounded-lg bg-secondary/50 hover:bg-secondary transition">
               <span className="text-sm font-medium">{service.service}</span>
               <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                <span>{service.views} views</span>
-                <span>{service.calls} calls</span>
+                <span>{service.views} pregleda</span>
+                <span>{service.calls} poziva</span>
                 <span className="text-primary font-semibold">{service.rate}</span>
               </div>
             </div>

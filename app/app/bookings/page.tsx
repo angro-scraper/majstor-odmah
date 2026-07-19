@@ -16,9 +16,9 @@ type Booking = {
 }
 
 const initialBookings: Booking[] = [
-  { id: 1, service: 'Popravka elektroinstalacija', business: 'Elite Electricians', businessId: 1, date: '20. januar', time: '10:00', status: 'confirmed', price: '14.000 RSD' },
-  { id: 2, service: 'Vodoinstalaterska usluga', business: 'Quick Plumbing Co', businessId: 2, date: '22. januar', time: '14:00', status: 'pending', price: '9.950 RSD' },
-  { id: 3, service: 'Krečenje stana', business: 'Pro Painting Services', businessId: 3, date: '25. januar', time: '09:00', status: 'confirmed', price: '52.500 RSD' },
+  { id: 1, service: 'Popravka elektroinstalacija', business: 'Elite Električari', businessId: 1, date: '20. januar', time: '10:00', status: 'confirmed', price: '14.000 RSD' },
+  { id: 2, service: 'Vodoinstalaterska usluga', business: 'Brzi Vodoinstalateri', businessId: 2, date: '22. januar', time: '14:00', status: 'pending', price: '9.950 RSD' },
+  { id: 3, service: 'Krečenje stana', business: 'Pro Krečenje', businessId: 3, date: '25. januar', time: '09:00', status: 'confirmed', price: '52.500 RSD' },
 ]
 
 export default function BookingsPage() {

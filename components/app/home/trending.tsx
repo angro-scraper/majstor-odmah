@@ -14,7 +14,7 @@ export function TrendingSection() {
     <div className="px-4 space-y-3">
       <h2 className="text-lg font-semibold flex items-center gap-2">
         <TrendingUp className="w-5 h-5 text-primary" />
-        Trending Now
+        Popularno sada
       </h2>
       <div className="space-y-2">
         {TRENDING.map((item) => (

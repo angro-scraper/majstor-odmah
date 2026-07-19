@@ -3,7 +3,7 @@ import { AnalyticsCard } from '@/components/business/analytics-card'
 import Link from 'next/link'
 
 export const metadata = {
-  title: 'Admin Dashboard — balkan.works',
+  title: 'Administratorska kontrolna tabla — balkan.works',
 }
 
 export default function AdminDashboard() {
@@ -11,63 +11,63 @@ export default function AdminDashboard() {
     <div className="space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-3xl font-bold">Admin Dashboard</h1>
-        <p className="text-muted-foreground mt-1">System overview and management tools</p>
+        <h1 className="text-3xl font-bold">Administratorska kontrolna tabla</h1>
+        <p className="text-muted-foreground mt-1">Pregled sistema i alati za upravljanje</p>
       </div>
 
       {/* KPI Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
         <AnalyticsCard
           icon={Users}
-          label="Total Users"
+          label="Ukupno korisnika"
           value="12,482"
           change="+8.2%"
           trend="up"
-          subtitle="Active users"
+          subtitle="Aktivni korisnici"
         />
         <AnalyticsCard
           icon={Building2}
-          label="Businesses"
+          label="Firme"
           value="3,241"
           change="+12.1%"
           trend="up"
-          subtitle="This month"
+          subtitle="Ovog meseca"
         />
         <AnalyticsCard
           icon={AlertTriangle}
-          label="Reports"
+          label="Prijave"
           value="24"
           change="+3"
           trend="up"
-          subtitle="Pending review"
+          subtitle="Čeka pregled"
         />
         <AnalyticsCard
           icon={CheckCircle}
-          label="Verified"
+          label="Verifikovane"
           value="2,940"
           change="+4.2%"
           trend="up"
-          subtitle="Verified businesses"
+          subtitle="Verifikovane firme"
         />
         <AnalyticsCard
           icon={TrendingUp}
-          label="Platform Health"
+          label="Stanje platforme"
           value="98.2%"
           change="+0.5%"
           trend="up"
-          subtitle="System uptime"
+          subtitle="Dostupnost sistema"
         />
       </div>
 
       {/* Quick Actions */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {[
-          { title: 'Review Pending Reports', count: 24, color: 'from-red-500/20 to-orange-500/20', href: '/admin/moderation' },
-          { title: 'Verify Businesses', count: 18, color: 'from-blue-500/20 to-cyan-500/20', href: '/admin/verification' },
-          { title: 'Suspended Users', count: 3, color: 'from-yellow-500/20 to-amber-500/20', href: '/admin/users' },
-          { title: 'Fake Review Reports', count: 8, color: 'from-purple-500/20 to-pink-500/20', href: '/admin/moderation' },
-          { title: 'Support Tickets', count: 42, color: 'from-green-500/20 to-emerald-500/20', href: '/admin/settings' },
-          { title: 'System Alerts', count: 2, color: 'from-indigo-500/20 to-blue-500/20', href: '/admin/settings' },
+          { title: 'Pregled prijava na čekanju', count: 24, color: 'from-red-500/20 to-orange-500/20', href: '/admin/moderation' },
+          { title: 'Verifikuj firme', count: 18, color: 'from-blue-500/20 to-cyan-500/20', href: '/admin/verification' },
+          { title: 'Suspendovani korisnici', count: 3, color: 'from-yellow-500/20 to-amber-500/20', href: '/admin/users' },
+          { title: 'Prijave lažnih recenzija', count: 8, color: 'from-purple-500/20 to-pink-500/20', href: '/admin/moderation' },
+          { title: 'Tiketi podrške', count: 42, color: 'from-green-500/20 to-emerald-500/20', href: '/admin/settings' },
+          { title: 'Sistemska upozorenja', count: 2, color: 'from-indigo-500/20 to-blue-500/20', href: '/admin/settings' },
         ].map((action) => (
           <Link
             key={action.title}
@@ -76,7 +76,7 @@ export default function AdminDashboard() {
           >
             <p className="text-sm text-muted-foreground mb-2">{action.title}</p>
             <p className="text-3xl font-bold">{action.count}</p>
-            <p className="text-xs text-primary mt-3">View details →</p>
+            <p className="text-xs text-primary mt-3">Pogledaj detalje →</p>
           </Link>
         ))}
       </div>
@@ -84,13 +84,13 @@ export default function AdminDashboard() {
       {/* Recent Activity */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div className="p-6 rounded-2xl border border-border bg-card">
-          <h2 className="text-lg font-semibold mb-4">Recent Reports</h2>
+          <h2 className="text-lg font-semibold mb-4">Nedavne prijave</h2>
           <div className="space-y-3">
             {[
-              { id: 1, type: 'Fake Review', business: 'Elite Services', severity: 'High' },
-              { id: 2, type: 'Inappropriate Content', user: 'John Doe', severity: 'Medium' },
-              { id: 3, type: 'Spam', business: 'Fast Fixes', severity: 'Low' },
-              { id: 4, type: 'Scam Accusation', business: 'Pro Repairs', severity: 'High' },
+              { id: 1, type: 'Lažna recenzija', business: 'Elite Usluge', severity: 'Visok' },
+              { id: 2, type: 'Neprimeren sadržaj', user: 'Jovan Jovanović', severity: 'Srednji' },
+              { id: 3, type: 'Neželjeni sadržaj', business: 'Brza Rešenja', severity: 'Nizak' },
+              { id: 4, type: 'Prijava prevare', business: 'Pro Popravke', severity: 'Visok' },
             ].map((report) => (
               <div key={report.id} className="flex items-center justify-between p-3 rounded-lg bg-secondary/50 hover:bg-secondary transition">
                 <div>
@@ -98,8 +98,8 @@ export default function AdminDashboard() {
                   <p className="text-xs text-muted-foreground">{report.business || report.user}</p>
                 </div>
                 <span className={`text-xs font-semibold px-2.5 py-1 rounded ${
-                  report.severity === 'High' ? 'bg-red-500/20 text-red-600' :
-                  report.severity === 'Medium' ? 'bg-amber-500/20 text-amber-600' :
+                  report.severity === 'Visok' ? 'bg-red-500/20 text-red-600' :
+                  report.severity === 'Srednji' ? 'bg-amber-500/20 text-amber-600' :
                   'bg-green-500/20 text-green-600'
                 }`}>
                   {report.severity}
@@ -110,13 +110,13 @@ export default function AdminDashboard() {
         </div>
 
         <div className="p-6 rounded-2xl border border-border bg-card">
-          <h2 className="text-lg font-semibold mb-4">Pending Verifications</h2>
+          <h2 className="text-lg font-semibold mb-4">Verifikacije na čekanju</h2>
           <div className="space-y-3">
             {[
-              { business: 'Elite Electricians', date: '2 hours ago', docs: '3/4' },
-              { business: 'Quick Plumbing', date: '5 hours ago', docs: '2/4' },
-              { business: 'Pro Painting', date: '1 day ago', docs: '4/4' },
-              { business: 'HVAC Experts', date: '2 days ago', docs: '3/4' },
+              { business: 'Elite Električari', date: 'pre 2 sata', docs: '3/4' },
+              { business: 'Brzi Vodoinstalateri', date: 'pre 5 sati', docs: '2/4' },
+              { business: 'Pro Krečenje', date: 'pre 1 dana', docs: '4/4' },
+              { business: 'Klima Eksperti', date: 'pre 2 dana', docs: '3/4' },
             ].map((item, i) => (
               <div key={i} className="flex items-center justify-between p-3 rounded-lg bg-secondary/50 hover:bg-secondary transition">
                 <div>

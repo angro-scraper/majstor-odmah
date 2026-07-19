@@ -3,7 +3,7 @@ import { ArrowRight, Bookmark, FolderHeart } from 'lucide-react'
 import { BusinessCard } from '@/components/app/business-card'
 
 const savedBusinesses = [
-  { id: 1, name: 'Elite Electricians', rating: 4.9, reviews: 234, distance: '0.5 km', category: 'Električar', verified: true, responseTime: '< 1 sat' },
+  { id: 1, name: 'Elite Električari', rating: 4.9, reviews: 234, distance: '0.5 km', category: 'Električar', verified: true, responseTime: '< 1 sat' },
   { id: 4, name: 'Pekara Jutro', rating: 4.8, reviews: 98, distance: '0.6 km', category: 'Pekara', verified: true, responseTime: 'Otvoreno sada' },
 ]
 

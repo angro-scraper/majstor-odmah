@@ -8,8 +8,8 @@ export default function ProfilePage() {
     <div className="px-4 py-6 space-y-6">
       <div className="flex items-start justify-between">
         <div>
-          <h1 className="text-3xl font-bold">Profile</h1>
-          <p className="text-muted-foreground mt-1">Manage your account</p>
+          <h1 className="text-3xl font-bold">Profil</h1>
+          <p className="text-muted-foreground mt-1">Upravljaj svojim nalogom</p>
         </div>
         <Link href="/app/rewards" className="p-3 rounded-full bg-secondary border border-border hover:border-primary transition" aria-label="Balkan Rewards">
           <Settings className="w-5 h-5" />
@@ -29,7 +29,7 @@ export default function ProfilePage() {
           <div>
             <h2 className="text-xl font-bold">Marko Marković</h2>
             <p className="text-sm text-muted-foreground">marko@example.com</p>
-            <p className="text-xs text-muted-foreground mt-1">Member since Jan 2024</p>
+            <p className="text-xs text-muted-foreground mt-1">Član od januara 2024.</p>
           </div>
         </div>
       </div>
@@ -38,26 +38,26 @@ export default function ProfilePage() {
       <div className="grid grid-cols-3 gap-3">
         <div className="p-4 rounded-xl bg-secondary/50 border border-border text-center">
           <p className="text-2xl font-bold text-primary">24</p>
-          <p className="text-xs text-muted-foreground mt-1">Bookings</p>
+          <p className="text-xs text-muted-foreground mt-1">Termini</p>
         </div>
         <div className="p-4 rounded-xl bg-secondary/50 border border-border text-center">
           <p className="text-2xl font-bold text-primary">4.8</p>
           <p className="text-xs text-muted-foreground mt-1 flex items-center justify-center gap-1">
-            <Star className="w-3 h-3" /> Rating
+            <Star className="w-3 h-3" /> Ocena
           </p>
         </div>
         <div className="p-4 rounded-xl bg-secondary/50 border border-border text-center">
           <p className="text-2xl font-bold text-primary">12</p>
-          <p className="text-xs text-muted-foreground mt-1">Reviews</p>
+          <p className="text-xs text-muted-foreground mt-1">Recenzije</p>
         </div>
       </div>
 
       {/* Menu */}
       <div className="space-y-2">
         {[
-          { label: 'Saved Places', icon: MapPin, href: '/app/saved' },
-          { label: 'Booking History', icon: Activity, href: '/app/bookings' },
-          { label: 'Rewards & benefits', icon: Settings, href: '/app/rewards' },
+          { label: 'Sačuvana mesta', icon: MapPin, href: '/app/saved' },
+          { label: 'Istorija termina', icon: Activity, href: '/app/bookings' },
+          { label: 'Nagrade i pogodnosti', icon: Settings, href: '/app/rewards' },
         ].map((item) => {
           const Icon = item.icon
           return (
@@ -76,7 +76,7 @@ export default function ProfilePage() {
       {/* Logout */}
       <button className="w-full flex items-center justify-center gap-2 p-3 rounded-xl border border-destructive/50 text-destructive hover:bg-destructive/10 transition">
         <LogOut className="w-5 h-5" />
-        Log Out
+        Odjavi se
       </button>
     </div>
   )

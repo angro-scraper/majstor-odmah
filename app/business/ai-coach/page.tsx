@@ -17,7 +17,7 @@ export default function AICoachPage() {
     setLoading(true)
     try {
       const token = window.localStorage.getItem('access_token')
-      if (!token) throw new Error('Prijavite se kao vlasnik firme da biste koristili AI Coach.')
+      if (!token) throw new Error('Prijavite se kao vlasnik firme da biste koristili AI savetnika.')
       const response = await fetch(`${apiUrl}/business/ai/analyze`, { method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` }, body: JSON.stringify({ businessId: businessId.trim() }) })
       const payload = await response.json()
       if (!response.ok || !payload.success) throw new Error(payload?.error?.message || 'Analiza trenutno nije dostupna.')

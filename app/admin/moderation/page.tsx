@@ -6,43 +6,43 @@ import { useState } from 'react'
 const reports = [
   {
     id: 1,
-    type: 'Fake Review',
+    type: 'Lažna recenzija',
     reporter: 'Marko Marković',
-    target: 'Elite Services',
-    description: 'Review seems fabricated, same content as another user',
+    target: 'Elite Usluge',
+    description: 'Recenzija deluje izmišljeno i ima isti sadržaj kao druga prijava',
     status: 'pending',
     severity: 'high',
-    date: '2 hours ago',
+    date: 'pre 2 sata',
   },
   {
     id: 2,
     type: 'Spam',
     reporter: 'Ana Nikolić',
-    target: 'Fast Fixes',
-    description: 'Multiple spam messages in comments',
+    target: 'Brza Rešenja',
+    description: 'Više neželjenih poruka u komentarima',
     status: 'in_review',
     severity: 'medium',
-    date: '4 hours ago',
+    date: 'pre 4 sata',
   },
   {
     id: 3,
-    type: 'Inappropriate Content',
-    reporter: 'System',
-    target: 'John Doe',
-    description: 'Profile contains inappropriate language',
+    type: 'Neprimeren sadržaj',
+    reporter: 'Sistem',
+    target: 'Jovan Jovanović',
+    description: 'Profil sadrži neprimeren jezik',
     status: 'pending',
     severity: 'medium',
-    date: '1 day ago',
+    date: 'pre 1 dana',
   },
   {
     id: 4,
-    type: 'Scam Accusation',
-    reporter: 'Customer',
-    target: 'Pro Repairs',
-    description: 'Customer claims they were overcharged',
+    type: 'Prijava prevare',
+    reporter: 'Korisnik',
+    target: 'Pro Popravke',
+    description: 'Korisnik navodi da mu je naplaćeno više od dogovorenog',
     status: 'resolved',
     severity: 'high',
-    date: '3 days ago',
+    date: 'pre 3 dana',
   },
 ]
 
@@ -57,18 +57,18 @@ export default function ModerationPage() {
       <div>
         <h1 className="text-3xl font-bold flex items-center gap-2">
           <AlertTriangle className="w-8 h-8 text-destructive" />
-          Moderation Center
+          Centar za moderaciju
         </h1>
-        <p className="text-muted-foreground mt-1">Review and manage user reports</p>
+        <p className="text-muted-foreground mt-1">Pregledajte i rešavajte prijave korisnika</p>
       </div>
 
       {/* Stats */}
       <div className="grid grid-cols-4 gap-4">
         {[
-          { label: 'Pending', value: '12', color: 'text-blue-600' },
-          { label: 'In Review', value: '5', color: 'text-amber-600' },
-          { label: 'Resolved', value: '89', color: 'text-green-600' },
-          { label: 'Dismissed', value: '23', color: 'text-muted-foreground' },
+          { label: 'Na čekanju', value: '12', color: 'text-blue-600' },
+          { label: 'U pregledu', value: '5', color: 'text-amber-600' },
+          { label: 'Rešeno', value: '89', color: 'text-green-600' },
+          { label: 'Odbačeno', value: '23', color: 'text-muted-foreground' },
         ].map((stat) => (
           <div key={stat.label} className="p-4 rounded-xl border border-border bg-card">
             <p className="text-sm text-muted-foreground">{stat.label}</p>
@@ -89,7 +89,7 @@ export default function ModerationPage() {
                 : 'bg-secondary border border-border hover:border-primary'
             }`}
           >
-            {status === 'all' ? 'All Reports' : status.replace('_', ' ').toUpperCase()}
+            {status === 'all' ? 'Sve prijave' : ({ pending: 'NA ČEKANJU', in_review: 'U PREGLEDU', resolved: 'REŠENO' }[status] ?? status)}
           </button>
         ))}
       </div>
@@ -111,13 +111,13 @@ export default function ModerationPage() {
                     report.severity === 'medium' ? 'bg-amber-500/20 text-amber-600' :
                     'bg-green-500/20 text-green-600'
                   }`}>
-                    {report.severity.toUpperCase()}
+                    {{ high: 'VISOK', medium: 'SREDNJI', low: 'NIZAK' }[report.severity]}
                   </span>
                 </h3>
                 <p className="text-sm text-muted-foreground mt-1">{report.description}</p>
                 <div className="flex items-center gap-4 mt-3 text-xs text-muted-foreground">
-                  <span>By: {report.reporter}</span>
-                  <span>Target: {report.target}</span>
+                  <span>Prijavio/la: {report.reporter}</span>
+                  <span>Predmet: {report.target}</span>
                   <span>{report.date}</span>
                 </div>
               </div>
@@ -126,7 +126,7 @@ export default function ModerationPage() {
                 report.status === 'in_review' ? 'bg-amber-500/20 text-amber-600' :
                 'bg-green-500/20 text-green-600'
               }`}>
-                {report.status.replace('_', ' ').toUpperCase()}
+                {{ pending: 'NA ČEKANJU', in_review: 'U PREGLEDU', resolved: 'REŠENO' }[report.status]}
               </span>
             </div>
 
@@ -136,19 +136,19 @@ export default function ModerationPage() {
                 <div className="grid grid-cols-2 gap-3">
                   <button className="flex items-center justify-center gap-2 px-3 py-2 rounded-lg border border-border bg-secondary hover:bg-secondary/80 transition text-sm font-medium">
                     <Eye className="w-4 h-4" />
-                    View Details
+                    Pogledaj detalje
                   </button>
                   <button className="flex items-center justify-center gap-2 px-3 py-2 rounded-lg border border-border bg-secondary hover:bg-secondary/80 transition text-sm font-medium">
                     <CheckCircle className="w-4 h-4 text-green-600" />
-                    Approve
+                    Odobri
                   </button>
                   <button className="flex items-center justify-center gap-2 px-3 py-2 rounded-lg border border-amber-500/50 bg-amber-500/10 hover:bg-amber-500/20 transition text-sm font-medium text-amber-600">
                     <Ban className="w-4 h-4" />
-                    Suspend User
+                    Suspenduj korisnika
                   </button>
                   <button className="flex items-center justify-center gap-2 px-3 py-2 rounded-lg border border-destructive/50 bg-destructive/10 hover:bg-destructive/20 transition text-sm font-medium text-destructive">
                     <Trash2 className="w-4 h-4" />
-                    Delete Content
+                    Ukloni sadržaj
                   </button>
                 </div>
               </div>

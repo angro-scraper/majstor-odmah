@@ -20,7 +20,7 @@ export default function SaveFoodPage() {
 
       <div className="rounded-2xl border border-border bg-secondary/60 p-4"><div className="flex items-start gap-3"><div className="grid size-10 shrink-0 place-items-center rounded-xl bg-card text-turquoise"><PackageCheck className="size-5" /></div><div><p className="font-semibold text-navy">Kako funkcioniše?</p><p className="mt-1 text-sm text-muted-foreground">Rezerviši paket, preuzmi ga u navedenom terminu i potvrdi kodom u firmi.</p></div></div></div>
 
-      <section className="space-y-3" aria-label="Dostupni Save Food paketi">
+      <section className="space-y-3" aria-label="Dostupni paketi sačuvane hrane">
         {packages.map((item) => (
           <article key={item.id} className="rounded-2xl border border-border bg-card p-4 shadow-soft">
             <div className="flex items-start justify-between gap-3"><div><p className="text-xs font-medium text-muted-foreground">{item.business}</p><h2 className="mt-1 font-semibold text-navy">{item.title}</h2></div><span className="rounded-full bg-turquoise/10 px-2.5 py-1 text-xs font-semibold text-turquoise">{item.remaining}</span></div>

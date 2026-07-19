@@ -6,11 +6,11 @@ import { Home, Compass, MessageSquare, Bookmark, User } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 const NAV_ITEMS = [
-  { href: '/app', label: 'Home', icon: Home },
-  { href: '/app/discover', label: 'Discover', icon: Compass },
+  { href: '/app', label: 'Početna', icon: Home },
+  { href: '/app/discover', label: 'Otkrij', icon: Compass },
   { href: '/app/ai', label: 'AI', icon: MessageSquare, highlight: true },
-  { href: '/app/saved', label: 'Saved', icon: Bookmark },
-  { href: '/app/profile', label: 'Profile', icon: User },
+  { href: '/app/saved', label: 'Sačuvano', icon: Bookmark },
+  { href: '/app/profile', label: 'Profil', icon: User },
 ]
 
 export function BottomNavigation() {

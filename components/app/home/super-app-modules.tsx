@@ -7,7 +7,7 @@ const modules = [
   { name: 'Nagrade', description: 'Poeni i lokalne pogodnosti', href: '/app/rewards', icon: Gift, color: 'bg-cyan-500/10 text-cyan-600', active: true },
   { name: 'Događaji', description: 'Šta se dešava u tvom gradu', href: '/app/category/events', icon: CalendarDays, color: 'bg-violet-500/10 text-violet-600', active: true },
   { name: 'Zajednica', description: 'Lokalne preporuke i grupe', href: '/app/discover', icon: UsersRound, color: 'bg-sky-500/10 text-sky-600', active: true },
-  { name: 'Balkan Card', description: 'Pogodnosti i tvoj status', href: '/app/profile', icon: CreditCard, color: 'bg-primary/10 text-primary', active: true },
+  { name: 'Balkan kartica', description: 'Pogodnosti i tvoj status', href: '/app/profile', icon: CreditCard, color: 'bg-primary/10 text-primary', active: true },
   { name: 'Zdravlje', description: 'Apoteke i podsetnici', href: '/app/category/health', icon: HeartPulse, color: 'bg-emerald-500/10 text-emerald-600', active: false },
   { name: 'Auto', description: 'Servisi i podsetnici', href: '/app/category/auto', icon: CarFront, color: 'bg-orange-500/10 text-orange-600', active: false },
   { name: 'Putovanja', description: 'Iskustva širom Balkana', href: '/app/category/travel', icon: Plane, color: 'bg-cyan-500/10 text-cyan-600', active: false },
